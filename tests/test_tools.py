@@ -352,3 +352,20 @@ def test_protocol_marks_full_text_only_criteria():
     assert "  I2. [full text only] Study includes a control group" in marked and "  I1. Patients with condition X" in marked
     # a protocol written before this field existed loads with the safeguard off
     assert Criterion.model_validate({"id": "I1", "text": "old"}).full_text_only is False
+
+
+def test_estimated_available_quota(tmp_path, monkeypatch):
+    import time as time_module
+
+    from sysrev.llm import DiskCache
+
+    cache = DiskCache(tmp_path / "c.sqlite")
+    now = 1_000_000.0
+    monkeypatch.setattr(time_module, "time", lambda: now)
+    assert cache.estimated_available(200_000) == {}  # nothing used: nothing to report
+    cache.record_usage("m", 150_000, ts=now - 6 * 3600)  # 6 h ago: 50k left, then +50k refilled
+    assert cache.estimated_available(200_000) == {"m": 100_000}
+    cache.record_usage("m", 100_000, ts=now)  # spends everything that had come back
+    assert cache.estimated_available(200_000) == {"m": 0}
+    cache.record_usage("other", 10_000, ts=now - 48 * 3600)  # long ago: full again, never above the cap
+    assert cache.estimated_available(200_000)["other"] == 200_000

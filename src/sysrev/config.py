@@ -41,6 +41,7 @@ class Settings(BaseSettings):
 
     # Free-tier friendly limits (per model). Raise them on a paid plan.
     tokens_per_minute: int = 8000
+    tokens_per_day: int = 200_000  # daily allowance per model; only used to estimate what is left (`sysrev quota`)
     requests_per_minute: int = 30
     max_request_tokens: int = 6000  # prompt + completion budget of a single call
     llm_max_retries: int = 6

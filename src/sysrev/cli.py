@@ -298,16 +298,23 @@ def quota() -> None:
     from .llm import DiskCache
 
     settings = get_settings()
-    used = DiskCache(settings.cache_dir / "llm_cache.sqlite").usage_last_24h()
-    table = Table(title="LLM usage over the last 24 hours")
-    for col in ("Model", "Requests", "Tokens", "Tasks"):
+    cache = DiskCache(settings.cache_dir / "llm_cache.sqlite")
+    used, left = cache.usage_last_24h(), cache.estimated_available(settings.tokens_per_day)
+    table = Table(title="LLM quota per model")
+    for col in ("Model", "Available now (estimate)", "Used in the last 24 h", "Requests", "Tasks"):
         table.add_column(col)
     tasks = settings.task_models()
     for model in dict.fromkeys([settings.model_primary, settings.model_secondary, settings.model_fast, *used]):
         row = used.get(model, {"requests": 0, "tokens": 0})
-        table.add_row(model, str(row["requests"]), f"{row['tokens']:,}", ", ".join(t for t, m in tasks.items() if m == model))
+        available = left.get(model, settings.tokens_per_day)
+        table.add_row(model, f"{available:,} of {settings.tokens_per_day:,}", f"{row['tokens']:,}", str(row["requests"]),
+                      ", ".join(t for t, m in tasks.items() if m == model))
     console.print(table)
-    console.print("[dim]Groq free tier: 1,000 requests and 200,000 tokens per model per day (console.groq.com/settings/limits).[/dim]")
+    console.print(
+        "[dim]The provider does not publish the balance: the estimate assumes an allowance of "
+        f"{settings.tokens_per_day:,} tokens per model that refills continuously over 24 hours "
+        "(Groq free tier; see console.groq.com/settings/limits).[/dim]"
+    )
 
 
 @app.command()
