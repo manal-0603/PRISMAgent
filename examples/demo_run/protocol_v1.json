@@ -92,7 +92,7 @@
     "Screening time per record for LLM and humans",
     "Any reported adverse effects (e.g., missed critical studies)"
   ],
-  "ri<redacted-key>": "QUADAS‑2 will be applied to diagnostic accuracy studies; ROBINS‑I will be used for non‑randomised comparative designs; RoB 2 will be applied if any randomised trials are found. Two reviewers will assess each study independently, with disagreements resolved by consensus.",
+  "risk_of_bias_approach": "QUADAS‑2 will be applied to diagnostic accuracy studies; ROBINS‑I will be used for non‑randomised comparative designs; RoB 2 will be applied if any randomised trials are found. Two reviewers will assess each study independently, with disagreements resolved by consensus.",
   "synthesis_plan": "A narrative synthesis will summarise study characteristics, LLM configurations, and accuracy outcomes, grouped by model type and screening context. If ≥3 studies report comparable sensitivity and specificity on similar datasets, a random‑effects meta‑analysis will be performed using a bivariate model.",
   "meta_analysis_planned": true
 }

@@ -211,15 +211,21 @@ a checkpoint can be closed and resumed later.
 streamlit run app/streamlit_app.py
 ```
 
-Start a review, answer the checkpoints in forms (the screening table is editable), and browse
-everything: protocol, queries, PRISMA diagram, screening decisions, extracted data with their
-quotations, the manuscript, the critic's report and the audit trail.
+Start a review, follow its twelve stages on the progress track, answer the checkpoints in forms
+(the screening table is editable), and browse everything in nine tabs: an overview with the study
+selection funnel, time per stage, risk of bias and grounding; the protocol; the queries; every
+screening decision with both reviewers' rationales; the extracted data with their quotations; the
+manuscript; the critic's report; the audit trail; and the evaluation.
 
 To browse the demonstration review without running anything or setting a key:
 
 ```bash
 RUNS_DIR=examples streamlit run app/streamlit_app.py
 ```
+
+![Overview tab of the web interface](docs/screenshots/overview.png)
+
+More screenshots: [studies](docs/screenshots/studies.png), [quality report](docs/screenshots/quality.png).
 
 ### Protocol template
 
@@ -379,6 +385,8 @@ src/sysrev/
   evaluation/                run metrics and the screening benchmark
   cli.py                     command-line interface
 app/streamlit_app.py         web interface
+app/ui.py                    its visual system: design tokens, CSS, HTML components and charts
+.streamlit/config.toml       theme of the web interface
 tests/                       unit and workflow tests
 examples/demo_run/           artifacts of the demonstration review
 docs/                        technical report, evaluation results, video script

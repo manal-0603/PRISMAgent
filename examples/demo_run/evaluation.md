@@ -16,7 +16,7 @@ Question: How accurate are large language models at title and abstract screening
 - **citations to unknown records final**: 0
 - **unsupported statements found by critic first draft**: 3
 - **unsupported statements found by critic final draft**: 3
-- **critic rounds**: 1
+- **critic rounds**: 2
 - **eligibility audit flagged included studies**: 0
 
 ## Inter-agent consistency
@@ -32,9 +32,9 @@ Question: How accurate are large language models at title and abstract screening
 - **exclusion audit sample**: 4
 
 ## Time
-- **pipeline hours**: 0.58
+- **pipeline hours**: 1.17
 - **manual person hours estimate**: 67.7
-- **reduction all tasks**: 0.9914
+- **reduction all tasks**: 0.9828
 - **per item tasks manual person hours**: 22.7
 - **per item tasks pipeline hours**: 0.41
 - **reduction per item tasks**: 0.9821
@@ -48,7 +48,7 @@ Question: How accurate are large language models at title and abstract screening
 | screen_title_abstract | 3.0 | 0.6 |
 | screen_full_text | 6.1 | 8.0 |
 | extraction | 15.2 | 14.08 |
-| synthesis | 9.3 | 30 |
+| synthesis | 44.3 | 30 |
 
 Manual-effort assumptions (edit `config/manual_effort.yaml`):
 
@@ -56,7 +56,7 @@ Manual-effort assumptions (edit `config/manual_effort.yaml`):
 - full_text_retrieval_min_per_report: 4
 - full_text_screening_min_per_report: 10
 - data_extraction_min_per_study: 45
-- ri<redacted-key>: 20
+- risk_of_bias_min_per_study: 20
 - reviewers_per_screening_task: 2
 - protocol_hours: 8
 - search_strategy_hours: 6
@@ -66,6 +66,6 @@ Manual-effort assumptions (edit `config/manual_effort.yaml`):
 ## LLM usage
 | model | calls | cached | input_tokens | output_tokens | seconds |
 |---|---|---|---|---|---|
-| openai/gpt-oss-120b | 62 | 39 | 52982 | 7571 | 25.3 |
-| openai/gpt-oss-20b | 57 | 5 | 98736 | 24109 | 55.9 |
-| qwen/qwen3.8-27b | 29 | 0 | 59359 | 5136 | 21.4 |
+| openai/gpt-oss-120b | 76 | 50 | 59562 | 8982 | 29.8 |
+| openai/gpt-oss-20b | 59 | 7 | 98736 | 24109 | 55.9 |
+| qwen/qwen3.8-27b | 34 | 1 | 72484 | 6265 | 25.9 |

@@ -20,12 +20,16 @@ en cours, puis les résultats d'une revue terminée.
 | Temps | À l'écran | Ce qu'il faut dire |
 |---|---|---|
 | 0:00 – 0:20 | Schéma d'architecture du README | Le système prend une question de recherche et conduit seul une revue systématique PRISMA 2020. Un coordinateur LangGraph distribue le travail à sept agents : planification, stratégie de recherche, récupération, screening, extraction, rédaction, critique. |
-| 0:20 – 0:50 | Interface Streamlit, revue en attente au point de validation 1 | Voici une revue en cours. Le planificateur a écrit le protocole : question PICO, critères d'inclusion et d'exclusion. L'agent de recherche a écrit une requête par base et l'a testée sur les bases réelles ; on voit le nombre de résultats. Je peux approuver, modifier le protocole, ou demander une révision. J'approuve. |
-| 0:50 – 1:20 | Revue terminée, onglets « PRISMA flow » puis « Screening » | Sur la revue de démonstration : le diagramme PRISMA, puis les décisions de screening. Deux modèles différents jouent les deux relecteurs indépendants, un troisième arbitre les désaccords. Chaque décision a sa justification et le critère appliqué ; l'accord entre relecteurs est mesuré par le kappa de Cohen. |
-| 1:20 – 1:50 | Onglet « Studies », ouvrir une étude | Pour chaque étude incluse, le RAG retrouve les passages du texte intégral, l'agent remplit la fiche d'extraction et doit citer la phrase source. Le programme vérifie que chaque citation existe vraiment dans le texte : colonne « quote found in source ». Le risque de biais est évalué avec l'outil adapté au type d'étude. |
-| 1:50 – 2:20 | Onglets « Report » puis « Quality assurance » | Le manuscrit suit la structure PRISMA, avec références numérotées et tableaux. L'agent critique, sur un autre modèle, vérifie chaque affirmation contre les preuves : ici il a relevé des erreurs et renvoyé le texte à la rédaction. |
-| 2:20 – 2:45 | Onglet « Audit trail », puis `examples/demo_run/` dans l'explorateur | Tout est tracé : chaque action d'agent, chaque requête, chaque décision humaine, et les exports Markdown, Word et BibTeX. |
-| 2:45 – 3:00 | Tableau d'évaluation du README | Évaluation : exhaustivité PRISMA, accord inter-agents, vérification des citations, comparaison avec des décisions humaines sur un jeu de référence, et temps gagné. |
+| 0:20 – 0:45 | Interface, onglet « Overview » | Voici une revue terminée. La frise du haut montre les douze étapes, dont trois points de validation humaine. En dessous : 120 articles identifiés, 24 passés au screening, 13 études incluses, et le temps passé par étape. |
+| 0:45 – 1:10 | Onglets « Protocol » puis « Search » | Le planificateur a écrit le protocole : question PICO, critères d'inclusion et d'exclusion. L'agent de recherche a écrit une requête par base et l'a testée sur les bases réelles. À cette étape, l'humain peut approuver, modifier ou demander une révision. |
+| 1:10 – 1:35 | Onglet « Screening », ouvrir un désaccord | Deux modèles différents jouent les deux relecteurs indépendants, un troisième arbitre les désaccords. Chaque décision a sa justification ; l'accord entre relecteurs est mesuré par le kappa de Cohen. |
+| 1:35 – 2:00 | Onglet « Studies », ouvrir une étude | Pour chaque étude incluse, le RAG retrouve les passages du texte intégral, l'agent remplit la fiche d'extraction et doit citer la phrase source. Le programme vérifie que chaque citation existe vraiment dans le texte. Le risque de biais est évalué avec l'outil adapté au type d'étude. |
+| 2:00 – 2:25 | Onglets « Report » puis « Quality » | Le manuscrit suit la structure PRISMA, avec références numérotées, tableaux et diagramme de flux. L'agent critique, sur un autre modèle, vérifie chaque affirmation contre les preuves et liste ce qu'il faut corriger. |
+| 2:25 – 2:45 | Onglet « Audit trail » | Tout est tracé : chaque action d'agent, chaque requête, chaque décision. |
+| 2:45 – 3:00 | Onglet « Evaluation » | Évaluation : exhaustivité PRISMA, accord inter-agents, vérification des citations, temps machine comparé à l'effort manuel estimé. |
+
+Si vous avez une revue en pause au premier point de validation (étape 3 de la préparation), montrez-la
+à la place de la ligne 0:45 – 1:10 et cliquez sur « Approve » à l'écran.
 
 ## Conseils
 

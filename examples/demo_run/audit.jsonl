@@ -226,3 +226,38 @@
 {"seq": 226, "ts": "2026-11-11T00:28:04+00:00", "agent": "system", "action": "run_finished", "included": 13}
 {"seq": 227, "ts": "2026-11-11T00:28:05+00:00", "agent": "evaluation", "action": "artifact_saved", "artifact": "evaluation", "version": 3, "file": "evaluation_v3.json", "note": ""}
 {"seq": 228, "ts": "2026-11-11T00:28:05+00:00", "agent": "evaluation", "action": "file_written", "file": "evaluation.md", "chars": 2665}
+{"seq": 229, "ts": "2026-11-11T00:40:12+00:00", "agent": "coordinator", "action": "revision_reopened", "issues": 7}
+{"seq": 230, "ts": "2026-11-11T00:40:13+00:00", "agent": "coordinator", "action": "route", "next": "synthesis", "completed": ["protocol", "search_strategy", "review_protocol", "retrieval", "screen_title_abstract", "review_screening", "screen_full_text", "extraction"], "qa_round": 1}
+{"seq": 231, "ts": "2026-11-11T00:40:13+00:00", "agent": "coordinator", "action": "stage_started", "stage": "synthesis"}
+{"seq": 232, "ts": "2026-11-11T00:40:18+00:00", "agent": "synthesis_writing", "action": "artifact_saved", "artifact": "meta_analysis", "version": 7, "file": "meta_analysis_v7.json", "note": ""}
+{"seq": 233, "ts": "2026-11-11T00:40:22+00:00", "agent": "synthesis_writing", "action": "llm_rate_limited", "role": "primary", "wait_seconds": 573.5, "message": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_<redacted>` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199038, Requested 2287. Please try again in 9m32.4s. Need more tokens? Upgrade to Dev Tier today at https:"}
+{"seq": 234, "ts": "2026-11-11T00:49:57+00:00", "agent": "synthesis_writing", "action": "llm_rate_limited", "role": "primary", "wait_seconds": 1332.5, "message": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_<redacted>` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 200000, Requested 3082. Please try again in 22m11.424s. Need more tokens? Upgrade to Dev Tier today at htt"}
+{"seq": 235, "ts": "2026-11-11T01:12:10+00:00", "agent": "synthesis_writing", "action": "llm_rate_limited", "role": "primary", "wait_seconds": 16.5, "message": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_<redacted>` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196915, Requested 3122. Please try again in 15.984s. Need more tokens? Upgrade to Dev Tier today at https:"}
+{"seq": 236, "ts": "2026-11-11T01:13:11+00:00", "agent": "synthesis_writing", "action": "artifact_saved", "artifact": "manuscript_meta", "version": 7, "file": "manuscript_meta_v7.json", "note": "revision"}
+{"seq": 237, "ts": "2026-11-11T01:13:11+00:00", "agent": "synthesis_writing", "action": "file_written", "file": "report_draft.md", "chars": 55948}
+{"seq": 238, "ts": "2026-11-11T01:13:11+00:00", "agent": "synthesis_writing", "action": "manuscript_written", "words": 8056, "references": 17, "unknown_citations": 0, "revision": true}
+{"seq": 239, "ts": "2026-11-11T01:13:11+00:00", "agent": "coordinator", "action": "stage_completed", "stage": "synthesis", "seconds": 1978.3}
+{"seq": 240, "ts": "2026-11-11T01:13:11+00:00", "agent": "coordinator", "action": "route", "next": "critic", "completed": ["protocol", "search_strategy", "review_protocol", "retrieval", "screen_title_abstract", "review_screening", "screen_full_text", "extraction", "synthesis"], "qa_round": 1}
+{"seq": 241, "ts": "2026-11-11T01:13:11+00:00", "agent": "coordinator", "action": "stage_started", "stage": "critic"}
+{"seq": 242, "ts": "2026-11-11T01:15:13+00:00", "agent": "critic", "action": "artifact_saved", "artifact": "qa_report", "version": 2, "file": "qa_report_v2.json", "note": "round 2"}
+{"seq": 243, "ts": "2026-11-11T01:15:13+00:00", "agent": "critic", "action": "file_written", "file": "qa_report.md", "chars": 5981}
+{"seq": 244, "ts": "2026-11-11T01:15:13+00:00", "agent": "critic", "action": "qa_review", "round": 2, "verdict": "pass", "issues": 7, "writer_fixable": 5}
+{"seq": 245, "ts": "2026-11-11T01:15:13+00:00", "agent": "coordinator", "action": "stage_completed", "stage": "critic", "seconds": 122.6}
+{"seq": 246, "ts": "2026-11-11T01:15:13+00:00", "agent": "coordinator", "action": "route", "next": "review_report", "completed": ["protocol", "search_strategy", "review_protocol", "retrieval", "screen_title_abstract", "review_screening", "screen_full_text", "extraction", "synthesis", "critic"], "qa_round": 2}
+{"seq": 247, "ts": "2026-11-11T01:15:13+00:00", "agent": "system", "action": "artifact_saved", "artifact": "human_checkpoints", "version": 4, "file": "human_checkpoints_v4.json", "note": ""}
+{"seq": 248, "ts": "2026-11-11T01:15:13+00:00", "agent": "system", "action": "checkpoint", "checkpoint": "final_report", "mode": "auto", "decision": "approve", "feedback": "", "overrides": {}}
+{"seq": 249, "ts": "2026-11-11T01:15:13+00:00", "agent": "coordinator", "action": "route", "next": "finalize", "completed": ["protocol", "search_strategy", "review_protocol", "retrieval", "screen_title_abstract", "review_screening", "screen_full_text", "extraction", "synthesis", "critic", "review_report"], "qa_round": 2}
+{"seq": 250, "ts": "2026-11-11T01:15:13+00:00", "agent": "coordinator", "action": "stage_started", "stage": "finalize"}
+{"seq": 251, "ts": "2026-11-11T01:15:14+00:00", "agent": "system", "action": "file_written", "file": "prisma_flow.mmd", "chars": 863}
+{"seq": 252, "ts": "2026-11-11T01:15:17+00:00", "agent": "synthesis_writing", "action": "artifact_saved", "artifact": "meta_analysis", "version": 8, "file": "meta_analysis_v8.json", "note": ""}
+{"seq": 253, "ts": "2026-11-11T01:15:19+00:00", "agent": "synthesis_writing", "action": "artifact_saved", "artifact": "manuscript_meta", "version": 8, "file": "manuscript_meta_v8.json", "note": "revision"}
+{"seq": 254, "ts": "2026-11-11T01:15:19+00:00", "agent": "synthesis_writing", "action": "file_written", "file": "report_draft.md", "chars": 55600}
+{"seq": 255, "ts": "2026-11-11T01:15:19+00:00", "agent": "synthesis_writing", "action": "manuscript_written", "words": 7997, "references": 17, "unknown_citations": 0, "revision": true}
+{"seq": 256, "ts": "2026-11-11T01:15:19+00:00", "agent": "system", "action": "file_written", "file": "report.md", "chars": 58645}
+{"seq": 257, "ts": "2026-11-11T01:15:20+00:00", "agent": "system", "action": "file_written", "file": "references.bib", "chars": 8306}
+{"seq": 258, "ts": "2026-11-11T01:15:20+00:00", "agent": "system", "action": "artifact_saved", "artifact": "result", "version": 6, "file": "result_v6.json", "note": ""}
+{"seq": 259, "ts": "2026-11-11T01:15:20+00:00", "agent": "system", "action": "run_finished", "included": 13}
+{"seq": 260, "ts": "2026-11-11T01:15:20+00:00", "agent": "coordinator", "action": "stage_completed", "stage": "finalize", "seconds": 6.4}
+{"seq": 261, "ts": "2026-11-11T01:15:20+00:00", "agent": "coordinator", "action": "route", "next": "end", "completed": ["protocol", "search_strategy", "review_protocol", "retrieval", "screen_title_abstract", "review_screening", "screen_full_text", "extraction", "synthesis", "critic", "review_report", "finalize"], "qa_round": 2}
+{"seq": 262, "ts": "2026-11-11T01:15:21+00:00", "agent": "evaluation", "action": "artifact_saved", "artifact": "evaluation", "version": 4, "file": "evaluation_v4.json", "note": ""}
+{"seq": 263, "ts": "2026-11-11T01:15:21+00:00", "agent": "evaluation", "action": "file_written", "file": "evaluation.md", "chars": 2666}
