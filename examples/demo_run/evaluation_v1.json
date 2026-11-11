@@ -80,7 +80,7 @@
     "full_text_retrieval_min_per_report": 4,
     "full_text_screening_min_per_report": 10,
     "data_extraction_min_per_study": 45,
-    "ri<redacted-key>": 20,
+    "risk_of_bias_min_per_study": 20,
     "reviewers_per_screening_task": 2,
     "protocol_hours": 8,
     "search_strategy_hours": 6,

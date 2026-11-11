@@ -141,8 +141,9 @@ class DiskCache:
 
 def scrub(text: str) -> str:
     """Remove account identifiers and key fragments that providers echo in error messages."""
-    text = re.sub(r"org_[A-Za-z0-9]{6,}", "org_<redacted>", text)
-    return re.sub(r"(gsk|sk)[-_][A-Za-z0-9_\-]{8,}", "<redacted-key>", text)
+    text = re.sub(r"\borg_[A-Za-z0-9]{12,}", "org_<redacted>", text)
+    # API keys only: a provider prefix followed by a long run of letters AND digits, at a word start
+    return re.sub(r"\b(?:gsk_|sk-(?:ant-|proj-)?)(?=[A-Za-z0-9_\-]*\d)[A-Za-z0-9_\-]{16,}", "<redacted-key>", text)
 
 
 def _retry_after(exc: Exception) -> float | None:

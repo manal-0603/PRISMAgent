@@ -1,0 +1,80 @@
+{
+  "verdict": "pass",
+  "issues": [
+    {
+      "severity": "minor",
+      "area": "synthesis:Model performance comparisons",
+      "description": "Studies assigned to this theme are never cited in its narrative: R0074.",
+      "suggested_fix": "Report what these studies found, or explain why they add nothing."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:Model performance comparisons",
+      "description": "Unsupported statement: \"Across five diagnostic accuracy studies, large language models (LLMs) showed variable performance for title and abstract screening.\" — The draft cites six studies (Insuk, Oami, Sood, Fazeli, Zhan, Kwok) in the subsequent sentences, but the introductory sentence claims 'five'. Additionally, Kwok et al. [R0048] is classified as a 'Comparative analysis' and Zhan et al. [R0070] as a 'validation study' in the evidence cards, not strictly 'diagnostic accuracy studies' (though they measure diagnostic metrics, the count is the primary error).",
+      "suggested_fix": "Change 'five' to 'six' or adjust the phrasing to 'Across six studies' to match the number of citations provided in the narrative."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:Model performance comparisons",
+      "description": "Unsupported statement: \"Kwok et al. noted commercial LLMs (ChatGPT, Copilot) achieving similar accuracy (83%–86%) and recall (87%–88%) to local implementations, while traditional NLP methods outperformed them [R0048].\" — The evidence states that 'Local machine learning and natural language processing approaches outperformed commercial LLMs'. It does not state that commercial LLMs achieved similar accuracy/recall to *local implementations* (which implies local LLMs). The evidence distinguishes between 'Local API-based LLM implementation' (which had similar performance to commercial) and 'Local machine learning and natural language processing approaches' (which outperformed commercial). The draft conflates these two distinct local approaches.",
+      "suggested_fix": "Clarify that commercial LLMs had similar performance to *local API-based LLM implementations*, while *local machine learning and NLP approaches* outperformed the commercial LLMs."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:LLM versus supervised machine learning",
+      "description": "Unsupported statement: \"In contrast, the SML models demonstrated higher specificity than human reviewers but fell short of human recall, suggesting a trade‑off between false‑positive reduction and missed inclusions [R0042].\" — The evidence states that 'Naïve Bayes performed worse in recall but exceeded human recall on average.' The draft's statement that SML models 'fell short of human recall' contradicts the specific finding for Naïve Bayes, which is one of the four SML models included in the comparison.",
+      "suggested_fix": "Revise the sentence to acknowledge that while most SML models fell behind human recall, Naïve Bayes exceeded human recall on average, or specify that this trade-off applied to the other SML models (logistic regression, random forest, support vector machine) but not necessarily Naïve Bayes."
+    },
+    {
+      "severity": "major",
+      "area": "abstract",
+      "description": "\"Efficiency data indicated substantial time savings, with reported reductions of 63% to 75% in screening duration in two studies and notable speed‑ups in the remaining investigations.\" — The synthesis states that Kwok et al. found a reduction to 37% of human time (a 63% reduction) and Zhan et al. reported completion in one-quarter of human time (a 75% reduction). However, the synthesis also notes that Oami et al. reported a saving of 15.25 minutes per 100 records (from 17.2 to 1.3 minutes), which is an 88% reduction, and Li et al. reported high time efficiency without a specific percentage. The abstract's claim that the reductions were '63% to 75%' in 'two studies' and 'notable speed-ups' in others is an imprecise summary that omits the higher reduction reported by Oami et al. and conflates the specific percentages with general 'speed-ups' without accurately reflecting the range of reported efficiencies in the synthesis.",
+      "suggested_fix": "Revise the efficiency statement to accurately reflect the range of time savings reported in the synthesis, e.g., 'LLMs reduced screening time by 63% to 88% across studies, with consistent reports of substantial workload reduction.'"
+    },
+    {
+      "severity": "major",
+      "area": "discussion",
+      "description": "\"Overall, the moderate certainty evidence supports that LLMs can reliably identify relevant studies if recall is prioritised...\" — The synthesis assigns 'moderate' certainty to the 'Prompt engineering' and 'Efficiency' themes, but 'low' certainty to 'Model performance comparisons' and 'LLM versus supervised machine learning'. The discussion sentence aggregates these findings into a single conclusion supported by 'moderate certainty evidence'. This overstates the certainty of the overall conclusion, particularly regarding the comparative performance and reliability claims which are based on low-certainty evidence.",
+      "suggested_fix": "Qualify the certainty statement to reflect the mixed certainty levels, e.g., 'The evidence, ranging from low to moderate certainty, suggests that LLMs can identify relevant studies with high recall...'"
+    },
+    {
+      "severity": "major",
+      "area": "screening",
+      "description": "R0038 was excluded at title/abstract stage but an independent auditor would include it: Study evaluates GPT-5 for title/abstract screening, reports accuracy metrics, compares with human reviewers, and is in English.",
+      "suggested_fix": "Human reviewer to re-check this record."
+    }
+  ],
+  "checks": {
+    "round": 2,
+    "prisma_flow_consistent": true,
+    "prisma_items_reported": 42,
+    "prisma_items_total": 42,
+    "unknown_citations": [],
+    "included_without_extraction": [],
+    "uncited_sentence_ratio": {
+      "Prompt engineering": 0.17,
+      "Model performance comparisons": 0.33,
+      "Efficiency and workload reduction": 0.29,
+      "LLM versus supervised machine learning": 0.0
+    },
+    "extraction_quotes": {
+      "quotes_checked": 109,
+      "quotes_verified": 98,
+      "verification_rate": 0.8991
+    },
+    "unsupported_statements": 3,
+    "overstatements": 2,
+    "exclusion_audit": {
+      "sampled": 4,
+      "judged": 4,
+      "auditor_would_include": [
+        "R0038"
+      ],
+      "agreement": 0.75
+    },
+    "eligibility_audit": {
+      "checked": 13,
+      "flagged": []
+    }
+  }
+}

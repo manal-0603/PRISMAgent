@@ -303,3 +303,6 @@ def test_scrub_removes_account_identifiers():
 
     message = "Rate limit reached in organization `org_01abcDEF234xyz` for key gsk_abcdefgh12345678 on tokens per day"
     assert scrub(message) == "Rate limit reached in organization `org_<redacted>` for key <redacted-key> on tokens per day"
+    # ordinary words that merely contain "sk_" or "org_" must survive (this once corrupted exported JSON keys)
+    harmless = '{"risk_of_bias_approach": "x", "task_models": {}, "reorg_plan": 1, "ask-me-anything-about-this": 2}'
+    assert scrub(harmless) == harmless
