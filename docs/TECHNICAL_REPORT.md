@@ -56,7 +56,7 @@ Design decisions:
 | Planner | question, protocol template | `protocol_vN.json`, `plan_vN.json` | Template constraints are enforced in code after generation, not left to the model |
 | Search Strategy | protocol | `search_strategy_vN.json` | Tool-calling loop: writes a query, calls `test_query(database, query)` against the live API, reads the hit count, refines. Every tested query is logged. A deterministic query builder is the fallback |
 | Retrieval | queries | `records_raw.jsonl`, `records.jsonl`, `dedup_log.jsonl`, index | No LLM. De-duplication cascade: DOI, PMID, arXiv id, exact title, fuzzy title (≥95%, years ≤1 apart, same numbers) |
-| Screening | protocol, records | `screening_*.jsonl`, `agreement_*.json` | Two reviewers on different models, never shown each other's votes; adjudicator sees both rationales. Title/abstract: only positive evidence of ineligibility excludes |
+| Screening | protocol, records | `screening_*.jsonl`, `agreement_*.json` | Two reviewers on different models, never shown each other's votes; adjudicator sees both rationales. Title/abstract: only positive evidence of ineligibility excludes, and criteria the planner marks "full text only" cannot justify an exclusion |
 | Extraction and Appraisal | included studies, index | `extractions.jsonl`, `risk_of_bias.jsonl` | Every value needs a verbatim quotation; code checks the quotation exists in the source. Overall risk of bias is derived by rule from the domain judgements |
 | Synthesis and Writing | all artifacts | `report_draft.md`, `themes`, `meta_analysis`, `evidence_map.png` | Process facts (methods, counts, tables, references) are rendered by code; the model writes only interpretation, with a citation after every claim |
 | Critic / QA | draft, artifacts | `qa_report_vN.json` | Rule-based checks plus LLM audits on a different model from the writer |
@@ -277,22 +277,56 @@ present in the sample: 3; kept by the pipeline: 1.
 - The dual design does add something: the pipeline is more sensitive than either reviewer alone,
   because disagreements go to an adjudicator that includes more readily.
 
+**Third version: criteria marked "full text only".** The constraint was moved from the wording to
+the structure of the protocol. `Criterion` gained a `full_text_only` flag that the planner sets for
+rules an abstract usually cannot settle; on this topic it marked four criteria (comparator group,
+controlled design, outcomes reported, quantitative data). At title/abstract stage the reviewers
+and the adjudicator see the mark next to each criterion, and `guard_exclusion` in
+`agents/screening.py` converts to "unsure" any exclusion that cites only marked criteria. Tested
+on a third unseen sample (seed 21):
+
+| Screener (v3) | Sensitivity | Specificity | F1 | Kappa vs humans |
+|---|---|---|---|---|
+| Pipeline (A + B + adjudicator) | 0.76 | 0.87 | 0.76 | 0.63 |
+| Reviewer A alone (gpt-oss-20b) | 0.67 | 0.85 | 0.68 | 0.52 |
+| Reviewer B alone (qwen3.8-27b) | 0.52 | 1.00 | 0.69 | 0.59 |
+
+Kappa between the two AI reviewers: 0.45, with 13 conflicts adjudicated. The one finally-included
+study of the sample was kept. Time: 10.3 minutes.
+
+**Interpretation.**
+
+- Sensitivity 16/21 (95% Wilson interval 0.55 to 0.89) against 7/21 for v2 and 3/21 for v1. The
+  samples differ, but the difference from v2 is larger than sampling noise explains (Fisher exact
+  test, p = 0.012).
+- The price is specificity: 34/39 against 39/39. The five false positives are single case reports
+  that the adjudicator kept because nothing in the abstract positively violates a criterion — the
+  intended behaviour of a sensitive first-pass screen. At the dataset's real prevalence a human
+  would still be spared 83% of the records.
+- **The code guard never fired.** No exclusion cited only marked criteria. The gain came from the
+  reviewers reading the marks: "unsure" votes went from rare to 19 (reviewer A) and 10 (reviewer B)
+  out of 60. This is worth stating because the design intent was a guarantee enforced in code, and
+  what was measured is a prompt effect.
+- The guard can be sidestepped. Four of the five remaining misses are retrospective cohorts that
+  both reviewers excluded by citing the marked design criterion together with an unmarked one that
+  does not fit (reviewer B: "not primary research"; reviewer A: "other therapies"). An exclusion
+  citing any unmarked criterion stands, whatever its merit.
+- The dual design keeps paying: the pipeline is more sensitive than either reviewer alone.
+
 **What follows from it.**
 
-1. As it stands, title/abstract screening must not be trusted without a human check of the
-   exclusions on topics where eligibility depends on study design. Checkpoint 2 exists for this.
-2. Proposed structural fix (not implemented, because it could not be tested within the quota):
-   the planner tags each criterion as assessable on an abstract or only on a full text, and the
-   screening code converts any exclusion resting solely on full-text criteria into "unsure".
-3. The evidence is narrow: one review topic, two samples of 60 records, wide confidence
-   intervals. The benchmark command accepts any of the listed datasets and any sample size.
-
-The benchmark took 64 minutes here only because the daily quota was exhausted and each
-adjudication waited for it; the first run of the same size took 7 minutes.
+1. Screening is much better than it was but 0.76 is still short of what a review needs; a human
+   must check the exclusions at checkpoint 2.
+2. Next step: require, for every exclusion, a verbatim sentence of the abstract that proves the
+   violation, and check it in code — the mechanism that already grounds extraction.
+3. The evidence is narrow: one review topic, three samples of 60 records. The benchmark command
+   accepts any of the listed datasets and any sample size.
+4. Method note: every change was tested on a sample not used to design it. The three samples are
+   therefore not paired, and their comparison rests on the tests above.
 
 ### 7.3 Software tests
 
-32 automated tests run without network or API key: 29 on the deterministic components and 3 on
+34 automated tests run without network or API key: 31 on the deterministic components and 3 on
 the real LangGraph workflow with fake agents (routing, three human checkpoints, protocol-revision
 loop, critic loop, resume in a fresh process, reopening a finished run for revision).
 
@@ -300,8 +334,8 @@ loop, critic loop, resume in a fresh process, reopening a finished run for revis
 
 - **Scale under the free tier.** 200,000 tokens per model per day limits a review to a few dozen
   screened records. The code has no such limit; a paid tier or local models remove it.
-- **Screening sensitivity is insufficient** on the benchmark topic (section 7.2): exclusions need a
-  human check, and the criterion-tagging fix described there is the first thing to implement.
+- **Screening sensitivity** reached 0.76 on the benchmark topic after three iterations (section 7.2).
+  Exclusions still need a human check; quoted evidence for every exclusion is the next step.
 - **Single extraction.** Extraction and appraisal are done once; dual extraction with reconciliation
   would mirror the screening design.
 - **Sources.** No subscription databases, no grey literature, no reference-list chasing; open-access

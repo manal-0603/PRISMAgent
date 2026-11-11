@@ -239,7 +239,7 @@ def _exclusion_audit(ctx: RunContext, protocol: Protocol, records: dict[str, Rec
     if not sample:
         checks["exclusion_audit"] = {"sampled": 0}
         return []
-    system = TA_SYSTEM.format(guidance="", protocol=protocol_brief(protocol))
+    system = TA_SYSTEM.format(guidance="", protocol=protocol_brief(protocol, mark_full_text_only=True))
     disagreements: list[tuple[str, str]] = []
     judged = 0
     for start in range(0, len(sample), 5):

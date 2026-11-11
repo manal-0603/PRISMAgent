@@ -306,3 +306,49 @@ def test_scrub_removes_account_identifiers():
     # ordinary words that merely contain "sk_" or "org_" must survive (this once corrupted exported JSON keys)
     harmless = '{"risk_of_bias_approach": "x", "task_models": {}, "reorg_plan": 1, "ask-me-anything-about-this": 2}'
     assert scrub(harmless) == harmless
+
+
+def test_guard_blocks_exclusions_resting_only_on_full_text_criteria():
+    from sysrev.agents.screening import guard_exclusion
+    from sysrev.models import ReviewerVote
+
+    locked = {"I2", "E3"}
+
+    def vote(decision: str, criteria: list[str]) -> ReviewerVote:
+        return ReviewerVote(decision=decision, criteria=criteria, rationale="no comparator mentioned", confidence=0.8)
+
+    blocked, fired = guard_exclusion(vote("exclude", ["E3"]), locked)
+    assert fired and blocked.decision == "unsure" and blocked.criteria == ["E3"]
+    assert blocked.rationale.startswith("[Exclusion not allowed at this stage: E3") and "no comparator mentioned" in blocked.rationale
+    assert guard_exclusion(vote("exclude", ["E3", "I2"]), locked)[1] is True
+    # at least one criterion an abstract can settle: the exclusion stands
+    kept, fired = guard_exclusion(vote("exclude", ["E1", "E3"]), locked)
+    assert not fired and kept.decision == "exclude"
+    # nothing to check against, or not an exclusion: untouched
+    assert guard_exclusion(vote("exclude", []), locked) == (vote("exclude", []), False)
+    assert guard_exclusion(vote("include", ["E3"]), locked)[1] is False
+    assert guard_exclusion(vote("exclude", ["E3"]), set())[1] is False
+
+
+def test_protocol_marks_full_text_only_criteria():
+    from sysrev.agents.planner import _apply_fixed, full_text_only_ids, protocol_brief
+    from sysrev.models import Criterion, Protocol
+
+    protocol = Protocol(
+        title="T: a systematic review", research_question="q", rationale="r", objectives=["o"], framework="PICO",
+        framework_elements={"P": "p"}, study_designs=["cohort"], databases=["pubmed"], outcomes=["x"], data_items=["item"],
+        risk_of_bias_approach="rob", synthesis_plan="narrative",
+        inclusion_criteria=[Criterion(id="a", text="Patients with condition X"),
+                            Criterion(id="b", text="Study includes a control group", full_text_only=True)],
+        exclusion_criteria=[Criterion(id="c", text="Editorials and reviews")],
+    )
+    fixed = _apply_fixed(protocol, {"exclusion_criteria": ["Animal studies"]})
+    assert [(c.id, c.full_text_only) for c in fixed.inclusion_criteria] == [("I1", False), ("I2", True)]
+    assert [(c.id, c.text, c.full_text_only) for c in fixed.exclusion_criteria] == [
+        ("E1", "Editorials and reviews", False), ("E2", "Animal studies", False)]
+    assert full_text_only_ids(fixed) == {"I2"}
+    plain, marked = protocol_brief(fixed), protocol_brief(fixed, mark_full_text_only=True)
+    assert "[full text only]" not in plain and "  I2. Study includes a control group" in plain
+    assert "  I2. [full text only] Study includes a control group" in marked and "  I1. Patients with condition X" in marked
+    # a protocol written before this field existed loads with the safeguard off
+    assert Criterion.model_validate({"id": "I1", "text": "old"}).full_text_only is False

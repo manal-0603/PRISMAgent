@@ -17,7 +17,7 @@ from ..llm import LLMError
 from ..models import Decision, Protocol, Record, ReviewerVote, ScreeningDecision
 from ..rag.index import Chunk, format_passages
 from ..tools.stats import cohen_kappa, kappa_label
-from .planner import ReviewPlan, criteria_by_id, protocol_brief
+from .planner import ReviewPlan, criteria_by_id, full_text_only_ids, protocol_brief
 from .retrieval import relevance_query
 
 AGENT_TA = "screening_title_abstract"
@@ -46,7 +46,11 @@ class Adjudication(BaseModel):
 # v2 (see docs/evaluation): v1 let reviewers exclude a record when the abstract did not *mention* a
 # required feature (e.g. a comparator). Against human screening decisions this cost most of the
 # sensitivity, so the rules below make the convention of title/abstract screening explicit.
-SCREENING_PROMPT_VERSION = "v2"
+# v3: the benchmark showed that v2's wording was not enough — reviewers still excluded records whose
+# abstract did not mention a comparator. The rule is now enforced in code: the planner marks the
+# criteria that only a full text can settle, and `guard_exclusion` turns any title/abstract exclusion
+# resting solely on those criteria into "unsure".
+SCREENING_PROMPT_VERSION = "v3"
 
 TA_SYSTEM = """You are an experienced systematic reviewer screening titles and abstracts. \
 You work independently: another reviewer screens the same records separately.
@@ -61,6 +65,8 @@ the criteria exclude (editorial, review, protocol…). List the decisive criteri
 example it does not mention a comparator, the study design, the outcomes measured or the sample. \
 NEVER exclude for something that is merely not mentioned; such records go to full-text review.
 - "include": the record appears to satisfy every inclusion criterion.
+Criteria tagged [full text only] concern details that abstracts usually omit. They can never be the \
+reason for an exclusion at this stage: if such a criterion is your only doubt, answer "unsure".
 Judge each record on its own text only, not on what you may know about the paper, and independently \
 of the other records in the batch. Return one vote per record, with its exact id.
 {guidance}
@@ -100,6 +106,19 @@ def _record_block(rec: Record, max_abstract: int = 1500) -> str:
         f"### {rec.rid}\nTitle: {rec.title}\nYear: {rec.year or 'n/a'} | Venue: {rec.venue or 'n/a'}{kind}\n"
         f"Abstract: {abstract or 'NOT AVAILABLE'}"
     )
+
+
+def guard_exclusion(vote: ReviewerVote, locked: set[str]) -> tuple[ReviewerVote, bool]:
+    """Title/abstract safeguard: an exclusion that rests only on full-text-only criteria becomes "unsure".
+
+    Returns the (possibly rewritten) vote and whether the guard fired. An exclusion citing at least
+    one criterion that an abstract can settle is left untouched.
+    """
+    if vote.decision != "exclude" or not vote.criteria or not all(c in locked for c in vote.criteria):
+        return vote, False
+    note = f"[Exclusion not allowed at this stage: {', '.join(vote.criteria)} can only be judged on the full text.] "
+    return ReviewerVote(decision="unsure", criteria=vote.criteria, rationale=note + vote.rationale,
+                        confidence=vote.confidence), True
 
 
 def _positive(decision: str) -> bool:
@@ -155,12 +174,15 @@ def _adjudicate(ctx: RunContext, stage: str, protocol: Protocol, body: str, a: R
     rule = (
         "At the title/abstract stage, exclude only if the abstract positively shows that a criterion is "
         "violated. Information that is merely not mentioned (comparator, design, outcomes) is not a "
-        "violation: in that case include, so that the full text is examined."
+        "violation: in that case include, so that the full text is examined. A criterion tagged "
+        "[full text only] can never justify an exclusion at this stage."
         if stage == "title/abstract"
         else "At the full-text stage a definite decision is required. If the text provided cannot settle "
         "the point, include and say so, so that a human can verify."
     )
-    system = ADJUDICATOR_SYSTEM.format(stage=stage, rule=rule, protocol=protocol_brief(protocol))
+    system = ADJUDICATOR_SYSTEM.format(
+        stage=stage, rule=rule, protocol=protocol_brief(protocol, mark_full_text_only=stage == "title/abstract")
+    )
     user = (
         f"{body}\n\nReviewer A: {a.decision} (criteria: {', '.join(a.criteria) or 'none'}) — {a.rationale}\n"
         f"Reviewer B: {b.decision} (criteria: {', '.join(b.criteria) or 'none'}) — {b.rationale}"
@@ -206,8 +228,9 @@ def screen_title_abstract(ctx: RunContext, protocol: Protocol, records: list[Rec
                           plan: ReviewPlan | None = None) -> list[ScreeningDecision]:
     valid_ids = set(criteria_by_id(protocol))
     guidance = f"Coordinator guidance: {plan.guidance_for('title_abstract_screening')}" if plan else ""
-    system = TA_SYSTEM.format(guidance=guidance, protocol=protocol_brief(protocol))
+    system = TA_SYSTEM.format(guidance=guidance, protocol=protocol_brief(protocol, mark_full_text_only=True))
     batch = ctx.options.screen_batch_size
+    locked = full_text_only_ids(protocol)
 
     with ThreadPoolExecutor(max_workers=2) as pool:  # the two reviewers run concurrently and independently
         futures = {
@@ -215,6 +238,14 @@ def screen_title_abstract(ctx: RunContext, protocol: Protocol, records: list[Rec
             for name, task in REVIEWERS.items()
         }
         votes = {name: future.result() for name, future in futures.items()}
+
+    guarded = 0
+    for name in votes:  # code-level safeguard, applied to each reviewer's vote before they are compared
+        for rid, vote in votes[name].items():
+            votes[name][rid], fired = guard_exclusion(vote, locked)
+            if fired:
+                guarded += 1
+                ctx.audit.log(AGENT_TA, "exclusion_guard", rid=rid, reviewer=name, criteria=vote.criteria)
 
     decisions: list[ScreeningDecision] = []
     for rec in records:
@@ -226,6 +257,14 @@ def screen_title_abstract(ctx: RunContext, protocol: Protocol, records: list[Rec
         else:
             verdict = _adjudicate(ctx, "title/abstract", protocol, _record_block(rec), a, b, valid_ids,
                                   f"{AGENT_TA}:adjudicator")
+            if verdict.decision == "exclude" and verdict.criteria and all(c in locked for c in verdict.criteria):
+                guarded += 1
+                ctx.audit.log(AGENT_TA, "exclusion_guard", rid=rec.rid, reviewer="adjudicator", criteria=verdict.criteria)
+                verdict.decision = "include"
+                verdict.rationale = (
+                    f"[Exclusion not allowed at this stage: {', '.join(verdict.criteria)} can only be judged on the "
+                    f"full text.] {verdict.rationale}"
+                )
             final, resolved, rationale, criteria = verdict.decision, "adjudicator", verdict.rationale, verdict.criteria
         decisions.append(
             ScreeningDecision(
@@ -237,7 +276,7 @@ def screen_title_abstract(ctx: RunContext, protocol: Protocol, records: list[Rec
         ctx.audit.log(AGENT_TA, "decision", rid=rec.rid, a=a.decision, b=b.decision, final=final, resolved_by=resolved)
 
     ctx.store.save_lines("screening_title_abstract", decisions, agent=AGENT_TA)
-    ctx.store.save("agreement_title_abstract", _agreement(decisions), agent=AGENT_TA)
+    ctx.store.save("agreement_title_abstract", {**_agreement(decisions), "exclusions_blocked_by_guard": guarded}, agent=AGENT_TA)
     return decisions
 
 

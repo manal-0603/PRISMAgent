@@ -50,6 +50,15 @@ class Record(BaseModel):
 class Criterion(BaseModel):
     id: str = Field(description="Short id such as I1, I2 (inclusion) or E1, E2 (exclusion)")
     text: str = Field(description="One precise, checkable eligibility rule")
+    full_text_only: bool = Field(
+        default=False,
+        description=(
+            "true when abstracts usually do not say whether the rule is met, so it can only be judged on the "
+            "full text: presence of a comparator or control group, details of the study design, randomisation, "
+            "which outcomes were measured, follow-up, sample size, full-text availability. false for rules an "
+            "abstract normally settles: topic, population, condition, intervention or exposure, publication type, language"
+        ),
+    )
 
 
 class Protocol(BaseModel):

@@ -299,6 +299,8 @@ What to know when reading this demonstration:
   the revision was skipped. It was applied later with `sysrev revise <run_id>`.
 - **Extraction ran on the smaller model** (`ROLE_EXTRACTOR=fast`) for the same quota reason; the
   default is the larger one.
+- **It predates the last screening change.** The demonstration was screened with version v2; the
+  criteria marking of v3 (section 6) was added afterwards.
 - **No human verified anything** (autonomous mode). The manuscript is a draft for expert review.
 
 ## 6. Evaluation
@@ -328,55 +330,50 @@ same agents as a real review. The agents receive only the title and abstract of 
 review; they never see a label.
 
 Dataset: Appenzeller-Herzog 2020 (therapies for Wilson disease), 2,358 records with an abstract,
-161 kept by the humans at title/abstract stage. Stratified sample of 60 records, 21 of them
-human-kept ([full report](docs/evaluation/benchmark_screening_prompt_v1_seed13_n60.md)).
+161 kept by the humans at title/abstract stage. Each test screens a stratified sample of 60
+records (21 human-kept, 39 human-excluded). The benchmark drove two changes to the screening, and
+each change was tested on a sample the agents had not seen before.
 
-| Screener (prompt v1) | Sensitivity | Specificity | Kappa vs humans |
-|---|---|---|---|
-| Pipeline: reviewer A + reviewer B + adjudicator | 0.14 (3/21) | 1.00 (39/39) | 0.18 |
-| Reviewer A alone (gpt-oss-20b) | 0.19 | 1.00 | 0.23 |
-| Reviewer B alone (qwen3.8-27b) | 0.19 | 1.00 | 0.23 |
+| Screening version | Sample | Sensitivity | Specificity | Kappa vs humans | Finally-included studies kept |
+|---|---|---|---|---|---|
+| v1: first prompt | seed 13 | 0.14 (3/21) | 1.00 (39/39) | 0.18 | 3 of 3 |
+| v2: "missing information is not a reason to exclude" | seed 7 | 0.33 (7/21) | 1.00 (39/39) | 0.39 | 1 of 3 |
+| v3: criteria marked "full text only" | seed 21 | **0.76 (16/21)** | 0.87 (34/39) | 0.63 | 1 of 1 |
 
-- The two AI reviewers agreed with each other (kappa 0.73) and never kept a record the humans had
-  excluded.
-- All 3 studies of the sample that the published review finally included were kept by the pipeline.
-- But the pipeline excluded 18 of the 21 records the humans had carried to full-text review. In 16
-  of these 18 the stated reason is the same: a cohort description or case series whose abstract
+Full reports: [v1](docs/evaluation/benchmark_screening_prompt_v1_seed13_n60.md),
+[v2](docs/evaluation/benchmark_screening_prompt_v2_seed7_n60.md),
+[v3](docs/evaluation/benchmark_screening_v3_seed21_n60.md).
+
+- **v1** never kept an irrelevant record but excluded 18 of the 21 records the humans had carried
+  to full text. In 16 of those 18 the reason was the same: a cohort or case series whose abstract
   "does not mention a comparator". Human screeners keep such records and check the full text.
+- **v2** added that rule to the prompt in words. It was not enough: the gain over v1 is within
+  sampling noise (p = 0.28) and 2 of the 3 finally-included studies of the sample were excluded,
+  for the same reason.
+- **v3** changed the structure instead of the wording. The planner marks each criterion that only
+  a full text can settle (here: comparator group, controlled design, outcomes reported); the
+  reviewers see the mark, and the code refuses any exclusion that rests only on marked criteria.
+  Sensitivity rose to 0.76 (95% interval 0.55 to 0.89), a difference from v2 that sampling noise
+  does not explain (p = 0.012).
 
-This result changed the system. The title/abstract prompt (v2, `agents/screening.py`) now states
-that only positive evidence of ineligibility excludes a record and that information missing from an
-abstract sends the record to full-text review. Because the first sample had served to diagnose the
-problem, v2 was tested on a second, independent sample of 60 records (seed 7, again 21 human-kept;
-[full report](docs/evaluation/benchmark_screening_prompt_v2_seed7_n60.md)).
+What v3 costs and what it does not solve:
 
-| Screener (prompt v2) | Sensitivity | Specificity | Kappa vs humans |
-|---|---|---|---|
-| Pipeline: reviewer A + reviewer B + adjudicator | 0.33 (7/21) | 1.00 (39/39) | 0.39 |
-| Reviewer A alone (gpt-oss-20b) | 0.24 | 1.00 | 0.29 |
-| Reviewer B alone (qwen3.8-27b) | 0.29 | 0.97 | 0.31 |
+- Specificity fell to 0.87: 5 of 39 irrelevant records (single case reports) now go on to
+  full-text review. Re-weighted to the real prevalence of the dataset, a human would still be
+  spared 83% of the records.
+- 5 of 21 relevant records are still excluded. Four are retrospective cohorts that both reviewers
+  excluded by citing the marked design criterion *together with* an ill-fitting unmarked one, so
+  the code guard did not apply. In fact the guard never fired in this test: the improvement came
+  from the reviewers reading the marks. A guard that demands a quoted sentence proving the
+  violation would be the next step.
+- A sensitivity of 0.76 is still below what a review needs from screening. Exclusions must be
+  checked by a human at checkpoint 2, which shows every decision and lets the reviewer override it.
+- One topic and three samples of 60 records do not generalise. Run the benchmark on your own
+  topic before relying on the screening:
 
-**The fix was not enough.**
-
-- Sensitivity rose from 0.14 to 0.33, but the two figures come from different samples of 21 and
-  the difference is within sampling noise (Fisher exact test, p = 0.28).
-- More importantly, of the 3 studies in this sample that the published review finally included,
-  the pipeline kept only 1. In the first sample it had kept 3 of 3.
-- The cause is unchanged: in 12 of the 14 disagreements the reviewers again excluded a record
-  because its abstract does not describe a comparator group, despite the explicit instruction.
-- Adjudication helps: the pipeline's sensitivity is higher than either reviewer's alone, and the
-  two reviewers now disagree more often (kappa 0.45, 6 conflicts), which is what sends borderline
-  records to the adjudicator.
-
-What this means in practice: on this review topic, title/abstract screening by these models is
-precise (it almost never keeps an irrelevant record) but not sensitive enough to be trusted
-alone. Excluded records must be checked by a human at checkpoint 2, which is why that checkpoint
-shows every decision and lets the reviewer override it. One topic and two samples of 60 records do
-not generalise; run the benchmark on your own topic before relying on the screening.
-
-The next thing to try is structural rather than another prompt: have the planner mark each
-criterion as checkable on an abstract or only on a full text, and forbid, in code, any
-title/abstract exclusion that rests only on full-text criteria.
+```bash
+sysrev benchmark --dataset Appenzeller-Herzog_2020 --n 60 --seed 21
+```
 
 ## 7. Tests
 
@@ -384,11 +381,12 @@ title/abstract exclusion that rests only on full-text criteria.
 pytest
 ```
 
-32 tests, no network and no API key needed:
+34 tests, no network and no API key needed:
 
 - `tests/test_tools.py` — de-duplication, Cohen's kappa, classification metrics, random-effects
   pooling (checked against hand calculations), PRISMA flow arithmetic and checklist validator,
-  citation numbering, quotation verification, risk-of-bias rule, rate limiter, exports.
+  citation numbering, quotation verification, risk-of-bias rule, the screening guard on full-text-only
+  criteria, rate limiter, secret scrubbing, exports.
 - `tests/test_graph.py` — the real LangGraph workflow with the LLM agents replaced by fakes:
   routing, the three human checkpoints, the protocol-revision loop, the critic → writer loop,
   checkpointing and resumption in a fresh process.
@@ -442,18 +440,19 @@ docs/                        technical report, evaluation results, video script
    a test where possible: PubMed identifiers taken from reference lists, OpenAlex full-text search
    far too broad, unreliable "review" labels misleading the screeners, LaTeX residue in full texts,
    author names in three different formats, citations written with non-standard brackets.
-10. **Evaluation** — screening benchmark against human decisions, which showed that the first
-    screening prompt was too strict; the prompt was revised and re-tested on an independent sample,
-    where it improved sensitivity only slightly (section 6).
+10. **Evaluation** — screening benchmark against human decisions. It showed that the first prompt
+    was too strict (sensitivity 0.14); rewording the prompt barely helped (0.33); marking the
+    criteria that only a full text can settle raised it to 0.76. Each version was tested on a
+    fresh sample (section 6).
 11. **Demonstration** — full autonomous review on a real question (section 5).
 
 ## 10. Limitations
 
 - Language models screen, extract and appraise. Dual screening with different models reduces but
   does not remove shared errors; a human should verify decisions before the review is used.
-- Title/abstract screening is precise but not sensitive enough: on the benchmark it excluded most
-  of the records that human reviewers carried to full text, including, in one sample, 2 of the 3
-  studies finally included (section 6). Exclusions need human checking.
+- Title/abstract screening is not sensitive enough to run unchecked: in its latest version it
+  kept 16 of the 21 records that human reviewers carried to full text on the benchmark (section 6).
+  Exclusions need human checking.
 - Only databases with free APIs are searched (no Embase, Scopus, Web of Science, trial registers,
   grey literature), and only open-access full texts are read; other reports are assessed on their
   abstract and flagged.

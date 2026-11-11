@@ -423,8 +423,12 @@ with tabs[1]:
                      f"{', '.join(DISPLAY_NAME.get(d, d) for d in protocol['databases'])}"))
         st.write("")
         c1, c2 = st.columns(2, gap="medium")
-        inc = [ui.row(f'<div class="crit-id">{ui.e(c["id"])}</div>', ui.e(c["text"])) for c in protocol["inclusion_criteria"]]
-        exc = [ui.row(f'<div class="crit-id">{ui.e(c["id"])}</div>', ui.e(c["text"])) for c in protocol["exclusion_criteria"]]
+        def criterion(c: dict) -> str:
+            badge = ui.tag("full text only") if c.get("full_text_only") else ""
+            return ui.row(f'<div class="crit-id">{ui.e(c["id"])}</div>', ui.e(c["text"]), badge)
+
+        inc = [criterion(c) for c in protocol["inclusion_criteria"]]
+        exc = [criterion(c) for c in protocol["exclusion_criteria"]]
         with c1:
             html(ui.card("Inclusion criteria", ui.rows(inc), "A record must meet all of them"))
         with c2:
