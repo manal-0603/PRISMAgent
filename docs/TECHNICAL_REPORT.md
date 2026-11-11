@@ -158,23 +158,31 @@ database, 24 records screened, one revision round allowed. All artifacts are in
 | Full-text screening | 10 full texts retrieved, 10 abstract-only; 13 included, 7 excluded; kappa 0.66; 3 adjudications | 6.1 min |
 | Extraction and appraisal | 13 studies; 98/109 quotations verified; 12 "some concerns", 1 "unclear" | 15.2 min |
 | Synthesis and writing | 4 themes; 8,700 words; 17 references; 42/42 PRISMA items | 6.1 min |
-| Critic | 8 issues raised | 3.1 min |
+| Critic, round 1 | 8 issues raised | 3.1 min |
+| Revision and critic, round 2 | flagged sections rewritten; 7 issues raised | run later, see below |
 
-Model calls: 148 (44 answered from the cache). Tokens sent: gpt-oss-120b 61 k, gpt-oss-20b 123 k,
-qwen3.8-27b 64 k. Nearly all of the 34.9 minutes is waiting for the per-minute rate limit: the
-models answered in 103 seconds in total.
+First complete pass: 148 model calls (44 answered from the cache) in 34.9 minutes. With the later
+revision round: 169 calls; tokens sent gpt-oss-120b 69 k, gpt-oss-20b 123 k, qwen3.8-27b 79 k.
+Nearly all the elapsed time is waiting for rate limits: the models answered in 112 seconds in total.
 
-**What the critic found.** Three statements not supported by the evidence (for example, the draft
-said specificity was "maintained" where the study reports a drop from 0.99 to 0.98), two
+**What the critic found (round 1).** Three statements not supported by the evidence (for example,
+the draft said specificity was "maintained" where the study reports a drop from 0.99 to 0.98), two
 overstatements in the abstract, two narratives with too few citations, and one excluded record
-that an independent auditor would include. These are real defects of the first draft and show the
-critic doing its job.
+that an independent auditor would include. These are real defects of the first draft.
 
-**What did not happen.** The revision round. The writing model's daily quota was exhausted when
-the critic returned its issues; the pipeline kept the reviewed draft, logged `revision_skipped`,
-and wrote the fact into the manuscript's Methods and Limitations. `sysrev revise <run_id>` applies
-the revision when quota is available. The critic → writer loop itself is exercised by the workflow
-tests and worked in the earlier trial run.
+**The revision, in two sittings.** The writing model's daily quota was exhausted when the critic
+returned its issues. The pipeline kept the reviewed draft, logged `revision_skipped`, wrote the
+fact into the manuscript and finished. Half an hour later `sysrev revise <run_id>` reopened the
+run: the writer rewrote the three flagged narratives, the discussion and the abstract, and the
+critic reviewed the result.
+
+**What the critic found (round 2).** The round-1 defects were gone, but the rewritten text
+contained new ones: three other unsupported statements, one overstatement in the abstract and one
+in the discussion, and a study never cited in its theme. With one revision round allowed for this
+run, the loop stopped there: 6 issues for the writer (7 with the screening one) remain open and
+are listed in `qa_report.md`; the manuscript's Methods state it. The lesson is that the critic →
+writer loop detects errors reliably but one round does not guarantee convergence: the default is
+two rounds, and the last word should be a human's.
 
 **Deviations from the default configuration**, both forced by the quota: extraction ran on
 gpt-oss-20b instead of gpt-oss-120b, and only 24 records were screened.
@@ -195,11 +203,11 @@ gpt-oss-20b instead of gpt-oss-120b, and only 24 records were screened.
 | Accuracy | Extraction quotations found in the source | 98/109 (90%) |
 | | Citations to non-existent records | 0 |
 | | Included studies flagged by the eligibility audit | 0/13 |
-| | Unsupported statements / overstatements found by the critic | 3 / 2 (first draft, uncorrected) |
+| | Unsupported statements / overstatements found by the critic | 3 / 2 in the first draft; 3 / 2 (different ones) after one revision |
 | Consistency | Title/abstract: kappa, raw agreement, conflicts | 0.83, 96%, 1/24 |
 | | Full text: kappa, raw agreement, conflicts | 0.66, 85%, 3/20 |
 | | Independent re-screening of excluded records | agreed on 3 of 4 |
-| Time | Machine time | 0.58 h |
+| Time | Machine time | 0.58 h for the first complete pass (1.17 h with the later revision, mostly quota waits) |
 | | Estimated manual effort, same workload | 67.7 person-hours |
 | | Per-item tasks only (screening, extraction, appraisal) | 0.41 h vs 22.7 person-hours |
 

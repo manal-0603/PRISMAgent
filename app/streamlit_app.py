@@ -285,8 +285,8 @@ elif pending and pending["checkpoint"] == "screening":
 elif pending and pending["checkpoint"] == "report":
     pending_qa = pending["qa_report"]
     html('<div class="callout"><h3>Checkpoint 3 · Approve the manuscript</h3>'
-         f"<p>The Critic agent's verdict is “{ui.e(pending_qa['verdict'])}” with {len(pending_qa['issues'])} issue(s); see the "
-         "Quality tab. Approve to export, or ask the Writing agent for a revision.</p></div>")
+         f"<p>The Critic agent leaves {len(pending_qa['issues'])} issue(s) open; see the Quality tab. "
+         "Approve to export, or ask the Writing agent for a revision.</p></div>")
     feedback = st.text_area("Revision request (optional)", height=90)
     b1, b2, _ = st.columns([1, 1, 3])
     if b1.button("Approve and export", type="primary", width="stretch"):
@@ -376,10 +376,12 @@ with tabs[0]:
         with c3:
             if qa:
                 n_issues = len(qa["issues"])
+                rounds = qa["checks"].get("round", 1)
                 unsupported = qa["checks"].get("unsupported_statements", 0)
                 body = (
-                    f'<div class="figure">{n_issues} <small>issue{"s" if n_issues != 1 else ""} raised</small></div>'
-                    f'<div style="height:10px"></div><div class="badges">{ui.pill("Verdict: " + qa["verdict"], "warn" if n_issues else "good")}'
+                    f'<div class="figure">{n_issues} <small>issue{"s" if n_issues != 1 else ""} after {rounds} round{"s" if rounds != 1 else ""}</small></div>'
+                    f'<div style="height:10px"></div><div class="badges">'
+                    f'{ui.pill(f"{n_issues} still open" if n_issues else "No open issue", "warn" if n_issues else "good")}'
                     f'{ui.tag(f"{unsupported} unsupported statements")}{ui.tag("round " + str(qa["checks"].get("round", 1)))}</div>'
                 )
             else:
@@ -569,7 +571,8 @@ with tabs[6]:
         quotes = checks.get("extraction_quotes") or {}
         audit_x = checks.get("exclusion_audit") or {}
         html(ui.tiles([
-            {"label": "Verdict", "value": qa["verdict"].capitalize(), "note": f"round {checks.get('round', 1)}", "lead": True},
+            {"label": "Open issues", "value": len(qa["issues"]), "lead": True,
+             "note": f"after {checks.get('round', 1)} critic round{'s' if checks.get('round', 1) != 1 else ''}"},
             {"label": "PRISMA items", "value": f"{checks.get('prisma_items_reported', '—')}/{checks.get('prisma_items_total', '—')}"},
             {"label": "Unsupported claims", "value": checks.get("unsupported_statements", "—"), "note": "not backed by the evidence"},
             {"label": "Quotations verified",
@@ -617,9 +620,9 @@ with tabs[8]:
         t = evaluation["time"]
         rate = evaluation["accuracy"].get("extraction_quote_verification_rate")
         html(ui.tiles([
-            {"label": "Machine time", "value": f"{t['pipeline_hours']:.2f}", "unit": "h", "lead": True},
-            {"label": "Estimated manual effort", "value": f"{t['manual_person_hours_estimate']:.0f}", "unit": "person-hours",
-             "note": "assumptions in config/manual_effort.yaml"},
+            {"label": "Machine time", "value": f"{t['pipeline_hours']:.2f}", "unit": "h", "lead": True, "note": "incl. rate-limit waits"},
+            {"label": "Manual effort", "value": f"{t['manual_person_hours_estimate']:.0f}", "unit": "h",
+             "note": "person-hours, estimated"},
             {"label": "PRISMA items", "value": evaluation["completeness"]["prisma_items_reported"]},
             {"label": "Quotations verified", "value": f"{rate:.0%}" if rate is not None else "—"},
             {"label": "Agreement, title/abstract", "value": kappa({"cohen_kappa": evaluation["consistency"]["title_abstract_cohen_kappa"]}), "unit": "κ"},
@@ -627,7 +630,7 @@ with tabs[8]:
         ]))
 
         def listing(section: dict) -> str:
-            return ui.rows([ui.row("", f'<span class="muted">{ui.e(k.replace("_", " ").capitalize())}</span>', f"<b>{ui.e(v)}</b>")
+            return ui.rows([ui.row("", f'<span class="muted">{ui.e(k.replace("_", " ").capitalize().replace("Prisma", "PRISMA").replace("cohen", "Cohen"))}</span>', f"<b>{ui.e(v)}</b>")
                             for k, v in section.items() if k != "note"])
 
         c1, c2 = st.columns(2, gap="medium")
