@@ -346,15 +346,37 @@ human-kept ([full report](docs/evaluation/benchmark_screening_prompt_v1_seed13_n
 
 This result changed the system. The title/abstract prompt (v2, `agents/screening.py`) now states
 that only positive evidence of ineligibility excludes a record and that information missing from an
-abstract sends the record to full-text review. In the demonstration, run with v2, the reviewers
-kept 20 of 24 records at title/abstract stage and the decision was made on the full text.
+abstract sends the record to full-text review. Because the first sample had served to diagnose the
+problem, v2 was tested on a second, independent sample of 60 records (seed 7, again 21 human-kept;
+[full report](docs/evaluation/benchmark_screening_prompt_v2_seed7_n60.md)).
 
-**Prompt v2 has not yet been measured on labelled data**: the daily quota was exhausted. The
-sample above served to diagnose the problem, so v2 must be tested on a different sample:
+| Screener (prompt v2) | Sensitivity | Specificity | Kappa vs humans |
+|---|---|---|---|
+| Pipeline: reviewer A + reviewer B + adjudicator | 0.33 (7/21) | 1.00 (39/39) | 0.39 |
+| Reviewer A alone (gpt-oss-20b) | 0.24 | 1.00 | 0.29 |
+| Reviewer B alone (qwen3.8-27b) | 0.29 | 0.97 | 0.31 |
 
-```bash
-sysrev benchmark --dataset Appenzeller-Herzog_2020 --n 60 --seed 7
-```
+**The fix was not enough.**
+
+- Sensitivity rose from 0.14 to 0.33, but the two figures come from different samples of 21 and
+  the difference is within sampling noise (Fisher exact test, p = 0.28).
+- More importantly, of the 3 studies in this sample that the published review finally included,
+  the pipeline kept only 1. In the first sample it had kept 3 of 3.
+- The cause is unchanged: in 12 of the 14 disagreements the reviewers again excluded a record
+  because its abstract does not describe a comparator group, despite the explicit instruction.
+- Adjudication helps: the pipeline's sensitivity is higher than either reviewer's alone, and the
+  two reviewers now disagree more often (kappa 0.45, 6 conflicts), which is what sends borderline
+  records to the adjudicator.
+
+What this means in practice: on this review topic, title/abstract screening by these models is
+precise (it almost never keeps an irrelevant record) but not sensitive enough to be trusted
+alone. Excluded records must be checked by a human at checkpoint 2, which is why that checkpoint
+shows every decision and lets the reviewer override it. One topic and two samples of 60 records do
+not generalise; run the benchmark on your own topic before relying on the screening.
+
+The next thing to try is structural rather than another prompt: have the planner mark each
+criterion as checkable on an abstract or only on a full text, and forbid, in code, any
+title/abstract exclusion that rests only on full-text criteria.
 
 ## 7. Tests
 
@@ -421,13 +443,17 @@ docs/                        technical report, evaluation results, video script
    far too broad, unreliable "review" labels misleading the screeners, LaTeX residue in full texts,
    author names in three different formats, citations written with non-standard brackets.
 10. **Evaluation** — screening benchmark against human decisions, which showed that the first
-    screening prompt was too strict; the prompt was revised (section 6).
+    screening prompt was too strict; the prompt was revised and re-tested on an independent sample,
+    where it improved sensitivity only slightly (section 6).
 11. **Demonstration** — full autonomous review on a real question (section 5).
 
 ## 10. Limitations
 
 - Language models screen, extract and appraise. Dual screening with different models reduces but
   does not remove shared errors; a human should verify decisions before the review is used.
+- Title/abstract screening is precise but not sensitive enough: on the benchmark it excluded most
+  of the records that human reviewers carried to full text, including, in one sample, 2 of the 3
+  studies finally included (section 6). Exclusions need human checking.
 - Only databases with free APIs are searched (no Embase, Scopus, Web of Science, trial registers,
   grey literature), and only open-access full texts are read; other reports are assessed on their
   abstract and flagged.
