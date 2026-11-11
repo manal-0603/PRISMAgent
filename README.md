@@ -273,8 +273,10 @@ ROLE_EXTRACTOR=fast sysrev run "How accurate are large language models at title 
 | Full-text screening | 10 open-access full texts retrieved and indexed, 10 reports assessed on the abstract; 13 included, 7 excluded with reasons; kappa 0.66; 3 conflicts adjudicated |
 | Extraction and appraisal | 13 studies; 98 of 109 supporting quotations found in the source (90%); tools chosen: QUADAS-2 (8), PROBAST (2), ROBINS-I (2), JBI (1); 12 studies "some concerns", 1 "unclear" |
 | Synthesis | 4 themes, certainty rating per theme, 8,700-word manuscript, 17 references, 5 tables, PRISMA diagram and evidence map; 42 of 42 PRISMA items reported |
-| Critic | 8 issues: 3 unsupported statements, 2 overstatements in the abstract, 2 narratives with too few citations, 1 excluded record an independent auditor would include |
-| Cost | 34.9 minutes, 148 model calls, 228 audit events |
+| Critic, round 1 | 8 issues: 3 unsupported statements, 2 overstatements in the abstract, 2 narratives with too few citations, 1 excluded record an independent auditor would include |
+| Revision | the Writing agent rewrote the flagged narratives, the discussion and the abstract |
+| Critic, round 2 | 7 issues: 3 unsupported statements in the rewritten narratives, 1 overstatement in the abstract, 1 in the discussion, 1 study never cited in its theme, and the same excluded record |
+| Cost | 34.9 minutes for the first complete pass; 169 model calls and 263 audit events including the revision |
 
 Outputs in [`examples/demo_run/`](examples/demo_run/): [`report.md`](examples/demo_run/report.md),
 [`report.docx`](examples/demo_run/report.docx), [`prisma_flow.png`](examples/demo_run/prisma_flow.png),
@@ -287,11 +289,14 @@ What to know when reading this demonstration:
 
 - **It is small.** The free daily quota was shared with development runs, so only 24 records were
   screened. The numbers describe that sample of the literature, not the whole field.
-- **The critic's issues are not yet corrected.** The daily quota of the writing model ran out just
-  before the revision round. The pipeline finished with the first draft, recorded that the revision
-  was skipped, and says so in the manuscript (Methods 2.9 and Limitations 4.3). To apply the
-  revision once quota is available: `sysrev revise <run_id>`, then
-  `sysrev export <run_id> examples/demo_run`.
+- **The revision did not converge.** The writer corrected what the critic had flagged, but the
+  critic then found new unsupported statements in the rewritten text. This run allowed one revision
+  round (`--qa-rounds 1`), so 6 issues for the writer remain open; they are listed in
+  [`qa_report.md`](examples/demo_run/qa_report.md) and the manuscript says so in its Methods. The
+  affected paragraphs need another round or a human edit.
+- **The revision was applied in a second sitting.** The daily quota of the writing model ran out
+  just before the revision round: the pipeline finished with the reviewed draft and recorded that
+  the revision was skipped. It was applied later with `sysrev revise <run_id>`.
 - **Extraction ran on the smaller model** (`ROLE_EXTRACTOR=fast`) for the same quota reason; the
   default is the larger one.
 - **No human verified anything** (autonomous mode). The manuscript is a draft for expert review.
@@ -305,9 +310,9 @@ are computed by `sysrev evaluate` from the run artifacts. For the demonstration 
 | Measure | Result |
 |---|---|
 | **Completeness** | 42/42 PRISMA 2020 items reported; PRISMA flow arithmetic consistent; 13/13 included studies extracted and appraised; 61 of 89 data items reported by the studies; 8 of 13 studies read from full text |
-| **Accuracy and grounding** | 98/109 extraction quotations located in the source text (90%); 0 citations to non-existent records; 0 of 13 included studies flagged by the eligibility audit; 3 unsupported statements and 2 overstatements detected by the critic in the first draft (not yet corrected, see section 5) |
+| **Accuracy and grounding** | 98/109 extraction quotations located in the source text (90%); 0 citations to non-existent records; 0 of 13 included studies flagged by the eligibility audit; the critic found 3 unsupported statements and 2 overstatements in the first draft, and again 3 and 2 (different ones) after one revision round (see section 5) |
 | **Inter-agent consistency** | title/abstract: kappa 0.83, raw agreement 96%, 1 conflict in 24; full text: kappa 0.66, raw agreement 85%, 3 conflicts in 20; independent re-screening of the 4 excluded records agreed on 3 |
-| **Time** | 0.58 hours of machine time, against an estimated 67.7 person-hours for a manual review of the same workload (24 records, 20 full texts, 13 studies) |
+| **Time** | 0.58 hours of machine time for the first complete pass (1.17 hours with the later revision round, most of it spent waiting for the daily quota), against an estimated 67.7 person-hours for a manual review of the same workload (24 records, 20 full texts, 13 studies) |
 
 The manual figure is an estimate, not a measurement: it applies per-task assumptions that are
 written down in [`config/manual_effort.yaml`](config/manual_effort.yaml) and can be changed.

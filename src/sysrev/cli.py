@@ -153,7 +153,7 @@ def _print_result(run_id: str) -> None:
         f"full-text assessed: {flow['reports_assessed']}   included: {flow['studies_included']}\n"
         f"Kappa title/abstract: {result['agreement_title_abstract']['cohen_kappa']}   "
         f"PRISMA items reported: {result['prisma_items_reported']}/{result['prisma_items_total']}   "
-        f"QA verdict: {result['qa_verdict']}\n"
+        f"Critic: {len(ctx.store.load('qa_report')['issues'])} issue(s) open after {result['qa'].get('round', 1)} round(s)\n"
         f"Pipeline time: {sum(result['timings_seconds'].values()) / 60:.1f} min\n\n"
         f"Report:  {ctx.run_dir / 'report.md'}\n         {ctx.run_dir / 'report.docx'}\n"
         f"Audit:   {ctx.run_dir / 'audit.jsonl'}",
