@@ -1,4 +1,4 @@
-# sysrev-agents — an agentic AI pipeline for systematic reviews
+# PRISMAgent — an agentic AI pipeline for systematic reviews
 
 A multi-agent system that takes a research question and carries out a complete systematic
 literature review following PRISMA 2020: protocol, search strategy, multi-database retrieval,
@@ -96,8 +96,8 @@ replays the same answers at no cost.
 Requirements: Python 3.11–3.13 and about 1.5 GB of disk (dependencies and two small local models).
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/manal-0603/PRISMAgent.git
+cd PRISMAgent
 
 # with uv (recommended)
 uv venv --python 3.12
@@ -160,6 +160,8 @@ an unattended run wait for the quota instead of stopping. On a paid plan, raise
 ## 4. Usage
 
 ### Command line
+
+The command-line tool is called `sysrev`.
 
 ```bash
 # interactive review: stops at three checkpoints for your approval

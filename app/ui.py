@@ -212,7 +212,7 @@ def tag(label: str) -> str:
 def brand() -> str:
     return (
         f'<div class="brand"><div class="brand-mark">{ICON["logo"]}</div><div>'
-        '<div class="brand-name">SysRev Agents</div><div class="brand-sub">PRISMA 2020 · multi-agent</div></div></div>'
+        '<div class="brand-name">PRISMAgent</div><div class="brand-sub">PRISMA 2020 · multi-agent</div></div></div>'
     )
 
 
