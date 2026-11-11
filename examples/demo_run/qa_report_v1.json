@@ -1,0 +1,86 @@
+{
+  "verdict": "revise",
+  "issues": [
+    {
+      "severity": "major",
+      "area": "synthesis:Model performance comparisons",
+      "description": "36% of the sentences in this narrative carry no citation.",
+      "suggested_fix": "End every sentence reporting a finding with the ids of the studies it comes from."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:LLM versus supervised machine learning",
+      "description": "50% of the sentences in this narrative carry no citation.",
+      "suggested_fix": "End every sentence reporting a finding with the ids of the studies it comes from."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:Prompt engineering",
+      "description": "Unsupported statement: \"Oami et al. observed a rise in sensitivity from 0.75 to 0.91 after post‑hoc prompt modifications while maintaining high specificity (0.98) for GPT‑4 Turbo, indicating that prompt refinement can boost recall without sacrificing precision [R0028].\" — The evidence states that specificity decreased from 0.99 to 0.98 after the prompt modifications. The draft claims specificity was 'maintained' and that precision was not sacrificed, which contradicts the reported drop in specificity.",
+      "suggested_fix": "Change the description to note that specificity decreased slightly from 0.99 to 0.98, or remove the claim that precision was not sacrificed."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:LLM versus supervised machine learning",
+      "description": "Unsupported statement: \"The LLM achieved a recall of 0.86, which was comparable to or higher than the recall reported for human reviewers\" — The evidence states that the LLM achieved recall values 'close to or above' human reviewers, but does not provide a specific aggregate recall value of 0.86 for the LLM. The value 0.86 appears in the 'Effects' section of the evidence card labeled as 'Recall: accuracy = 0.86', which is ambiguous and likely refers to a different metric or a specific dataset not explicitly linked to the LLM's overall performance in the text. Furthermore, the text says SML models 'exceeded human specificity while falling behind human recall', but the draft claims the LLM's recall was 'comparable to or higher', which is supported, but the specific number 0.86 is not explicitly attributed to the LLM's overall recall in the supporting passages.",
+      "suggested_fix": "Remove the specific number 0.86 or verify if it is the correct aggregate recall for the LLM. The text supports that the LLM's recall was close to or above human reviewers, but the specific value 0.86 is not clearly supported as the LLM's overall recall in the provided passages."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:LLM versus supervised machine learning",
+      "description": "Unsupported statement: \"Specificity for the LLM was 0.79, falling between the higher specificity of the SML models and the lower specificity of human screening.\" — The evidence states that SML models 'exceeded human specificity'. It does not state that the LLM's specificity (0.79) fell *between* the SML models and human reviewers. The evidence only says SML exceeded human specificity. It does not compare the LLM's specificity to the SML models' specificity or place it in a specific order relative to both. The claim that it falls 'between' is an unsupported inference.",
+      "suggested_fix": "Remove the claim that the LLM's specificity fell between the SML models and human reviewers. State only that the LLM's specificity was 0.79 and that SML models exceeded human specificity, without ranking the LLM's specificity relative to the SML models unless explicitly stated."
+    },
+    {
+      "severity": "major",
+      "area": "abstract",
+      "description": "\"Five studies demonstrated workload reductions of 60–75 %\" — The thematic synthesis states that Kwok et al. found LLMs cut screening time to 37% of human time (a 63% reduction) and Zhan et al. reported completion in one-quarter of human time (a 75% reduction). However, the synthesis does not provide specific percentage reductions for the other three studies (Oami, Li, Qiu), only noting 'substantial time savings' or specific minute savings. The abstract's claim of a consistent 60-75% range across all five studies is not supported by the provided synthesis text, which lacks the data to verify the lower bound for the other studies.",
+      "suggested_fix": "Revise the abstract to state that studies reported substantial time savings, with specific examples of 63-75% reductions (or 'up to 75%'), or verify the specific percentages for all five studies against the full source data before asserting a uniform range."
+    },
+    {
+      "severity": "major",
+      "area": "abstract",
+      "description": "\"Further high‑quality, standardized evaluations are needed before routine replacement of human screening.\" — The thematic synthesis concludes that 'no single model consistently outperforms others' and notes 'low to moderate certainty' evidence. It does not support the conclusion that LLMs are ready for 'routine replacement' of human screening, nor does it suggest that replacement is a viable near-term outcome. The synthesis emphasizes the need for human oversight due to false positives and the trade-off between sensitivity and precision. The phrase 'before routine replacement' implies a trajectory toward replacement that is not substantiated by the current evidence, which highlights persistent limitations and the necessity of human oversight.",
+      "suggested_fix": "Change the conclusion to reflect that LLMs are useful adjuncts to human screening, and that further research is needed to determine their role in augmenting (rather than replacing) human workflows, or to establish conditions under which they can be safely integrated with human oversight."
+    },
+    {
+      "severity": "major",
+      "area": "screening",
+      "description": "R0038 was excluded at title/abstract stage but an independent auditor would include it: Study evaluates GPT-5 for title/abstract screening, reports accuracy metrics, compares with human reviewers, and is in English.",
+      "suggested_fix": "Human reviewer to re-check this record."
+    }
+  ],
+  "checks": {
+    "round": 1,
+    "prisma_flow_consistent": true,
+    "prisma_items_reported": 42,
+    "prisma_items_total": 42,
+    "unknown_citations": [],
+    "included_without_extraction": [],
+    "uncited_sentence_ratio": {
+      "Prompt engineering": 0.29,
+      "Model performance comparisons": 0.36,
+      "Efficiency and workload reduction": 0.29,
+      "LLM versus supervised machine learning": 0.5
+    },
+    "extraction_quotes": {
+      "quotes_checked": 109,
+      "quotes_verified": 98,
+      "verification_rate": 0.8991
+    },
+    "unsupported_statements": 3,
+    "overstatements": 2,
+    "exclusion_audit": {
+      "sampled": 4,
+      "judged": 4,
+      "auditor_would_include": [
+        "R0038"
+      ],
+      "agreement": 0.75
+    },
+    "eligibility_audit": {
+      "checked": 13,
+      "flagged": []
+    }
+  }
+}

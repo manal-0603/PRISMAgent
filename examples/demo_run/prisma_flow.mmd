@@ -1,0 +1,9 @@
+flowchart TD
+    A["Records identified from databases<br/>n = 120<br/>PubMed: n = 40<br/>Europe PMC: n = 40<br/>Semantic Scholar: n = 40"] --> B["Records screened<br/>n = 24"]
+    A --> A2["Records removed before screening<br/>Duplicates: n = 8<br/>Marked ineligible by automation tools: n = 88"]
+    B --> B2["Records excluded<br/>n = 4"]
+    B --> C["Reports sought for retrieval<br/>n = 20"]
+    C --> C2["Reports not retrieved<br/>n = 0"]
+    C --> D["Reports assessed for eligibility<br/>n = 20<br/>(of which abstract only: n = 10)"]
+    D --> D2["Reports excluded, with reasons<br/>n = 7<br/>E5: Compares the LLM only with another automated<br/>method, without a human reviewer benchmark. (n =<br/>5)<br/>I3: Provides a direct comparison with human<br/>reviewer performance on the same dataset. (n = 2)"]
+    D --> E["Studies included in review<br/>n = 13"]

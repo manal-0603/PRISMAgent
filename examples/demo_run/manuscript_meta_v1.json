@@ -1,0 +1,110 @@
+{
+  "cited": [
+    "R0108",
+    "R0089",
+    "R0053",
+    "R0073",
+    "R0006",
+    "R0082",
+    "R0042",
+    "R0025",
+    "R0028",
+    "R0039",
+    "R0040",
+    "R0048",
+    "R0052",
+    "R0057",
+    "R0064",
+    "R0070",
+    "R0074"
+  ],
+  "unknown_citations": [],
+  "included": [
+    "R0006",
+    "R0028",
+    "R0039",
+    "R0040",
+    "R0042",
+    "R0048",
+    "R0052",
+    "R0053",
+    "R0057",
+    "R0064",
+    "R0070",
+    "R0074",
+    "R0089"
+  ],
+  "themes": [
+    {
+      "name": "Prompt engineering",
+      "description": "Studies evaluating the impact of prompt design and optimization on LLM screening accuracy and sensitivity.",
+      "study_ids": [
+        "R0006",
+        "R0028",
+        "R0089",
+        "R0064",
+        "R0057"
+      ]
+    },
+    {
+      "name": "Model performance comparisons",
+      "description": "Direct comparisons of different large language models (e.g., GPT‑4, Claude, Gemini, ChatGPT) for title/abstract screening accuracy.",
+      "study_ids": [
+        "R0039",
+        "R0040",
+        "R0052",
+        "R0053",
+        "R0070",
+        "R0074",
+        "R0048"
+      ]
+    },
+    {
+      "name": "Efficiency and workload reduction",
+      "description": "Evidence on time savings, processing speed, and reduction of human workload when using LLMs for screening.",
+      "study_ids": [
+        "R0028",
+        "R0048",
+        "R0074",
+        "R0064",
+        "R0070"
+      ]
+    },
+    {
+      "name": "LLM versus supervised machine learning",
+      "description": "Comparative evaluations of LLMs against traditional supervised machine‑learning classifiers for title‑abstract screening.",
+      "study_ids": [
+        "R0042"
+      ]
+    }
+  ],
+  "syntheses": {
+    "Prompt engineering": {
+      "narrative": "Optimised prompt templates markedly improve LLM screening performance, with Cao et al. reporting 97.7% sensitivity and 85.2% specificity for abstract screening using GPT‑4‑0125‑preview, far exceeding zero‑shot prompts (49% sensitivity) [R0006]. Oami et al. observed a rise in sensitivity from 0.75 to 0.91 after post‑hoc prompt modifications while maintaining high specificity (0.98) for GPT‑4 Turbo, indicating that prompt refinement can boost recall without sacrificing precision [R0028]. Homiar et al. achieved 100% sensitivity for ultimately included studies with GPT‑4o after iterative prompt development, though precision remained low (4–20%), reflecting a trade‑off between recall and false‑positive burden [R0089]. Qiu et al. demonstrated consistent high sensitivities (98–100%) across three datasets using a structured, stepwise prompting workflow with ChatGPT, with specificities ranging from 80.6% to 93% and a need for human oversight of residual false positives at the full‑text stage [R0064]. Sanghera et al. showed that prompt choice strongly influences performance: on a balanced 800‑record set, optimal prompts yielded perfect sensitivity (1.00) and high precision (0.927), whereas less tailored prompts produced variable sensitivity (0.756–1.00) and markedly lower precision (0.004–0.096) on a large 119 695‑record dataset [R0057]. Across studies, higher sensitivity is consistently achieved with carefully engineered prompts, but specificity and precision vary, likely due to differences in LLM versions, dataset composition, and the extent of prompt optimisation. Evidence is limited by reliance on abstracts only in some reports and by some‑concern risk of bias assessments.",
+      "certainty": "low",
+      "certainty_rationale": "Downgraded for risk of bias (some concerns in all studies), inconsistency in specificity/precision across LLMs and prompts, and indirectness due to varied datasets and outcome reporting."
+    },
+    "Model performance comparisons": {
+      "narrative": "Direct comparisons of LLMs show heterogeneous accuracy for title/abstract screening. Insuk et al. reported human reviewers highest accuracy (0.9593) followed by Claude (0.9448) and ChatGPT (0.9138) [R0039]; however this study provides only abstract data and has unclear risk of bias. Oami et al. found GPT-4o achieved high specificity (0.98) but lower sensitivity (0.75), whereas Gemini 1.5 Pro and Claude 3.5 Sonnet showed higher sensitivities (0.93 and 0.95) but lower specificities (0.86 and 0.81) [R0040]. Sood et al. observed Gemini Flash 1.5 highest overall accuracy (96.02%) and GPT‑4 the highest sensitivity (95.97%) [R0052]. Fazeli et al. reported GPT‑4o mini accuracy of 85.1% with sensitivity 83.2% and specificity 85.2% on a large record set [R0053]. Zhan et al. found Review Copilot (based on GPT‑4) achieving the highest sensitivity (99.2%) but moderate specificity (83.6%) [R0070]. Li et al. showed ChatGPT v4.0 reaching sensitivity 0.93, specificity 0.96 and accuracy 0.945 on a benchmark dataset [R0074]. Kwok et al. noted commercial LLMs (ChatGPT, Copilot) with accuracy 83‑86% and recall ~88% in physiotherapy trials [R0048]. Across studies, models trade off sensitivity versus specificity, and performance varies with prompting, dataset, and evaluation design. Studies with larger sample sizes (e.g., Fazeli, n=15,605) tend to report lower accuracy than smaller or abstract‑only reports, suggesting possible over‑estimation in limited data. Overall, no single model consistently outperforms others across all metrics.",
+      "certainty": "low",
+      "certainty_rationale": "Evidence is downgraded for risk of bias (unclear or some concerns), inconsistency between models, indirectness of varied datasets, and imprecision due to missing sample sizes and confidence intervals."
+    },
+    "Efficiency and workload reduction": {
+      "narrative": "Across five investigations, LLMs consistently reduced screening workload compared with human reviewers. Oami et al. reported that processing 100 studies fell from 17.2 minutes to 1.3 minutes, a mean saving of 15.25 minutes per 100 records [R0028]. Kwok et al. found that commercial LLMs cut total screening time to 37% of that required by humans, equating to roughly a three‑fold speedup [R0048]. Li et al. observed that their LLM tools required only 10–20 minutes to process 200 abstracts, indicating high time efficiency relative to manual duplicate screening [R0074]. Qiu et al. demonstrated that a structured prompt‑based workflow enabled screening of 3,821 abstracts and 261 full texts without programming, though human oversight remained necessary for false‑positive correction [R0064]. Zhan et al. reported that Review Copilot completed title/abstract screening in one‑quarter of human time and could exclude 90–95% of irrelevant articles at a rate of 1,000 articles per four person‑hours [R0070]. While all studies show substantial time savings, the magnitude varies with LLM version, prompting strategy, and dataset size, and some reports rely on abstracts only or have limited sample description, introducing uncertainty about generalisability.",
+      "certainty": "moderate",
+      "certainty_rationale": "Evidence is downgraded for risk of bias (unblinded designs, limited reporting) and inconsistency in reporting metrics and sample sizes, but remains moderate due to consistent direction of effect across multiple studies."
+    },
+    "LLM versus supervised machine learning": {
+      "narrative": "A comparative evaluation using six open‑source SYNERGY datasets examined the performance of a zero‑shot Llama‑3.1‑8B‑Instruct large language model (LLM) against four traditional supervised machine‑learning (SML) classifiers for title‑abstract screening. The LLM achieved a recall of 0.86, which was comparable to or higher than the recall reported for human reviewers, whereas the SML models (logistic regression, random forest, support vector machine) showed higher specificity than humans but lower recall [R0042]. Specificity for the LLM was 0.79, falling between the higher specificity of the SML models and the lower specificity of human screening. Performance varied markedly across the six datasets, indicating that neither approach consistently outperformed the other in all contexts [R0042]. The authors note that the comparison is limited to TF‑IDF‑based SML baselines and a zero‑shot, criteria‑prompted LLM, and that dataset selection bias and the subjectivity of human‑assigned labels may affect generalisability [R0042]. No pooled metric is presented because of the heterogeneity of results across datasets.",
+      "certainty": "very low",
+      "certainty_rationale": "Observational design with some concerns of bias, high inconsistency across datasets, and indirectness due to limited model types and dataset selection."
+    }
+  },
+  "discussion": {
+    "summary_of_evidence": "The 13 included studies show that large language models (LLMs) can achieve very high sensitivity for title and abstract screening when prompts are carefully engineered, with reported sensitivities ranging from 0.75 to 100 % and specificities from 0.80 to 0.98 [R0006,R0028,R0089,R0064,R0057]. Optimised prompt templates consistently improve recall, although precision often declines, reflecting a trade‑off between missed studies and false‑positive burden. Direct model comparisons reveal heterogeneous performance: some models (e.g., Claude, Gemini Flash) attain higher overall accuracy, while others (e.g., GPT‑4, Review Copilot) achieve the highest sensitivity but lower specificity [R0039,R0040,R0052,R0053,R0070,R0074,R0048]. Larger datasets tend to yield modest accuracy (≈85‑86 %) compared with smaller, abstract‑only samples that report higher metrics, suggesting possible over‑estimation in limited data. Across five investigations, LLMs markedly reduce screening time, cutting workload to 25‑40 % of that required by humans and saving 10‑15 minutes per 100 records screened [R0028,R0048,R0074,R0064,R0070]. A single zero‑shot LLM (Llama‑3.1‑8B‑Instruct) demonstrated recall comparable to humans but lower specificity than traditional supervised‑machine‑learning classifiers, indicating that LLMs and SML approaches each have strengths and weaknesses [R0042]. Overall, evidence is low to moderate certainty due to risk‑of‑bias concerns and variability in datasets and prompting strategies.",
+    "limitations_of_evidence": "All studies carry at least some concerns for bias, often stemming from unblinded designs, lack of independent validation sets, and reliance on abstract‑only data in five reports, which limits assessment of full‑text relevance [R0006,R0028,R0089,R0064,R0057]. Reported performance metrics are inconsistent across models and prompting methods, and many studies omit confidence intervals or detailed sample size calculations, reducing precision. The heterogeneity of datasets (size, topic, balance) and the use of different LLM versions impede direct comparability and introduce indirectness. Moreover, few investigations evaluated long‑term workflow integration or the impact of false‑positive burden on downstream screening stages.",
+    "implications": "Practitioners considering LLMs for systematic review screening should prioritize prompt optimisation to maximise sensitivity, while planning for human oversight to manage false positives. The demonstrated time savings suggest LLMs can accelerate the screening phase, but variability in specificity warrants caution, especially for large, unbalanced corpora. Future research should standardise evaluation protocols, include full‑text screening outcomes, and report uncertainty measures. Comparative trials of multiple LLMs and supervised‑machine‑learning classifiers on diverse, well‑characterised datasets are needed to identify conditions under which each approach offers the greatest efficiency and accuracy."
+  },
+  "rationale": "Large language models (LLMs) have emerged as a potential solution to the labor‑intensive title‑and‑abstract screening stage that delays systematic reviews, yet their reliability compared with expert human reviewers remains unclear [R0108]. Early investigations report promising accuracy for GPT‑4o and related models, but also highlight the need for higher precision to meet the standards required for clinical and policy‑making evidence [R0089, R0053]. Empirical evaluations across diverse domains—including radiology, venture‑capital evidence synthesis, and general biomedical literature—show that LLMs can achieve sensitivities and specificities approaching those of human reviewers, but performance varies with prompt design, model size, and the presence of disagreement, underscoring the importance of careful human‑in‑the‑loop oversight [R0073, R0006, R0082]. Comparative work suggests that zero‑shot, criteria‑prompted LLMs can match or exceed supervised machine‑learning baselines, yet the evidence is fragmented, with most studies focusing on single model families or specific review topics, and limited data on ensemble approaches or broader applicability [R0042, R0025]. Consequently, a systematic synthesis of existing empirical assessments is needed to clarify the accuracy of LLM‑driven screening, identify conditions under which they can reliably augment or replace human judgment, and guide methodological recommendations for future systematic review workflows.",
+  "revision_issues": []
+}

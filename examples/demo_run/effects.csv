@@ -1,0 +1,49 @@
+id,rid,study,outcome,measure,value,ci_low,ci_high,n,quote_verified
+0,R0006,Cao et al. (2025),Sensitivity of LLM abstract screening,accuracy,97.7,86.7,100.0,,False
+1,R0006,Cao et al. (2025),Specificity of LLM abstract screening,accuracy,85.2,68.3,95.9,,False
+2,R0006,Cao et al. (2025),Sensitivity of LLM full-text screening,accuracy,96.5,89.7,100.0,,False
+3,R0006,Cao et al. (2025),Specificity of LLM full-text screening,accuracy,91.2,80.7,100.0,,False
+4,R0028,Oami et al. (2024),Sensitivity,accuracy,0.75,0.43,0.92,,True
+5,R0028,Oami et al. (2024),Specificity,accuracy,0.99,0.99,0.99,,True
+6,R0028,Oami et al. (2024),Sensitivity (post hoc),accuracy,0.91,0.77,0.97,,True
+7,R0028,Oami et al. (2024),Specificity (post hoc),accuracy,0.98,0.96,0.99,,True
+8,R0028,Oami et al. (2024),Processing time for 100 studies,time per record,1.3,1.28,1.32,100,True
+9,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9593,,,,True
+10,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9448,,,,True
+11,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9138,,,,True
+12,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.3853,,,,True
+13,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.3724,,,,True
+14,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.2755,,,,True
+15,R0040,Oami et al. (2025),Sensitivity,accuracy,0.75,0.54,0.88,,True
+16,R0040,Oami et al. (2025),Specificity,accuracy,0.98,0.96,0.99,,True
+17,R0040,Oami et al. (2025),Processing time for 100 studies,time per 100 studies,0.93,0.92,0.98,,True
+18,R0040,Oami et al. (2025),Cost for 100 studies,cost,0.41,0.34,0.48,,True
+19,R0042,Aigner et al. (2026),Recall,accuracy,0.86,,,,True
+20,R0042,Aigner et al. (2026),Specificity,accuracy,0.79,,,,True
+21,R0048,Kwok et al. (2026),Accuracy,proportion,0.83,,,,True
+22,R0048,Kwok et al. (2026),Accuracy,proportion,0.86,,,,True
+23,R0048,Kwok et al. (2026),Precision,proportion,0.44,,,,True
+24,R0048,Kwok et al. (2026),Precision,proportion,0.48,,,,True
+25,R0048,Kwok et al. (2026),Recall,proportion,0.88,,,,True
+26,R0048,Kwok et al. (2026),Recall,proportion,0.87,,,,True
+27,R0057,Sanghera et al. (2025),Sensitivity,accuracy,1.0,,,800,True
+28,R0057,Sanghera et al. (2025),Precision,accuracy,0.927,,,800,True
+29,R0057,Sanghera et al. (2025),Specificity,accuracy,0.993,,,119695,False
+30,R0057,Sanghera et al. (2025),F1‑score,accuracy,0.381,,,119695,False
+31,R0057,Sanghera et al. (2025),Workload reduction,proportion,0.9911,,,,True
+32,R0064,Qiu et al. (2026),Sensitivity,accuracy,100.0,,,,True
+33,R0064,Qiu et al. (2026),Specificity,accuracy,93.0,,,,True
+34,R0064,Qiu et al. (2026),Sensitivity,accuracy,96.2,,,,True
+35,R0064,Qiu et al. (2026),Specificity,accuracy,90.3,,,,True
+36,R0070,Zhan et al. (2025),Sensitivity of Review Copilot for title/abstract screening,sensitivity,99.2,,,,True
+37,R0070,Zhan et al. (2025),Specificity of Review Copilot for title/abstract screening,specificity,83.6,,,,True
+38,R0070,Zhan et al. (2025),Sensitivity of Review Copilot for full‑text screening,sensitivity,97.6,,,,False
+39,R0070,Zhan et al. (2025),Specificity of Review Copilot for full‑text screening,specificity,47.4,,,,False
+40,R0070,Zhan et al. (2025),Percent agreement between two runs,percent agreement,95.4,,,,True
+41,R0070,Zhan et al. (2025),Kappa statistic for reliability,kappa,0.83,,,,True
+42,R0074,Li et al. (2024),Sensitivity,accuracy,0.93,,,,True
+43,R0074,Li et al. (2024),Specificity,accuracy,0.96,,,,True
+44,R0074,Li et al. (2024),Accuracy,accuracy,0.945,,,,True
+45,R0089,Homiar et al. (2025),Sensitivity,accuracy,100.0,,,,True
+46,R0089,Homiar et al. (2025),Sensitivity,accuracy,58.0,,,,True
+47,R0089,Homiar et al. (2025),Precision,accuracy,4.0,,,,True

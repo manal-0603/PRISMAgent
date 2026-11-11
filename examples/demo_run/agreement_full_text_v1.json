@@ -1,0 +1,14 @@
+{
+  "n": 20,
+  "raw_agreement": 0.85,
+  "cohen_kappa": 0.6591,
+  "interpretation": "substantial",
+  "conflicts": 3,
+  "reviewer_a_included": 13,
+  "reviewer_b_included": 14,
+  "resolved_by": {
+    "consensus": 17,
+    "adjudicator": 3,
+    "human": 0
+  }
+}
