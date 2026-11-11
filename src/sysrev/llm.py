@@ -115,6 +115,23 @@ class DiskCache:
             self._db.execute("INSERT INTO usage VALUES (?, ?, ?)", (ts or time.time(), model, tokens))
             self._db.commit()
 
+    def estimated_available(self, per_day: int) -> dict[str, int]:
+        """Estimate of the daily allowance left per model.
+
+        The provider does not publish the balance. It behaves like a bucket of `per_day` tokens that
+        refills continuously (per_day / 24 h): this replays the recorded usage through such a bucket.
+        """
+        rate = per_day / 86400
+        with self._lock:
+            rows = self._db.execute("SELECT model, ts, tokens FROM usage ORDER BY ts").fetchall()
+        level: dict[str, float] = {}
+        last: dict[str, float] = {}
+        for model, ts, tokens in rows:
+            current = min(per_day, level.get(model, per_day) + rate * (ts - last.get(model, ts)))
+            level[model], last[model] = max(0.0, current - tokens), ts
+        now = time.time()
+        return {model: int(min(per_day, level[model] + rate * (now - last[model]))) for model in level}
+
     def usage_last_24h(self) -> dict[str, dict[str, int]]:
         """Tokens and requests really sent to the provider over the last 24 hours, per model."""
         with self._lock:
