@@ -252,15 +252,43 @@ The first prompt said so in one sentence and the models did not follow it.
 of ineligibility, and "not mentioned" is explicitly named as a reason for full-text review, not for
 exclusion. The adjudicator's rule was aligned.
 
-**Open item.** v2 has not been measured: the daily quota was used up by the demonstration. Because
-the sample above was used to diagnose and fix the prompt, it cannot serve to validate the fix; the
-validation must use another sample (`--seed 7`). Until then the only evidence on v2 is indirect:
-in the demonstration it kept 20 of 24 records for full-text review, where the exclusions were then
-made with reasons.
+**Validation on an independent sample.** Because the first sample had been used to diagnose and fix
+the prompt, v2 was tested on a second stratified sample of the same dataset (seed 7, 60 records,
+21 human-kept).
 
-A sample of 60 records from one review is small; the confidence interval around a sensitivity of
-3/21 is wide, and one topic does not generalise. The benchmark command accepts any of the listed
-datasets and any sample size.
+| Screener (prompt v2) | Sensitivity | Specificity | F1 | Kappa vs humans |
+|---|---|---|---|---|
+| Pipeline (A + B + adjudicator) | 0.33 | 1.00 | 0.50 | 0.39 |
+| Reviewer A alone (gpt-oss-20b) | 0.24 | 1.00 | 0.38 | 0.29 |
+| Reviewer B alone (qwen3.8-27b) | 0.29 | 0.97 | 0.43 | 0.31 |
+
+Kappa between the two AI reviewers: 0.45, with 6 conflicts adjudicated. Finally-included studies
+present in the sample: 3; kept by the pipeline: 1.
+
+**Interpretation.** The revision did not solve the problem.
+
+- Sensitivity went from 3/21 to 7/21. The samples differ, and a difference of this size between
+  two samples of 21 is compatible with chance (Fisher exact test, p = 0.28).
+- Two of the three studies that the published review finally included were excluded. Both were
+  retrospective cohorts whose abstracts do not describe a comparator group — exactly the case the
+  new rule was written for. Twelve of the 14 disagreements have this cause.
+- The models read the instruction and still apply the eligibility criterion literally. A stronger
+  wording is unlikely to change this; the constraint should move from the prompt to the code.
+- The dual design does add something: the pipeline is more sensitive than either reviewer alone,
+  because disagreements go to an adjudicator that includes more readily.
+
+**What follows from it.**
+
+1. As it stands, title/abstract screening must not be trusted without a human check of the
+   exclusions on topics where eligibility depends on study design. Checkpoint 2 exists for this.
+2. Proposed structural fix (not implemented, because it could not be tested within the quota):
+   the planner tags each criterion as assessable on an abstract or only on a full text, and the
+   screening code converts any exclusion resting solely on full-text criteria into "unsure".
+3. The evidence is narrow: one review topic, two samples of 60 records, wide confidence
+   intervals. The benchmark command accepts any of the listed datasets and any sample size.
+
+The benchmark took 64 minutes here only because the daily quota was exhausted and each
+adjudication waited for it; the first run of the same size took 7 minutes.
 
 ### 7.3 Software tests
 
@@ -272,7 +300,8 @@ loop, critic loop, resume in a fresh process, reopening a finished run for revis
 
 - **Scale under the free tier.** 200,000 tokens per model per day limits a review to a few dozen
   screened records. The code has no such limit; a paid tier or local models remove it.
-- **Screening sensitivity** must be validated per topic; the benchmark command exists for that.
+- **Screening sensitivity is insufficient** on the benchmark topic (section 7.2): exclusions need a
+  human check, and the criterion-tagging fix described there is the first thing to implement.
 - **Single extraction.** Extraction and appraisal are done once; dual extraction with reconciliation
   would mirror the screening design.
 - **Sources.** No subscription databases, no grey literature, no reference-list chasing; open-access
