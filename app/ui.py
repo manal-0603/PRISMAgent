@@ -71,7 +71,7 @@ section[data-testid="stSidebar"] div[data-testid="stExpander"] summary { color: 
 @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(42,120,214,.5);} 50% { box-shadow: 0 0 0 6px rgba(42,120,214,0);} }
 
 /* ---------- stepper ---------- */
-.stepper { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin: 4px 0 22px; padding: 18px 10px 14px;
+.stepper { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin: 4px 0 22px; padding: 16px 10px 8px;
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
 .step { position: relative; text-align: center; padding: 0 4px; }
 .step::before { content: ""; position: absolute; top: 14px; left: -50%; width: 100%; height: 2px; background: var(--line); }
@@ -90,7 +90,14 @@ section[data-testid="stSidebar"] div[data-testid="stExpander"] summary { color: 
 .step.done .step-name { color: var(--ink); }
 .step.now .step-name { color: var(--accent-deep); font-weight: 600; }
 .step-kind { font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-top: 3px; }
-.step-name { min-height: 2.5em; display: flex; align-items: flex-start; justify-content: center; }
+.step-name { min-height: 2.4em; display: flex; align-items: flex-start; justify-content: center; }
+.stepper-key { display: flex; gap: 16px; justify-content: flex-end; font-size: .7rem; color: var(--ink-3); margin: -14px 4px 18px; }
+.stepper-key i { display: inline-block; width: 10px; height: 10px; border: 2px solid var(--neutral); margin-right: 5px; vertical-align: -1px; }
+.stepper-key i.agent { border-radius: 50%; } .stepper-key i.human { border-radius: 3px; }
+.mini { padding: 14px 0; border-top: 1px solid var(--line); }
+.mini:first-child { border-top: 0; padding-top: 0; } .mini:last-child { padding-bottom: 0; }
+.mini-title { font-size: .78rem; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.mini .figure { font-size: 1.25rem; }
 
 /* ---------- cards & tiles ---------- */
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; height: 100%; }
@@ -234,10 +241,10 @@ def stepper(steps: list[dict]) -> str:
         inner = ICON["check"] if step["state"] == "done" else (ICON["person"] if human else str(step["n"]))
         out.append(
             f'<div class="step {step["state"]} {"human" if human else ""}"><div class="node">{inner}</div>'
-            f'<div class="step-name">{e(step["name"])}</div>'
-            f'<div class="step-kind">{"checkpoint" if human else "agent"}</div></div>'
+            f'<div class="step-name">{e(step["name"])}</div></div>'
         )
-    return f'<div class="stepper">{"".join(out)}</div>'
+    key = '<div class="stepper-key"><span><i class="agent"></i>agent</span><span><i class="human"></i>human checkpoint</span></div>'
+    return f'<div class="stepper">{"".join(out)}</div>{key}'
 
 
 def tiles(items: list[dict]) -> str:
@@ -307,6 +314,16 @@ def meter(done: int, total: int, caption: str) -> str:
         f'<div class="figure">{share:.0%} <small>{done} of {total}</small></div>'
         f'<div class="meter"><i style="width:{100 * share:.1f}%"></i></div><div class="muted">{e(caption)}</div>'
     )
+
+
+def mini(title: str, body: str, right: str = "") -> str:
+    """A small titled block inside a card."""
+    return f'<div class="mini"><div class="mini-title"><span>{e(title)}</span>{right}</div>{body}</div>'
+
+
+def compact_meter(done: int, total: int) -> str:
+    share = done / total if total else 0
+    return f'<div class="meter" style="margin:0"><i style="width:{100 * share:.1f}%"></i></div>'
 
 
 def rows(items: list[str]) -> str:

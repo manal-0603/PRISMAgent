@@ -201,10 +201,8 @@ else:
     state = ("", "Paused")
 
 models = manifest["llm"].get("task_models", {})
-chips = [("Started", manifest["created"][:16].replace("T", " ")),
-         ("Mode", "autonomous" if manifest["options"]["auto_approve"] else "human-in-the-loop")]
-if models:
-    chips.append(("Models", " · ".join(dict.fromkeys(m.split("/")[-1] for m in models.values()))))
+chips = [("Mode", "autonomous" if manifest["options"]["auto_approve"] else "human-in-the-loop"),
+         ("Started", manifest["created"][:10])]
 html(ui.hero(manifest["question"], state, chips))
 
 active = job["running"] or bool(pending)
@@ -311,9 +309,10 @@ appraisals = {r["rid"]: r for r in lines(run_dir, "risk_of_bias")}
 agreement_ta = latest(run_dir, "agreement_title_abstract")
 agreement_ft = latest(run_dir, "agreement_full_text")
 
-tabs = st.tabs([":material/dashboard: Overview", ":material/assignment: Protocol", ":material/search: Search",
-                ":material/filter_alt: Screening", ":material/menu_book: Studies", ":material/article: Report",
-                ":material/verified: Quality", ":material/history: Audit trail", ":material/monitoring: Evaluation"])
+tabs = st.tabs([":material/dashboard: Overview", ":material/assignment: Protocol", ":material/filter_alt: Screening",
+                ":material/menu_book: Studies", ":material/article: Report", ":material/verified: Quality"])
+
+# The interface shows the headline first; everything else is one click away, in an expander.
 
 # ---- Overview ---------------------------------------------------------------
 with tabs[0]:
@@ -321,78 +320,46 @@ with tabs[0]:
         html(ui.empty("The overview fills in as soon as the first records are retrieved."))
     else:
         identified = sum(flow["identified"].values())
-        checklist = f"{result['prisma_items_reported']}/{result['prisma_items_total']}" if result else "—"
         html(ui.tiles([
-            {"label": "Records identified", "value": identified, "note": f"{len(flow['identified'])} databases"},
-            {"label": "Screened", "value": flow["records_screened"], "note": "title and abstract"},
-            {"label": "Full texts assessed", "value": flow["reports_assessed"],
-             "note": f"{flow['assessed_on_abstract_only']} on abstract only" if flow["assessed_on_abstract_only"] else "all in full text"},
+            {"label": "Records identified", "value": identified},
+            {"label": "Screened", "value": flow["records_screened"]},
             {"label": "Studies included", "value": flow["studies_included"], "lead": True},
             {"label": "Reviewer agreement", "value": kappa(agreement_ta), "unit": "κ",
-             "note": agreement_ta["interpretation"] if agreement_ta else "not screened yet"},
-            {"label": "PRISMA items", "value": checklist, "note": "reported, 2020 checklist"},
+             "note": agreement_ta["interpretation"] if agreement_ta else ""},
         ]))
 
-        left, right = st.columns(2, gap="medium")
+        left, right = st.columns([3, 2], gap="medium")
         unique = identified - flow["duplicates_removed"]
         reasons = "; ".join(f"{n} × {reason.split(':')[0]}" for reason, n in flow["reports_excluded"].items())
         funnel = [
             {"name": "Identified", "value": identified,
-             "note": " · ".join(f"{DISPLAY_NAME.get(k, k)} {v}" for k, v in flow["identified"].items()),
-             "tip": "Records returned by the database searches."},
-            {"name": "After de-duplication", "value": unique, "note": f"{flow['duplicates_removed']} duplicates merged",
-             "tip": "Matched on DOI, PubMed id, arXiv id, then title."},
-            {"name": "Screened", "value": flow["records_screened"], "note": f"{flow['removed_by_automation']} below the relevance cap",
-             "tip": "Records are ranked by hybrid retrieval against the question; the rest are reported as removed by automation."},
-            {"name": "Sought in full text", "value": flow["reports_sought"], "note": f"{flow['records_excluded']} excluded on title/abstract",
-             "tip": "Two reviewers on different models; conflicts are adjudicated."},
-            {"name": "Assessed for eligibility", "value": flow["reports_assessed"], "note": f"{flow['reports_not_retrieved']} not retrieved",
-             "tip": "Passages relevant to each criterion are retrieved from the full text."},
+             "tip": "Records returned by the searches: " + ", ".join(f"{DISPLAY_NAME.get(k, k)} {v}" for k, v in flow["identified"].items()) + "."},
+            {"name": "After de-duplication", "value": unique, "tip": f"{flow['duplicates_removed']} duplicates merged."},
+            {"name": "Screened", "value": flow["records_screened"],
+             "tip": f"{flow['removed_by_automation']} records ranked below the relevance cap were not screened."},
+            {"name": "Sought in full text", "value": flow["reports_sought"],
+             "tip": f"{flow['records_excluded']} records excluded on title and abstract."},
+            {"name": "Assessed for eligibility", "value": flow["reports_assessed"],
+             "tip": f"{flow['assessed_on_abstract_only']} assessed on the abstract only; {flow['reports_not_retrieved']} not retrieved."},
             {"name": "Included", "value": flow["studies_included"], "key": True,
-             "note": f"{sum(flow['reports_excluded'].values())} excluded with reasons", "tip": f"Exclusion reasons: {reasons or 'none'}."},
+             "tip": f"{sum(flow['reports_excluded'].values())} reports excluded with reasons: {reasons or 'none'}."},
         ]
         with left:
-            html(ui.card("Study selection", ui.bars(funnel), "Number of records at each PRISMA stage"))
-        timings = json.loads((run_dir / "timings.json").read_text()) if (run_dir / "timings.json").exists() else {}
-        time_rows = [{"name": STAGE_LONG[s], "value": round(timings[s] / 60, 1), "label": f"{timings[s] / 60:.1f} min",
-                      "tip": f"{timings[s]:.0f} seconds of wall-clock time, mostly waiting for the API rate limit."}
-                     for s in ORDER if s in timings and s in STAGE_LONG and timings[s] >= 1]
+            html(ui.card("Study selection", ui.bars(funnel)))
         with right:
-            total_minutes = sum(timings.values()) / 60
-            body = ui.bars(time_rows) if time_rows else ui.empty("No timing yet.")
-            html(ui.card("Where the time went", body, f"Minutes per stage · {total_minutes:.1f} min in total"))
-
-        st.write("")
-        c1, c2, c3 = st.columns(3, gap="medium")
-        with c1:
+            blocks = []
             levels = [appraisals[e["rid"]]["overall"] for e in extractions if e["rid"] in appraisals]
-            body = ui.segbar({level: levels.count(level) for level in ui.STATUS}) if levels else ui.empty("Not appraised yet.")
-            html(ui.card("Risk of bias", body, f"Overall judgement of the {len(levels)} included studies"))
-        with c2:
+            if levels:
+                blocks.append(ui.mini("Risk of bias", ui.segbar({level: levels.count(level) for level in ui.STATUS})))
             flags = [i["quote_verified"] for e in extractions for i in e["items"] + e.get("effects", []) if i["quote_verified"] is not None]
-            body = (ui.meter(sum(flags), len(flags), "supporting quotations found word for word in the source text")
-                    if flags else ui.empty("Nothing extracted yet."))
-            html(ui.card("Evidence grounding", body, "Every extracted value must quote its source"))
-        with c3:
+            if flags:
+                blocks.append(ui.mini("Quotations found in the source", ui.compact_meter(sum(flags), len(flags)),
+                                      f"<b>{sum(flags) / len(flags):.0%}</b>"))
             if qa:
                 n_issues = len(qa["issues"])
-                rounds = qa["checks"].get("round", 1)
-                unsupported = qa["checks"].get("unsupported_statements", 0)
-                body = (
-                    f'<div class="figure">{n_issues} <small>issue{"s" if n_issues != 1 else ""} after {rounds} round{"s" if rounds != 1 else ""}</small></div>'
-                    f'<div style="height:10px"></div><div class="badges">'
-                    f'{ui.pill(f"{n_issues} still open" if n_issues else "No open issue", "warn" if n_issues else "good")}'
-                    f'{ui.tag(f"{unsupported} unsupported statements")}{ui.tag("round " + str(qa["checks"].get("round", 1)))}</div>'
-                )
-            else:
-                body = ui.empty("The critic has not reviewed a draft yet.")
-            html(ui.card("Critic", body, "A second model checks every claim against its evidence"))
-
-        if (run_dir / "prisma_flow.png").exists():
-            st.write("")
-            with st.expander("PRISMA 2020 flow diagram", icon=":material/account_tree:"):
-                _, centre, _ = st.columns([1, 5, 1])
-                centre.image(str(run_dir / "prisma_flow.png"))
+                blocks.append(ui.mini("Critic", "", ui.pill(f"{n_issues} open issue{'s' if n_issues != 1 else ''}" if n_issues else "No open issue",
+                                                            "warn" if n_issues else "good")))
+            html(ui.card("Quality at a glance", "".join(blocks) if blocks else ui.empty("Available after extraction.")))
 
         meta = latest(run_dir, "manuscript_meta")
         if meta and meta.get("themes"):
@@ -400,81 +367,62 @@ with tabs[0]:
             tone = {"high": "good", "moderate": "info", "low": "warn", "very low": "crit"}
             items = []
             for theme in meta["themes"]:
-                syn = meta["syntheses"].get(theme["name"], {})
-                certainty = syn.get("certainty")
+                certainty = meta["syntheses"].get(theme["name"], {}).get("certainty")
                 badge = ui.pill(f"Certainty: {certainty}", tone.get(certainty, "plain")) if certainty else ""
-                items.append(ui.row(
-                    f'<div class="crit-id">{len(theme["study_ids"])}</div>',
-                    f"<b>{ui.e(theme['name'])}</b><div class=\"muted\">{ui.e(syn.get('certainty_rationale') or theme['description'])}</div>",
-                    badge,
-                ))
-            html(ui.card("Themes of the synthesis", ui.rows(items),
-                         "Number of studies per theme and certainty of the evidence (automated, GRADE-inspired)"))
+                items.append(ui.row(f'<div class="crit-id">{len(theme["study_ids"])}</div>', f"<b>{ui.e(theme['name'])}</b>", badge))
+            html(ui.card("Themes of the synthesis", ui.rows(items)))
+
+        if (run_dir / "prisma_flow.png").exists():
+            st.write("")
+            with st.expander("PRISMA 2020 flow diagram", icon=":material/account_tree:"):
+                _, centre, _ = st.columns([1, 5, 1])
+                centre.image(str(run_dir / "prisma_flow.png"))
 
 # ---- Protocol ---------------------------------------------------------------
 with tabs[1]:
     if not protocol:
         html(ui.empty("The Planner agent has not written the protocol yet."))
     else:
-        versions = len(list(run_dir.glob("protocol_v*.json")))
         defs = "".join(f'<div class="def"><b>{ui.e(k)}</b><span>{ui.e(v)}</span></div>' for k, v in protocol["framework_elements"].items())
-        html(ui.card(protocol["title"], f'<div class="defs">{defs}</div>',
-                     f"{protocol['framework']} framework · version {versions} · "
-                     f"{', '.join(DISPLAY_NAME.get(d, d) for d in protocol['databases'])}"))
+        html(ui.card(protocol["title"], f'<div class="defs">{defs}</div>'))
         st.write("")
-        c1, c2 = st.columns(2, gap="medium")
+
         def criterion(c: dict) -> str:
             badge = ui.tag("full text only") if c.get("full_text_only") else ""
             return ui.row(f'<div class="crit-id">{ui.e(c["id"])}</div>', ui.e(c["text"]), badge)
 
-        inc = [criterion(c) for c in protocol["inclusion_criteria"]]
-        exc = [criterion(c) for c in protocol["exclusion_criteria"]]
-        with c1:
-            html(ui.card("Inclusion criteria", ui.rows(inc), "A record must meet all of them"))
-        with c2:
-            html(ui.card("Exclusion criteria", ui.rows(exc), "Any one of them excludes a record"))
-        st.write("")
         c1, c2 = st.columns(2, gap="medium")
         with c1:
-            body = '<div class="badges">' + "".join(ui.tag(i) for i in protocol["data_items"]) + "</div>"
-            body += '<div style="height:14px"></div><div class="muted"><b>Outcomes</b> · ' + ui.e("; ".join(protocol["outcomes"])) + "</div>"
-            html(ui.card("Data to extract", body, "Read from every included study, each with a supporting quotation"))
+            html(ui.card("Inclusion criteria", ui.rows([criterion(c) for c in protocol["inclusion_criteria"]])))
         with c2:
-            body = (f'<div class="muted"><b>Study designs</b> · {ui.e(", ".join(protocol["study_designs"]))}</div><div style="height:8px"></div>'
-                    f'<div class="muted"><b>Risk of bias</b> · {ui.e(protocol["risk_of_bias_approach"])}</div><div style="height:8px"></div>'
-                    f'<div class="muted"><b>Synthesis</b> · {ui.e(protocol["synthesis_plan"])}</div>')
-            html(ui.card("Methods planned", body, "Fixed before the search is run"))
+            html(ui.card("Exclusion criteria", ui.rows([criterion(c) for c in protocol["exclusion_criteria"]])))
+        st.write("")
+
+        if strategy:
+            hits = " · ".join(f"{DISPLAY_NAME.get(db, db)} {strategy['hit_counts'].get(db, '?')}" for db in strategy["queries"])
+            with st.expander(f"Search strategy — {hits} hits", icon=":material/search:"):
+                for i, c in enumerate(strategy["concepts"], start=1):
+                    html(f"<b>Concept {i} · {ui.e(c['name'])}</b><div style='height:6px'></div><div class='badges'>"
+                         + "".join(ui.tag(term) for term in c["free_text_terms"])
+                         + "".join(ui.pill(term, "info") for term in c["controlled_terms"]) + "</div><div style='height:14px'></div>")
+                for db, query in strategy["queries"].items():
+                    st.caption(f"{DISPLAY_NAME.get(db, db)} · {strategy['hit_counts'].get(db, '?')} hits")
+                    st.code(query, language=None, wrap_lines=True)
+                st.caption(f"The agent tested {len(strategy['refinement_log'])} queries on the live databases before settling on these.")
+        with st.expander("Data to extract and planned methods", icon=":material/checklist:"):
+            html('<div class="badges">' + "".join(ui.tag(i) for i in protocol["data_items"]) + "</div>")
+            st.markdown(f"**Outcomes** · {'; '.join(protocol['outcomes'])}")
+            st.markdown(f"**Study designs** · {', '.join(protocol['study_designs'])}")
+            st.markdown(f"**Risk of bias** · {protocol['risk_of_bias_approach']}")
+            st.markdown(f"**Synthesis** · {protocol['synthesis_plan']}")
         plan = latest(run_dir, "plan")
         if plan and plan["briefs"]:
-            st.write("")
-            briefs = [ui.row(ui.tag(b["stage"].replace("_", " ")), ui.e(b["guidance"])) for b in plan["briefs"]]
-            html(ui.card("Briefs from the coordinator", ui.rows(briefs), "Topic-specific instructions the Planner gives to each agent"))
-
-# ---- Search -----------------------------------------------------------------
-with tabs[2]:
-    if not strategy:
-        html(ui.empty("The Search Strategy agent has not run yet."))
-    else:
-        html(ui.tiles([{"label": DISPLAY_NAME.get(db, db), "value": strategy["hit_counts"].get(db, "—"), "unit": "hits",
-                        "note": f"{(flow or {}).get('identified', {}).get(db, 0)} records retrieved"} for db in strategy["queries"]]))
-        concept_rows = [ui.row(
-            f'<div class="crit-id">{i}</div>',
-            f"<b>{ui.e(c['name'])}</b><div style=\"height:6px\"></div><div class=\"badges\">"
-            + "".join(ui.tag(t) for t in c["free_text_terms"]) + "".join(ui.pill(t, "info") for t in c["controlled_terms"]) + "</div>",
-        ) for i, c in enumerate(strategy["concepts"], start=1)]
-        html(ui.card("Concept blocks", ui.rows(concept_rows),
-                     "Synonyms are combined with OR inside a block, blocks with AND; blue chips are MeSH headings"))
-        st.write("")
-        st.markdown("##### Final queries")
-        st.caption(strategy["rationale"])
-        for db, query in strategy["queries"].items():
-            with st.expander(f"{DISPLAY_NAME.get(db, db)} · {strategy['hit_counts'].get(db, '?')} hits"):
-                st.code(query, language=None, wrap_lines=True)
-        with st.expander(f"Every query the agent tested on the live databases ({len(strategy['refinement_log'])})"):
-            st.code("\n\n".join(strategy["refinement_log"]), language=None, wrap_lines=True)
+            with st.expander("Briefs from the coordinator to the other agents", icon=":material/hub:"):
+                for brief in plan["briefs"]:
+                    st.markdown(f"**{brief['stage'].replace('_', ' ').capitalize()}** · {brief['guidance']}")
 
 # ---- Screening --------------------------------------------------------------
-with tabs[3]:
+with tabs[2]:
     stage_defs = [("screening_title_abstract", "Title and abstract", agreement_ta), ("screening_full_text", "Full text", agreement_ft)]
     available = [(key, label, agreement) for key, label, agreement in stage_defs if lines(run_dir, key)]
     if not available:
@@ -489,65 +437,63 @@ with tabs[3]:
             {"label": "Included", "value": included, "lead": True},
             {"label": "Excluded", "value": len(decisions) - included},
             {"label": "Reviewer agreement", "value": kappa(agreement), "unit": "κ",
-             "note": agreement["interpretation"] if agreement else ""},
-            {"label": "Conflicts adjudicated", "value": agreement["conflicts"] if agreement else "—",
-             "note": f"raw agreement {agreement['raw_agreement']:.0%}" if agreement else ""},
+             "note": f"{agreement['conflicts']} conflict{'s' if agreement['conflicts'] != 1 else ''} adjudicated" if agreement else ""},
         ]))
+        with_rationales = st.toggle("Show the reviewers' rationales", value=False)
+        table = pd.DataFrame([{
+            "ID": d["rid"], "Title": records.get(d["rid"], {}).get("title", ""), "Final": d["final"],
+            "Reviewer A": d["reviewer_a"]["decision"], "Reviewer B": d["reviewer_b"]["decision"], "Resolved by": d["resolved_by"],
+            **({"Why": d["final_rationale"], "Exclusion reason": d["exclusion_reason"]} if with_rationales else {}),
+        } for d in decisions])
+        st.dataframe(table, hide_index=True, width="stretch", height=430,
+                     column_config={"Title": st.column_config.TextColumn(width="large"), "Why": st.column_config.TextColumn(width="large")})
         conflicts = [d for d in decisions if d["resolved_by"] != "consensus"]
         if conflicts:
-            st.markdown("##### Disagreements and how they were settled")
-            for d in conflicts:
-                record = records.get(d["rid"], {})
-                with st.expander(f"{d['rid']} · {record.get('title', '')[:110]}"):
+            with st.expander(f"The {len(conflicts)} disagreement{'s' if len(conflicts) != 1 else ''} and how they were settled",
+                             icon=":material/balance:"):
+                for d in conflicts:
                     a, b = d["reviewer_a"], d["reviewer_b"]
-                    html(f'<div class="badges" style="margin-bottom:10px">{ui.decision_pill(d["final"])}'
-                         f'{ui.tag("resolved by " + d["resolved_by"])}</div>')
+                    html(f'<div style="margin:6px 0 8px"><b>{ui.e(d["rid"])} · {ui.e(records.get(d["rid"], {}).get("title", "")[:120])}</b></div>'
+                         f'<div class="badges" style="margin-bottom:8px">{ui.decision_pill(d["final"])}{ui.tag("resolved by " + d["resolved_by"])}</div>')
                     ca, cb = st.columns(2)
                     ca.markdown(f"**Reviewer A** · {a['decision']}  \n{a['rationale']}")
                     cb.markdown(f"**Reviewer B** · {b['decision']}  \n{b['rationale']}")
                     st.markdown(f"**Decision** · {d['final_rationale']}")
-        st.markdown("##### All decisions")
-        table = pd.DataFrame([{
-            "ID": d["rid"], "Title": records.get(d["rid"], {}).get("title", ""), "Final": d["final"], "Resolved by": d["resolved_by"],
-            "Reviewer A": d["reviewer_a"]["decision"], "Reviewer B": d["reviewer_b"]["decision"],
-            "Exclusion reason": d["exclusion_reason"], "Read from": d["basis"].replace("_", " "),
-            "A rationale": d["reviewer_a"]["rationale"], "B rationale": d["reviewer_b"]["rationale"],
-        } for d in decisions])
-        st.dataframe(table, hide_index=True, width="stretch", height=420,
-                     column_config={"Title": st.column_config.TextColumn(width="large")})
+                    st.divider()
 
 # ---- Studies ----------------------------------------------------------------
-with tabs[4]:
+with tabs[3]:
     if not extractions:
         html(ui.empty("No study has been extracted yet."))
     else:
         for e in extractions:
             record, rob = records[e["rid"]], appraisals.get(e["rid"])
             flags = [i["quote_verified"] for i in e["items"] + e.get("effects", []) if i["quote_verified"] is not None]
-            badges = [ui.tag(e["study_design"][:48]), ui.tag("read from " + e["basis"].replace("_", " "))]
-            if e["sample_size"].lower() != "not reported":
-                badges.append(ui.tag(e["sample_size"][:60]))
+            badges = []
             if rob:
                 badges.append(ui.rob_pill(rob["overall"]))
             if flags:
                 badges.append(ui.pill(f"{sum(flags)}/{len(flags)} quotations verified", "good" if all(flags) else "warn"))
+            if e["basis"] == "abstract":
+                badges.append(ui.tag("abstract only"))
             html(f'<div class="study"><h4>{ui.e(record["title"])}</h4><div class="by">{ui.e(short_ref(record))} · '
-                 f'{ui.e(record.get("venue") or "")} · {ui.e(e["rid"])}</div><div class="badges">{"".join(badges)}</div></div>')
+                 f'{ui.e(record.get("venue") or "")}</div><div class="badges">{"".join(badges)}</div></div>')
             with st.expander("Extracted data, findings and appraisal"):
+                st.caption(f"{e['study_design']} · {e['sample_size']} · {e['rid']}")
+                st.markdown("**Key findings**\n" + "\n".join(f"- {finding}" for finding in e["key_findings"]))
                 st.dataframe(pd.DataFrame([{
                     "Data item": i["field"], "Value": i["value"], "Supporting quotation": i["quote"],
                     "Found in source": {True: "yes", False: "no", None: "—"}[i["quote_verified"]],
                 } for i in e["items"]]), hide_index=True, width="stretch",
                     column_config={"Value": st.column_config.TextColumn(width="medium"),
                                    "Supporting quotation": st.column_config.TextColumn(width="large")})
-                st.markdown("**Key findings**\n" + "\n".join(f"- {finding}" for finding in e["key_findings"]))
                 if rob:
                     st.markdown(f"**Risk of bias · {rob['tool']}** — {rob['overall_justification']}")
                     st.dataframe(pd.DataFrame([{"Domain": d["domain"], "Judgement": d["judgement"], "Justification": d["justification"]}
                                                for d in rob["domains"]]), hide_index=True, width="stretch")
 
 # ---- Report -----------------------------------------------------------------
-with tabs[5]:
+with tabs[4]:
     report = run_dir / "report.md" if (run_dir / "report.md").exists() else run_dir / "report_draft.md"
     if not report.exists():
         html(ui.empty("The manuscript appears here once the Writing agent has produced a draft."))
@@ -567,99 +513,75 @@ with tabs[5]:
             render_markdown(text, run_dir)
 
 # ---- Quality ----------------------------------------------------------------
-with tabs[6]:
+with tabs[5]:
     if not qa:
         html(ui.empty("The Critic agent reviews the manuscript once a draft exists."))
     else:
         checks = qa["checks"]
         quotes = checks.get("extraction_quotes") or {}
-        audit_x = checks.get("exclusion_audit") or {}
+        rounds = checks.get("round", 1)
         html(ui.tiles([
-            {"label": "Open issues", "value": len(qa["issues"]), "lead": True,
-             "note": f"after {checks.get('round', 1)} critic round{'s' if checks.get('round', 1) != 1 else ''}"},
-            {"label": "PRISMA items", "value": f"{checks.get('prisma_items_reported', '—')}/{checks.get('prisma_items_total', '—')}"},
-            {"label": "Unsupported claims", "value": checks.get("unsupported_statements", "—"), "note": "not backed by the evidence"},
-            {"label": "Quotations verified",
-             "value": f"{quotes['verification_rate']:.0%}" if quotes.get("verification_rate") is not None else "—",
+            {"label": "Open issues", "value": len(qa["issues"]), "lead": True, "note": f"after {rounds} critic round{'s' if rounds != 1 else ''}"},
+            {"label": "Quotations verified", "value": f"{quotes['verification_rate']:.0%}" if quotes.get("verification_rate") is not None else "—",
              "note": f"{quotes.get('quotes_verified', 0)} of {quotes.get('quotes_checked', 0)}"},
-            {"label": "Exclusion audit", "value": f"{audit_x['agreement']:.0%}" if audit_x.get("agreement") is not None else "—",
-             "note": f"{audit_x.get('judged', 0)} excluded records re-screened"},
+            {"label": "PRISMA items", "value": f"{checks.get('prisma_items_reported', '—')}/{checks.get('prisma_items_total', '—')}",
+             "note": "reported"},
             {"label": "Unknown citations", "value": len(checks.get("unknown_citations") or [])},
         ]))
         if not qa["issues"]:
             html(ui.empty("The critic found no issue."))
-        severity_tone = {"critical": "crit", "major": "warn", "minor": "plain"}
+        severity_icon = {"critical": ":material/error:", "major": ":material/warning:", "minor": ":material/info:"}
         for issue in sorted(qa["issues"], key=lambda i: ["critical", "major", "minor"].index(i["severity"])):
-            fix = f'<div class="fix"><b>Suggested fix</b> · {ui.e(issue["suggested_fix"])}</div>' if issue.get("suggested_fix") else ""
-            html(f'<div class="issue {issue["severity"]}"><div class="head">'
-                 f'{ui.pill(issue["severity"].capitalize(), severity_tone[issue["severity"]])}{ui.tag(issue["area"])}</div>'
-                 f'{ui.e(issue["description"])}{fix}</div>')
+            area = issue["area"].split(":", 1)[-1]
+            summary = issue["description"].split(" — ")[0].replace("Unsupported statement: ", "")
+            summary = summary if len(summary) <= 92 else summary[:91] + "…"
+            with st.expander(f"{issue['severity'].capitalize()} · {area} · {summary}", icon=severity_icon[issue["severity"]]):
+                st.markdown(issue["description"])
+                if issue.get("suggested_fix"):
+                    st.markdown(f"**Suggested fix** · {issue['suggested_fix']}")
 
-# ---- Audit trail --------------------------------------------------------------
-with tabs[7]:
-    if not audit:
-        html(ui.empty("Nothing logged yet."))
-    else:
-        frame = pd.DataFrame([{
-            "#": e["seq"], "Time": e["ts"][11:19], "Agent": e["agent"], "Action": e["action"].replace("_", " "),
-            "Details": json.dumps({k: v for k, v in e.items() if k not in ("seq", "ts", "agent", "action")},
-                                  ensure_ascii=False, default=str)[:400],
-        } for e in audit])
-        trace = run_dir / "llm_trace.jsonl"
-        html(ui.tiles([
-            {"label": "Events logged", "value": len(audit), "lead": True},
-            {"label": "Agents involved", "value": frame["Agent"].str.split(":").str[0].nunique()},
-            {"label": "Model calls traced", "value": sum(1 for _ in trace.open()) if trace.exists() else "—"},
-            {"label": "Human decisions", "value": int((frame["Agent"] == "human").sum())},
-        ]))
-        agents = st.multiselect("Filter by agent", sorted(frame["Agent"].unique()), placeholder="All agents")
-        st.dataframe(frame[frame["Agent"].isin(agents)] if agents else frame, hide_index=True, width="stretch", height=520,
-                     column_config={"Details": st.column_config.TextColumn(width="large")})
-        st.caption("Full prompts and responses of every model call are in llm_trace.jsonl in the run folder.")
-
-# ---- Evaluation ---------------------------------------------------------------
-with tabs[8]:
     evaluation = latest(run_dir, "evaluation")
-    if evaluation:
-        t = evaluation["time"]
-        rate = evaluation["accuracy"].get("extraction_quote_verification_rate")
-        html(ui.tiles([
-            {"label": "Machine time", "value": f"{t['pipeline_hours']:.2f}", "unit": "h", "lead": True, "note": "incl. rate-limit waits"},
-            {"label": "Manual effort", "value": f"{t['manual_person_hours_estimate']:.0f}", "unit": "h",
-             "note": "person-hours, estimated"},
-            {"label": "PRISMA items", "value": evaluation["completeness"]["prisma_items_reported"]},
-            {"label": "Quotations verified", "value": f"{rate:.0%}" if rate is not None else "—"},
-            {"label": "Agreement, title/abstract", "value": kappa({"cohen_kappa": evaluation["consistency"]["title_abstract_cohen_kappa"]}), "unit": "κ"},
-            {"label": "Agreement, full text", "value": kappa({"cohen_kappa": evaluation["consistency"]["full_text_cohen_kappa"]}), "unit": "κ"},
-        ]))
+    if evaluation or job["finished"]:
+        st.write("")
+        with st.expander("Evaluation: completeness, accuracy, consistency, time", icon=":material/monitoring:"):
+            if not evaluation:
+                if st.button("Compute the evaluation", type="primary"):
+                    from sysrev.evaluation.run_metrics import evaluate_run
 
-        def listing(section: dict) -> str:
-            return ui.rows([ui.row("", f'<span class="muted">{ui.e(k.replace("_", " ").capitalize().replace("Prisma", "PRISMA").replace("cohen", "Cohen"))}</span>', f"<b>{ui.e(v)}</b>")
-                            for k, v in section.items() if k != "note"])
+                    evaluate_run(ctx)
+                    st.rerun()
+            else:
+                t = evaluation["time"]
 
-        c1, c2 = st.columns(2, gap="medium")
-        with c1:
-            html(ui.card("Completeness", listing(evaluation["completeness"]), "Is everything a PRISMA review needs present?"))
-            st.write("")
-            html(ui.card("Inter-agent consistency", listing(evaluation["consistency"]), "Do independent agents reach the same decisions?"))
-        with c2:
-            html(ui.card("Accuracy and grounding", listing(evaluation["accuracy"]), "Is what the agents wrote supported by the sources?"))
-            st.write("")
-            effort = [{"name": r["Stage"].replace("_", " ").capitalize(), "value": r["Manual estimate (person-hours)"],
-                       "label": f"{r['Manual estimate (person-hours)']:g} h", "note": f"pipeline: {r['Pipeline (min)']} min"}
-                      for r in evaluation["time_by_stage"]]
-            html(ui.card("Estimated manual effort by stage", ui.bars(effort),
-                         "Person-hours a manual review would need for the same workload (estimate)"))
-        st.caption(t["note"])
-    elif job["finished"]:
-        html(ui.empty("The evaluation has not been computed for this review."))
-        if st.button("Compute the evaluation", type="primary"):
-            from sysrev.evaluation.run_metrics import evaluate_run
+                def listing(section: dict) -> str:
+                    return ui.rows([ui.row("", f'<span class="muted">{ui.e(k.replace("_", " ").capitalize().replace("Prisma", "PRISMA").replace("cohen", "Cohen"))}</span>',
+                                           f"<b>{ui.e(v)}</b>") for k, v in section.items() if k != "note"])
 
-            evaluate_run(ctx)
-            st.rerun()
-    else:
-        html(ui.empty("Available once the review is finished."))
+                c1, c2 = st.columns(2, gap="medium")
+                with c1:
+                    html(ui.card("Completeness", listing(evaluation["completeness"])))
+                    st.write("")
+                    html(ui.card("Inter-agent consistency", listing(evaluation["consistency"])))
+                with c2:
+                    html(ui.card("Accuracy and grounding", listing(evaluation["accuracy"])))
+                    st.write("")
+                    timings = json.loads((run_dir / "timings.json").read_text()) if (run_dir / "timings.json").exists() else {}
+                    time_rows = [{"name": STAGE_LONG[s], "value": round(timings[s] / 60, 1), "label": f"{timings[s] / 60:.1f} min"}
+                                 for s in ORDER if s in timings and s in STAGE_LONG and timings[s] >= 1]
+                    html(ui.card("Machine time per stage", ui.bars(time_rows),
+                                 f"{t['pipeline_hours']:.2f} h in total, against an estimated {t['manual_person_hours_estimate']:.0f} person-hours by hand"))
+                st.caption(t["note"])
+    if audit:
+        with st.expander(f"Audit trail — {len(audit)} events", icon=":material/history:"):
+            frame = pd.DataFrame([{
+                "#": e["seq"], "Time": e["ts"][11:19], "Agent": e["agent"], "Action": e["action"].replace("_", " "),
+                "Details": json.dumps({k: v for k, v in e.items() if k not in ("seq", "ts", "agent", "action")},
+                                      ensure_ascii=False, default=str)[:400],
+            } for e in audit])
+            agents = st.multiselect("Filter by agent", sorted(frame["Agent"].unique()), placeholder="All agents")
+            st.dataframe(frame[frame["Agent"].isin(agents)] if agents else frame, hide_index=True, width="stretch", height=460,
+                         column_config={"Details": st.column_config.TextColumn(width="large")})
+            st.caption("Full prompts and responses of every model call are in llm_trace.jsonl in the run folder.")
 
 if job["running"]:
     time.sleep(4)
