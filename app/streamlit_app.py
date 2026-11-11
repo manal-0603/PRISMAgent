@@ -24,7 +24,7 @@ from sysrev.context import RunOptions, get_context  # noqa: E402
 from sysrev.graph import ORDER, ReviewRunner  # noqa: E402
 from sysrev.sources.connectors import DISPLAY_NAME  # noqa: E402
 
-st.set_page_config(page_title="SysRev Agents", page_icon="📑", layout="wide")
+st.set_page_config(page_title="PRISMAgent", page_icon="📑", layout="wide")
 st.markdown(ui.CSS, unsafe_allow_html=True)
 
 STAGES = {

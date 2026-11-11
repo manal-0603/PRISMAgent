@@ -1,7 +1,7 @@
 [project]
 name = "sysrev-agents"
 version = "0.1.0"
-description = "Agentic AI pipeline (LangGraph + RAG) for rigorous, transparent and reproducible PRISMA 2020 systematic reviews"
+description = "PRISMAgent: agentic AI pipeline (LangGraph + RAG) for rigorous, transparent and reproducible PRISMA 2020 systematic reviews"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [

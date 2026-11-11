@@ -1,4 +1,6 @@
-# Technical report — an agentic AI pipeline for systematic reviews
+# PRISMAgent — technical report
+
+An agentic AI pipeline for rigorous, transparent and reproducible systematic reviews.
 
 ## 1. Objective
 
