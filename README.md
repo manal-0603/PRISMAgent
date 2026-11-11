@@ -213,11 +213,18 @@ a checkpoint can be closed and resumed later.
 streamlit run app/streamlit_app.py
 ```
 
-Start a review, follow its twelve stages on the progress track, answer the checkpoints in forms
-(the screening table is editable), and browse everything in nine tabs: an overview with the study
-selection funnel, time per stage, risk of bias and grounding; the protocol; the queries; every
-screening decision with both reviewers' rationales; the extracted data with their quotations; the
-manuscript; the critic's report; the audit trail; and the evaluation.
+Start a review, follow its twelve stages on the progress track, and answer the checkpoints in
+forms (the screening table is editable). Six tabs show the headline of each part of the review;
+the detail is one click away, in expanders:
+
+| Tab | At a glance | On demand |
+|---|---|---|
+| Overview | key numbers, study-selection funnel, risk of bias, share of verified quotations, themes | PRISMA flow diagram |
+| Protocol | question framework, inclusion and exclusion criteria | search strategy and queries, data items, coordinator briefs |
+| Screening | counts, agreement, every decision | reviewers' rationales, how each disagreement was settled |
+| Studies | one card per included study | extracted data with quotations, findings, risk-of-bias domains |
+| Report | the manuscript, with Markdown, Word and BibTeX downloads | |
+| Quality | the critic's open issues, one line each | full issue and suggested fix, evaluation, audit trail |
 
 To browse the demonstration review without running anything or setting a key:
 
