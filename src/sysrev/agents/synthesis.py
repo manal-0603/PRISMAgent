@@ -381,12 +381,20 @@ def methods_sections(ctx: RunContext, protocol: Protocol, strategy: SearchStrate
             + f"). The relevance-ranking cap keeps the {opts.max_screen} records ranked highest against the review "
             "question by hybrid dense (sentence-embedding) and sparse (BM25) retrieval with reciprocal rank fusion. "
         )
+    locked = sorted(c.id for c in protocol.inclusion_criteria + protocol.exclusion_criteria if c.full_text_only)
+    locked_rule = (
+        f"The protocol marks {_count(len(locked), 'criterion').replace('criterions', 'criteria')} ({', '.join(locked)}) as verifiable "
+        "only on a full text; the pipeline enforces in code that such a criterion cannot, alone, justify an exclusion at "
+        f"title/abstract stage ({agreement_ta.get('exclusions_blocked_by_guard', 0)} exclusion votes were converted to 'unsure' "
+        "by this rule). " if locked else ""
+    )
     selection = (
         "Records were de-duplicated automatically (matching on DOI, PubMed id, arXiv id, exact normalised title, "
         "then fuzzy title similarity of at least 95% with publication years at most one apart). " + automation
         + f"Titles and abstracts were then screened independently by two AI reviewers built on different language "
         f"models (reviewer A: {models['reviewer_a']}; reviewer B: {models['reviewer_b']}), each applying the eligibility "
-        "criteria without access to the other's votes. Records were excluded only when both reviewers excluded "
+        "criteria without access to the other's votes. " + locked_rule
+        + "Records were excluded only when both reviewers excluded "
         f"them or when an adjudicator agent ({models['adjudicator']}), given both rationales, decided so; unclear "
         "records were carried forward. Full texts were sought for all retained records from open-access sources "
         "(Europe PMC, arXiv, publisher open-access PDFs). For each report, the passages most relevant to each "

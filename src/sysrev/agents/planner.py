@@ -53,6 +53,10 @@ Rules:
 - Be specific to the research question; never write generic boilerplate.
 - Eligibility criteria must be precise and checkable from a title and abstract. Use ids I1, I2… \
 for inclusion and E1, E2… for exclusion.
+- For every criterion set `full_text_only`. An abstract is a summary: it names the topic, the \
+population and the intervention, but often omits whether there was a comparator group, the exact design, \
+the outcomes measured or the follow-up. Criteria about such details are `full_text_only: true`; at \
+title/abstract screening they are not allowed to exclude a record.
 - `databases` must be chosen among: {databases}.
 - `data_items` are what must be read out of each study (population, intervention, comparator, \
 methods, results…), 5-9 items. Do not list bibliographic fields (authors, year, title, journal, DOI), \
@@ -85,12 +89,16 @@ def _apply_fixed(protocol: Protocol, fixed: dict) -> Protocol:
             if item not in data[key]:
                 data[key].append(item)
     for key, prefix in (("inclusion_criteria", "I"), ("exclusion_criteria", "E")):
-        merged: list[str] = []
-        for text in [c["text"] for c in data[key]] + list(fixed.get(key) or []):
+        merged: list[dict] = []
+        candidates = list(data[key]) + [{"text": text, "full_text_only": False} for text in fixed.get(key) or []]
+        for item in candidates:
             # the model usually copies the imposed criteria itself, with small rewordings
-            if not any(fuzz.ratio(text.lower(), kept.lower()) >= 85 for kept in merged):
-                merged.append(text)
-        data[key] = [{"id": f"{prefix}{i}", "text": text} for i, text in enumerate(merged, start=1)]
+            if not any(fuzz.ratio(item["text"].lower(), kept["text"].lower()) >= 85 for kept in merged):
+                merged.append(item)
+        data[key] = [
+            {"id": f"{prefix}{i}", "text": item["text"], "full_text_only": bool(item.get("full_text_only"))}
+            for i, item in enumerate(merged, start=1)
+        ]
     automatic = ("author", "year", "title", "journal", "doi", "publication date", "study design", "country", "sample size", "funding")
     data["data_items"] = [item for item in data["data_items"] if not item.strip().lower().startswith(automatic)] or data["data_items"]
     data["databases"] = [d for d in dict.fromkeys(data["databases"]) if d in SOURCES] or ["openalex", "europepmc"]
@@ -138,8 +146,23 @@ def make_plan(ctx: RunContext, protocol: Protocol) -> ReviewPlan:
     return plan
 
 
-def protocol_brief(protocol: Protocol, with_data_items: bool = False) -> str:
-    """Compact text rendering of the protocol used in downstream prompts."""
+FULL_TEXT_TAG = " [full text only]"
+
+
+def full_text_only_ids(protocol: Protocol) -> set[str]:
+    """Ids of the criteria that cannot be judged from a title and abstract."""
+    return {c.id for c in protocol.inclusion_criteria + protocol.exclusion_criteria if c.full_text_only}
+
+
+def protocol_brief(protocol: Protocol, with_data_items: bool = False, mark_full_text_only: bool = False) -> str:
+    """Compact text rendering of the protocol used in downstream prompts.
+
+    `mark_full_text_only` tags the criteria that title/abstract screening may not use to exclude.
+    """
+
+    def line(c: Criterion) -> str:
+        return f"  {c.id}.{FULL_TEXT_TAG if mark_full_text_only and c.full_text_only else ''} {c.text}"
+
     lines = [
         f"Review question: {protocol.research_question}",
         f"Framework ({protocol.framework}): "
@@ -149,9 +172,9 @@ def protocol_brief(protocol: Protocol, with_data_items: bool = False) -> str:
     if protocol.date_from or protocol.date_to:
         lines.append(f"Publication years: {protocol.date_from or 'any'} to {protocol.date_to or 'present'}")
     lines.append("Inclusion criteria:")
-    lines += [f"  {c.id}. {c.text}" for c in protocol.inclusion_criteria]
+    lines += [line(c) for c in protocol.inclusion_criteria]
     lines.append("Exclusion criteria:")
-    lines += [f"  {c.id}. {c.text}" for c in protocol.exclusion_criteria]
+    lines += [line(c) for c in protocol.exclusion_criteria]
     if with_data_items:
         lines.append("Outcomes of interest: " + "; ".join(protocol.outcomes))
         lines.append("Data items to extract: " + "; ".join(protocol.data_items))

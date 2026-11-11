@@ -125,6 +125,8 @@ def run_benchmark(dataset: str, n: int = 100, seed: int = 13, positive_share: fl
         "kappa_between_ai_reviewers": round(kappa_ab, 4) if kappa_ab is not None else None,
         "kappa_between_ai_reviewers_label": kappa_label(kappa_ab),
         "conflicts_sent_to_adjudicator": sum(not d.agreed for d in decisions),
+        "full_text_only_criteria": sorted(planner.full_text_only_ids(protocol)),
+        "exclusions_blocked_by_guard": ctx.store.load("agreement_title_abstract").get("exclusions_blocked_by_guard", 0),
         "finally_included_studies_in_sample": sum(final_included),
         "finally_included_studies_kept_by_pipeline": final_found,
         "seconds": round(seconds, 1), "seconds_per_record": round(seconds / len(sample), 2),
@@ -156,6 +158,8 @@ def run_benchmark(dataset: str, n: int = 100, seed: int = 13, positive_share: fl
         f"Adjudicator: {settings.task_model('adjudicator')}. Protocol written by: {settings.task_model('planner')}.", "",
         f"- Agreement between the two AI reviewers: kappa = {report['kappa_between_ai_reviewers']} "
         f"({report['kappa_between_ai_reviewers_label']}); {report['conflicts_sent_to_adjudicator']} conflicts adjudicated",
+        f"- Criteria the planner marked as full-text only: {', '.join(report['full_text_only_criteria']) or 'none'}; "
+        f"exclusion votes converted to 'unsure' by the code guard: {report['exclusions_blocked_by_guard']}",
         f"- Studies finally included in the published review that were in the sample: {sum(final_included)}; kept by the pipeline: {final_found}",
         f"- Precision re-weighted to the dataset prevalence: {final.get('precision_at_dataset_prevalence')}; "
         f"share of records a human would not need to read: {final.get('workload_reduction_at_dataset_prevalence')}",
