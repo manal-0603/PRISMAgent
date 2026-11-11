@@ -1,0 +1,149 @@
+{
+  "run_id": "20261110-234913-how-accurate-are-large-language-models-a",
+  "question": "How accurate are large language models at title and abstract screening for systematic reviews, compared with human reviewers?",
+  "flow": {
+    "identified": {
+      "pubmed": 40,
+      "europepmc": 40,
+      "semantic_scholar": 40
+    },
+    "duplicates_removed": 8,
+    "removed_by_automation": 88,
+    "automation_detail": {
+      "relevance-ranking cap": 88
+    },
+    "records_screened": 24,
+    "records_excluded": 4,
+    "reports_sought": 20,
+    "reports_not_retrieved": 0,
+    "reports_assessed": 20,
+    "assessed_on_abstract_only": 10,
+    "reports_excluded": {
+      "E5: Compares the LLM only with another automated method, without a human reviewer benchmark.": 5,
+      "I3: Provides a direct comparison with human reviewer performance on the same dataset.": 2
+    },
+    "studies_included": 13
+  },
+  "flow_errors": [],
+  "agreement_title_abstract": {
+    "n": 24,
+    "raw_agreement": 0.9583,
+    "cohen_kappa": 0.8333,
+    "interpretation": "almost perfect",
+    "conflicts": 1,
+    "reviewer_a_included": 20,
+    "reviewer_b_included": 21,
+    "resolved_by": {
+      "consensus": 23,
+      "adjudicator": 1,
+      "human": 0
+    }
+  },
+  "agreement_full_text": {
+    "n": 20,
+    "raw_agreement": 0.85,
+    "cohen_kappa": 0.6591,
+    "interpretation": "substantial",
+    "conflicts": 3,
+    "reviewer_a_included": 13,
+    "reviewer_b_included": 14,
+    "resolved_by": {
+      "consensus": 17,
+      "adjudicator": 3,
+      "human": 0
+    }
+  },
+  "qa": {
+    "round": 1,
+    "prisma_flow_consistent": true,
+    "prisma_items_reported": 42,
+    "prisma_items_total": 42,
+    "unknown_citations": [],
+    "included_without_extraction": [],
+    "uncited_sentence_ratio": {
+      "Prompt engineering": 0.29,
+      "Model performance comparisons": 0.36,
+      "Efficiency and workload reduction": 0.29,
+      "LLM versus supervised machine learning": 0.5
+    },
+    "extraction_quotes": {
+      "quotes_checked": 109,
+      "quotes_verified": 98,
+      "verification_rate": 0.8991
+    },
+    "unsupported_statements": 3,
+    "overstatements": 2,
+    "exclusion_audit": {
+      "sampled": 4,
+      "judged": 4,
+      "auditor_would_include": [
+        "R0038"
+      ],
+      "agreement": 0.75
+    },
+    "eligibility_audit": {
+      "checked": 13,
+      "flagged": []
+    }
+  },
+  "qa_verdict": "revise",
+  "prisma_items_reported": 42,
+  "prisma_items_total": 42,
+  "timings_seconds": {
+    "protocol": 0.01,
+    "search_strategy": 64.1,
+    "retrieval": 12.0,
+    "screen_title_abstract": 182.7,
+    "screen_full_text": 367.42,
+    "extraction": 910.97,
+    "synthesis": 366.47,
+    "critic": 184.57,
+    "finalize": 6.09
+  },
+  "llm_usage": {
+    "openai/gpt-oss-120b": {
+      "calls": 41,
+      "cached": 18,
+      "input_tokens": 52982,
+      "output_tokens": 7571,
+      "seconds": 25.3
+    },
+    "openai/gpt-oss-20b": {
+      "calls": 54,
+      "cached": 2,
+      "input_tokens": 98736,
+      "output_tokens": 24109,
+      "seconds": 55.9
+    },
+    "qwen/qwen3.8-27b": {
+      "calls": 29,
+      "cached": 0,
+      "input_tokens": 59359,
+      "output_tokens": 5136,
+      "seconds": 21.4
+    }
+  },
+  "human_checkpoints": [
+    {
+      "checkpoint": "protocol_and_search",
+      "mode": "auto",
+      "action": "approve",
+      "feedback": "",
+      "ts": "2026-11-10T23:50:17"
+    },
+    {
+      "checkpoint": "screening",
+      "mode": "auto",
+      "action": "approve",
+      "feedback": "",
+      "ts": "2026-11-10T23:53:32"
+    },
+    {
+      "checkpoint": "final_report",
+      "mode": "auto",
+      "action": "approve",
+      "feedback": "",
+      "ts": "2026-11-11T00:24:01"
+    }
+  ]
+}

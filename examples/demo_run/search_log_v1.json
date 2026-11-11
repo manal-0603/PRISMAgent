@@ -1,0 +1,13 @@
+{
+  "identified": {
+    "pubmed": 40,
+    "europepmc": 40,
+    "semantic_scholar": 40
+  },
+  "errors": {},
+  "total_hits": {
+    "pubmed": 195,
+    "europepmc": 312,
+    "semantic_scholar": 221
+  }
+}

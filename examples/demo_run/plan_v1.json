@@ -1,0 +1,39 @@
+{
+  "briefs": [
+    {
+      "stage": "search_strategy",
+      "objective": "Develop a comprehensive search that captures all primary studies evaluating LLMs for title/abstract screening against human reviewers.",
+      "guidance": "Combine terms for large language models (GPT‑4, Claude, LLaMA, \"large language model\") with screening verbs (\"title screening\", \"abstract screening\"). Exclude generic NLP tools and non‑primary reports. Beware of ambiguous phrases like \"AI‑assisted screening\" that may not specify LLMs."
+    },
+    {
+      "stage": "retrieval",
+      "objective": "Obtain full texts (including preprints) for every record retrieved by the search.",
+      "guidance": "Prioritize sources with PDFs; use institutional access or author requests. Flag records lacking full text or only available as abstracts—these will be excluded later. Watch for conference abstracts that may not contain detailed metrics."
+    },
+    {
+      "stage": "title_abstract_screening",
+      "objective": "Screen titles and abstracts to retain studies that potentially meet inclusion criteria.",
+      "guidance": "Reject obvious non‑primary reports, reviews, or studies using only keyword filters. Ambiguous cases include papers mentioning \"AI screening\" without specifying LLM type—retain for full‑text check. Exclude studies focusing solely on full‑text screening."
+    },
+    {
+      "stage": "full_text_screening",
+      "objective": "Confirm eligibility by verifying all inclusion and exclusion criteria against the full text.",
+      "guidance": "Ensure the study reports quantitative LLM accuracy metrics and a direct human comparator. Reject papers lacking any performance numbers or comparing only to other automated tools. Note that conference papers may omit detailed metrics—exclude if unavailable."
+    },
+    {
+      "stage": "extraction_appraisal",
+      "objective": "Extract accuracy outcomes, efficiency data, study design, LLM version, and comparator details; assess risk of bias.",
+      "guidance": "Hard‑to‑find items: exact time per record and confidence intervals for metrics. Non‑comparable studies often use different datasets or thresholds; record these differences. Flag missing precision/recall pairs or unclear human reviewer protocol."
+    },
+    {
+      "stage": "synthesis_writing",
+      "objective": "Summarize pooled accuracy estimates, heterogeneity sources, and efficiency findings across studies.",
+      "guidance": "When studies use different LLMs or datasets, report subgroup analyses rather than a single pooled metric. Highlight inconsistent reporting (e.g., only sensitivity) and note any bias from small sample sizes. Keep narrative concise."
+    },
+    {
+      "stage": "quality_assurance",
+      "objective": "Verify that all stages meet protocol standards, data are accurate, and the final report is error‑free.",
+      "guidance": "Cross‑check extracted numbers against source PDFs, ensure all excluded studies have documented reasons, and confirm JSON output is syntactically valid. Look for overlooked duplicate records or missed eligibility criteria."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Local caches and run directories (share a run with `sysrev export <run_id> examples/<name>`)
+.cache/
+runs/
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# Assignment statement (course document, not ours to redistribute)
+Project Agentic AI Pipeline.pdf
+
+# Created when an exported run is opened in the web interface
+examples/*/checkpoints.sqlite*
+examples/*/chroma/

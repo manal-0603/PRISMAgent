@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Prompt engineering",
+    "description": "Studies evaluating the impact of prompt design and optimization on LLM screening accuracy and sensitivity.",
+    "study_ids": [
+      "R0006",
+      "R0028",
+      "R0089",
+      "R0064",
+      "R0057"
+    ]
+  },
+  {
+    "name": "Model performance comparisons",
+    "description": "Direct comparisons of different large language models (e.g., GPT‑4, Claude, Gemini, ChatGPT) for title/abstract screening accuracy.",
+    "study_ids": [
+      "R0039",
+      "R0040",
+      "R0052",
+      "R0053",
+      "R0070",
+      "R0074",
+      "R0048"
+    ]
+  },
+  {
+    "name": "Efficiency and workload reduction",
+    "description": "Evidence on time savings, processing speed, and reduction of human workload when using LLMs for screening.",
+    "study_ids": [
+      "R0028",
+      "R0048",
+      "R0074",
+      "R0064",
+      "R0070"
+    ]
+  },
+  {
+    "name": "LLM versus supervised machine learning",
+    "description": "Comparative evaluations of LLMs against traditional supervised machine‑learning classifiers for title‑abstract screening.",
+    "study_ids": [
+      "R0042"
+    ]
+  }
+]

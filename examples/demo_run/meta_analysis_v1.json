@@ -1,0 +1,54 @@
+{
+  "n_effects": 48,
+  "pooled": [
+    {
+      "outcome": "Sensitivity",
+      "measure": "accuracy",
+      "studies": [
+        "Cao et al. (2025) [R0006]",
+        "Oami et al. (2024) [R0028]",
+        "Oami et al. (2025) [R0040]"
+      ],
+      "k": 3,
+      "fixed_effect": 0.7927,
+      "fixed_ci": [
+        0.6531,
+        0.9324
+      ],
+      "random_effects": 18.566,
+      "random_ci": [
+        14.7231,
+        22.4089
+      ],
+      "tau2": 9.40824,
+      "Q": 816.126,
+      "I2_percent": 99.8,
+      "scale": "natural"
+    },
+    {
+      "outcome": "Specificity",
+      "measure": "accuracy",
+      "studies": [
+        "Cao et al. (2025) [R0006]",
+        "Oami et al. (2024) [R0028]",
+        "Oami et al. (2025) [R0040]"
+      ],
+      "k": 3,
+      "fixed_effect": 0.98,
+      "fixed_ci": [
+        0.9694,
+        0.9907
+      ],
+      "random_effects": 0.9871,
+      "random_ci": [
+        0.8606,
+        1.1135
+      ],
+      "tau2": 0.00826,
+      "Q": 143.076,
+      "I2_percent": 98.6,
+      "scale": "natural"
+    }
+  ],
+  "note": ""
+}

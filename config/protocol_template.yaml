@@ -1,0 +1,53 @@
+# Configurable review protocol template (aligned with PRISMA-P 2015 / PRISMA 2020).
+#
+# The Planner agent fills in every protocol field from the research question.
+# Anything you set under `fixed` is imposed on the agent and copied verbatim into
+# the protocol; anything under `guidance` is advice the agent must follow when it
+# writes the corresponding field. Leave a value empty (null or []) to let the
+# agent decide.
+
+fixed:
+  # Question framework: PICO, PECO, PCC, SPIDER… (null = the agent picks the best fit)
+  framework: null
+  # Publication years, inclusive (null = no limit)
+  date_from: null
+  date_to: null
+  languages: [English]
+  # Databases to search. Available: pubmed, europepmc, openalex, arxiv, semantic_scholar
+  # ([] = the agent selects those relevant to the field of the question)
+  databases: []
+  # Eligible study designs ([] = the agent decides)
+  study_designs: []
+  # Extra eligibility rules that must appear in the protocol
+  inclusion_criteria: []
+  exclusion_criteria:
+    - Not a primary research report (editorials, commentaries, letters, protocols, narrative or systematic reviews)
+  # Data items that must be extracted from every included study, besides those the agent proposes
+  data_items: []
+
+guidance:
+  title: Identify the report as a systematic review in the title.
+  eligibility: >
+    Write 3-6 inclusion and 3-6 exclusion criteria. Each criterion must be a single
+    rule that can be checked on a title and abstract, and must not overlap another.
+    Do not restrict by publication status: preprints and conference papers are eligible
+    unless the question says otherwise. Do not add a date limit unless the question
+    implies one.
+  databases: >
+    Choose at least two databases. Use pubmed and europepmc for biomedical and health
+    topics, arxiv for computer science, physics and mathematics, openalex and
+    semantic_scholar for any field.
+  risk_of_bias: >
+    Name the appraisal tool matching each eligible design: RoB 2 for randomised trials,
+    ROBINS-I for non-randomised intervention studies, QUADAS-2 for diagnostic accuracy,
+    Newcastle-Ottawa Scale for cohort and case-control studies, PROBAST for prediction-model
+    and machine-learning evaluation studies, JBI checklists for other designs.
+  synthesis: >
+    Plan a narrative synthesis grouped by theme. Plan a meta-analysis only when studies
+    are expected to report the same effect measure on comparable populations.
+
+# Statements reported in the "Other information" section of the manuscript.
+administrative:
+  registration: This review was not registered. The protocol was generated before the search and is stored with the run artifacts (protocol_v1.json).
+  support: No external funding was received for this review.
+  competing_interests: The authors declare no competing interests.

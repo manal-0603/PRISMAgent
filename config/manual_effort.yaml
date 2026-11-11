@@ -1,0 +1,20 @@
+# Assumed human effort for each task of a manual systematic review.
+#
+# These values are ASSUMPTIONS used only to translate the pipeline's workload into
+# an estimate of the person-time a conventional review would need. Replace them
+# with your team's own figures: the evaluation report states them explicitly and
+# recomputes everything from this file.
+#
+# Per-item tasks (minutes per item, per person)
+title_abstract_screening_min_per_record: 0.75   # one reviewer reading one title + abstract
+full_text_retrieval_min_per_report: 4           # locating and downloading one full text
+full_text_screening_min_per_report: 10          # one reviewer assessing one full text
+data_extraction_min_per_study: 45               # one extractor filling the form for one study
+risk_of_bias_min_per_study: 20                  # one assessor appraising one study
+reviewers_per_screening_task: 2                 # dual independent screening
+
+# One-off tasks (hours)
+protocol_hours: 8
+search_strategy_hours: 6
+deduplication_hours: 1
+synthesis_and_writing_hours: 30

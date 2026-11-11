@@ -1,0 +1,20 @@
+{
+  "identified": {
+    "pubmed": 40,
+    "europepmc": 40,
+    "semantic_scholar": 40
+  },
+  "duplicates_removed": 8,
+  "removed_by_automation": 88,
+  "automation_detail": {
+    "relevance-ranking cap": 88
+  },
+  "records_screened": 24,
+  "records_excluded": 4,
+  "reports_sought": 20,
+  "reports_not_retrieved": 0,
+  "reports_assessed": 0,
+  "assessed_on_abstract_only": 0,
+  "reports_excluded": {},
+  "studies_included": 0
+}
