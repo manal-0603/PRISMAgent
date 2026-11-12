@@ -1,69 +1,88 @@
 {
-  "title": "Systematic Review of the Accuracy of Large Language Models for Title and Abstract Screening in Systematic Reviews",
+  "title": "Systematic Review of the Accuracy of Large Language Models for Title and Abstract Screening Compared with Human Reviewers",
   "research_question": "How accurate are large language models at title and abstract screening for systematic reviews, compared with human reviewers?",
-  "rationale": "Automating the initial screening of titles and abstracts could dramatically reduce the workload of systematic reviewers. Large language models (LLMs) have shown promise in natural‑language tasks, but their performance for screening decisions remains uncertain. A systematic synthesis of empirical evaluations is needed to inform methodological guidance and identify gaps in evidence.",
+  "rationale": "Automated screening promises to reduce workload in systematic reviews, yet the performance of large language models (LLMs) for title and abstract screening remains uncertain. Existing studies report heterogeneous accuracy metrics and methodological quality, making it difficult for reviewers to adopt LLMs confidently. A systematic synthesis of comparative evidence will clarify the current state of LLM screening performance and identify gaps for future research.",
   "objectives": [
-    "To identify and summarise primary studies that evaluate the performance of LLMs for title and abstract screening in systematic reviews.",
-    "To compare reported accuracy metrics of LLMs with those of human reviewers.",
-    "To assess the methodological quality of the identified studies.",
-    "To determine whether meta‑analysis of accuracy outcomes is feasible."
+    "To identify and summarise primary research that evaluates the performance of LLMs for title and abstract screening in systematic reviews.",
+    "To compare LLM screening accuracy with that of human reviewers using standard performance measures (e.g., sensitivity, specificity, precision, recall, F1).",
+    "To assess the methodological quality of included studies and explore factors influencing LLM performance."
   ],
   "framework": "PICO",
   "framework_elements": {
-    "Population": "Records (titles and abstracts) that are candidates for inclusion in systematic reviews.",
-    "Intervention": "Screening performed by a large language model (e.g., GPT‑4, Claude, LLaMA).",
-    "Comparator": "Screening performed by human reviewers (single or duplicate).",
-    "Outcome": "Accuracy measures (sensitivity, specificity, precision, recall, F1‑score) and screening efficiency (time per record)."
+    "Population": "Records (titles and abstracts) retrieved for systematic review screening",
+    "Intervention": "Screening performed by a large language model (e.g., GPT‑4, Claude, LLaMA)",
+    "Comparator": "Screening performed by human reviewers (single or dual independent screening)",
+    "Outcome": "Accuracy metrics of screening decisions (sensitivity, specificity, precision, recall, F1, area under the ROC curve)"
   },
   "inclusion_criteria": [
     {
       "id": "I1",
-      "text": "Primary research evaluating a large language model for title and/or abstract screening of systematic reviews."
+      "text": "Primary research that evaluates a large language model for title and/or abstract screening of systematic review records.",
+      "full_text_only": false
     },
     {
       "id": "I2",
-      "text": "Reports at least one quantitative accuracy metric (e.g., sensitivity, specificity, precision, recall, F1‑score) for the LLM."
+      "text": "The study reports a quantitative comparison between the LLM and at least one human reviewer or a human reference standard.",
+      "full_text_only": false
     },
     {
       "id": "I3",
-      "text": "Provides a direct comparison with human reviewer performance on the same dataset."
+      "text": "The population consists of records retrieved for any health‑related systematic review (any clinical, public‑health or health‑services topic).",
+      "full_text_only": false
     },
     {
       "id": "I4",
-      "text": "Written in English."
+      "text": "The article is written in English.",
+      "full_text_only": false
     },
     {
       "id": "I5",
-      "text": "Full‑text available (including preprints and conference papers)."
+      "text": "The study provides at least one accuracy measure (e.g., sensitivity, specificity, precision, recall, F1, AUC).",
+      "full_text_only": false
+    },
+    {
+      "id": "I6",
+      "text": "Full text is available for data extraction.",
+      "full_text_only": true
     }
   ],
   "exclusion_criteria": [
     {
       "id": "E1",
-      "text": "Not a primary research report (editorials, commentaries, letters, protocols, narrative or systematic reviews)."
+      "text": "Not a primary research report (editorials, commentaries, letters, protocols, narrative or systematic reviews).",
+      "full_text_only": false
     },
     {
       "id": "E2",
-      "text": "Evaluates only generic NLP tools that are not classified as large language models (e.g., keyword filters, traditional machine‑learning classifiers)."
+      "text": "Studies that evaluate LLMs for tasks other than title/abstract screening (e.g., full‑text retrieval, data extraction, risk‑of‑bias assessment).",
+      "full_text_only": false
     },
     {
       "id": "E3",
-      "text": "Focuses solely on full‑text screening or data extraction without assessing title/abstract screening."
+      "text": "Studies that use only simulated data without real systematic‑review records.",
+      "full_text_only": false
     },
     {
       "id": "E4",
-      "text": "Does not report any performance metric for the LLM."
+      "text": "Conference abstracts without a full‑text manuscript.",
+      "full_text_only": true
     },
     {
       "id": "E5",
-      "text": "Compares the LLM only with another automated method, without a human reviewer benchmark."
+      "text": "Studies that do not provide a human comparator or reference standard for screening decisions.",
+      "full_text_only": true
+    },
+    {
+      "id": "E6",
+      "text": "Non‑English language publications.",
+      "full_text_only": false
     }
   ],
   "study_designs": [
     "Diagnostic accuracy study",
-    "Cross‑sectional validation study",
+    "Cross‑sectional comparative study",
     "Randomised controlled trial of screening methods",
-    "Non‑randomised comparative study"
+    "Quasi‑experimental study"
   ],
   "date_from": null,
   "date_to": null,
@@ -73,26 +92,28 @@
   "databases": [
     "pubmed",
     "europepmc",
+    "arxiv",
     "semantic_scholar"
   ],
   "outcomes": [
     "Sensitivity (recall) of LLM screening",
     "Specificity of LLM screening",
     "Precision (positive predictive value)",
-    "F1‑score",
-    "Time per record screened",
-    "Number of records correctly included/excluded"
+    "F1 score",
+    "Area under the ROC curve (AUC)",
+    "Time taken for screening (if reported)"
   ],
   "data_items": [
-    "Number of records screened",
-    "LLM name, version, and prompting strategy",
-    "Human reviewer process (single, duplicate, consensus)",
-    "Reference standard definition (gold‑standard inclusion decisions)",
-    "Reported accuracy metrics (sensitivity, specificity, precision, recall, F1‑score)",
-    "Screening time per record for LLM and humans",
-    "Any reported adverse effects (e.g., missed critical studies)"
+    "Population description (type of systematic review, number of records screened)",
+    "LLM model name and version",
+    "Prompting / fine‑tuning strategy used",
+    "Human reviewer process (single, dual, consensus)",
+    "Reference standard definition (gold‑standard inclusion/exclusion decisions)",
+    "Accuracy metrics reported (sensitivity, specificity, precision, recall, F1, AUC)",
+    "Screening time or efficiency measures",
+    "Risk‑of‑bias assessment outcome"
   ],
-  "risk_of_bias_approach": "QUADAS‑2 will be applied to diagnostic accuracy studies; ROBINS‑I will be used for non‑randomised comparative designs; RoB 2 will be applied if any randomised trials are found. Two reviewers will assess each study independently, with disagreements resolved by consensus.",
-  "synthesis_plan": "A narrative synthesis will summarise study characteristics, LLM configurations, and accuracy outcomes, grouped by model type and screening context. If ≥3 studies report comparable sensitivity and specificity on similar datasets, a random‑effects meta‑analysis will be performed using a bivariate model.",
+  "risk_of_bias_approach": "Diagnostic accuracy studies will be appraised with QUADAS‑2; non‑randomised comparative designs will be assessed using ROBINS‑I; any randomised trials of screening methods will be evaluated with RoB 2. Two reviewers will independently apply the tools, with disagreements resolved by consensus.",
+  "synthesis_plan": "A narrative synthesis will summarise study characteristics, LLM configurations, and reported accuracy metrics, grouped by LLM type and screening workflow. Where at least three studies report the same metric on comparable populations, a random‑effects meta‑analysis of sensitivity and specificity will be performed using a bivariate model; otherwise, results will be presented descriptively.",
   "meta_analysis_planned": true
 }

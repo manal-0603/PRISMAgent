@@ -1,7 +1,7 @@
 {
   "concepts": [
     {
-      "name": "Large language models for screening",
+      "name": "Large language model screening",
       "free_text_terms": [
         "large language model",
         "LLM",
@@ -9,12 +9,12 @@
         "ChatGPT",
         "Claude",
         "LLaMA",
-        "PaLM",
-        "Bard",
-        "generative AI",
+        "BERT",
         "transformer model",
-        "AI language model",
-        "deep learning model"
+        "AI screening",
+        "machine learning",
+        "deep learning",
+        "natural language processing"
       ],
       "controlled_terms": [
         "Artificial Intelligence",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "name": "Title/abstract screening in systematic reviews",
+      "name": "Systematic review title/abstract screening",
       "free_text_terms": [
         "title screening",
         "abstract screening",
@@ -30,34 +30,37 @@
         "record screening",
         "citation screening",
         "eligibility screening",
-        "systematic review screening",
-        "screening of titles",
-        "screening of abstracts",
-        "SR screening"
+        "systematic review",
+        "SR",
+        "screening decisions",
+        "screening accuracy"
       ],
       "controlled_terms": [
         "Systematic Review",
-        "Literature Review",
-        "Information Retrieval"
+        "Literature Review"
       ]
     }
   ],
   "queries": {
-    "pubmed": "(\"large language model\"[tiab] OR LLM[tiab] OR GPT-4[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR PaLM[tiab] OR Bard[tiab] OR \"generative AI\"[tiab] OR \"transformer model\"[tiab] OR \"AI language model\"[tiab] OR \"deep learning model\"[tiab] OR \"Artificial Intelligence\"[MeSH Terms] OR \"Machine Learning\"[MeSH Terms]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab] OR \"record screening\"[tiab] OR \"citation screening\"[tiab] OR \"eligibility screening\"[tiab] OR \"systematic review screening\"[tiab] OR \"screening of titles\"[tiab] OR \"screening of abstracts\"[tiab] OR \"SR screening\"[tiab]) AND (sensitivity[tiab] OR specificity[tiab] OR precision[tiab] OR recall[tiab] OR \"F1 score\"[tiab])",
-    "europepmc": "(TITLE_ABS:\"large language model\" OR TITLE_ABS:LLM OR TITLE_ABS:GPT-4 OR TITLE_ABS:ChatGPT OR TITLE_ABS:Claude OR TITLE_ABS:LLaMA OR TITLE_ABS:PaLM OR TITLE_ABS:Bard OR TITLE_ABS:\"generative AI\" OR TITLE_ABS:\"transformer model\" OR TITLE_ABS:\"AI language model\" OR TITLE_ABS:\"deep learning model\" OR TITLE_ABS:\"Artificial Intelligence\" OR TITLE_ABS:\"Machine Learning\") AND (TITLE_ABS:\"title screening\" OR TITLE_ABS:\"abstract screening\" OR TITLE_ABS:\"study selection\" OR TITLE_ABS:\"record screening\" OR TITLE_ABS:\"citation screening\" OR TITLE_ABS:\"eligibility screening\" OR TITLE_ABS:\"systematic review screening\" OR TITLE_ABS:\"screening of titles\" OR TITLE_ABS:\"screening of abstracts\" OR TITLE_ABS:\"SR screening\") AND (TITLE_ABS:sensitivity OR TITLE_ABS:specificity OR TITLE_ABS:precision OR TITLE_ABS:recall OR TITLE_ABS:\"F1 score\")",
-    "semantic_scholar": "(\"large language model\" | LLM | GPT-4 | ChatGPT | Claude | LLaMA | PaLM | Bard | \"generative AI\" | \"transformer model\" | \"AI language model\" | \"deep learning model\" ) + (\"title screening\" | \"abstract screening\" | \"study selection\" | \"record screening\" | \"citation screening\" | \"eligibility screening\" | \"systematic review screening\" | \"screening of titles\" | \"screening of abstracts\" | \"SR screening\") + (sensitivity | specificity | precision | recall | \"F1 score\")"
+    "pubmed": "(GPT-4[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR BERT[tiab]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab])",
+    "europepmc": "(TITLE_ABS:\"GPT-4\" OR TITLE_ABS:ChatGPT OR TITLE_ABS:Claude OR TITLE_ABS:LLaMA OR TITLE_ABS:BERT) AND (TITLE_ABS:\"title screening\" OR TITLE_ABS:\"abstract screening\" OR TITLE_ABS:\"study selection\")",
+    "arxiv": "(abs:\"GPT-4\" OR abs:ChatGPT OR abs:Claude OR abs:LLaMA OR abs:BERT OR abs:\"large language model\") AND (abs:\"title screening\" OR abs:\"abstract screening\" OR abs:\"study selection\" OR abs:\"systematic review\" )",
+    "semantic_scholar": "(GPT-4 | ChatGPT | Claude | LLaMA | BERT) + (\"title screening\" | \"abstract screening\" | \"study selection\")"
   },
-  "rationale": "The queries combined the LLM block with the screening block using AND, and added a third block of accuracy terms to keep results within a manageable size. PubMed required narrowing to title/abstract fields and adding outcome keywords, while Europe PMC needed all terms forced into TITLE_ABS and also benefited from the outcome block. Semantic Scholar’s flexible syntax allowed a single combined query with the three blocks, yielding a similar hit count. This balances sensitivity—capturing all relevant LLM‑screening studies—with precision by limiting to records that report performance metrics.",
+  "rationale": "The final semantic‑scholar query combined the LLM names (GPT‑4, ChatGPT, Claude, LLaMA, BERT) with the screening concepts (title screening, abstract screening, study selection) using the “+” operator for AND and “|” for OR, yielding a focused set of about 120 records. This kept the LLM block concise for precision while retaining enough screening terms for sensitivity.",
   "hit_counts": {
-    "pubmed": 195,
-    "europepmc": 312,
-    "semantic_scholar": 221
+    "pubmed": 78,
+    "europepmc": 90,
+    "arxiv": 393,
+    "semantic_scholar": 123
   },
   "refinement_log": [
-    "pubmed: 565 hits <- (\"large language model\"[tiab] OR LLM[tiab] OR GPT-4[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR PaLM[tiab] OR Bard[tiab] OR \"generative AI\"[tiab] OR \"transformer model\"[tiab] OR \"AI language model\"[tiab] OR \"deep learning model\"[tiab] OR \"Artificial Intelligence\"[MeSH Terms] OR \"Machine Learning\"[MeSH Terms]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab] OR \"record screening\"[tiab] OR \"citation screening\"[tiab] OR \"eligibility screening\"[tiab] OR \"systematic review screening\"[tiab] OR \"screening of titles\"[tiab] OR \"screening of abstracts\"[tiab] OR \"SR screening\"[tiab] OR \"Systematic Review\"[MeSH Terms] OR \"Literature Review\"[MeSH Terms] OR \"Information Retrieval\"[MeSH Terms])",
-    "pubmed: 195 hits <- (\"large language model\"[tiab] OR LLM[tiab] OR GPT-4[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR PaLM[tiab] OR Bard[tiab] OR \"generative AI\"[tiab] OR \"transformer model\"[tiab] OR \"AI language model\"[tiab] OR \"deep learning model\"[tiab] OR \"Artificial Intelligence\"[MeSH Terms] OR \"Machine Learning\"[MeSH Terms]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab] OR \"record screening\"[tiab] OR \"citation screening\"[tiab] OR \"eligibility screening\"[tiab] OR \"systematic review screening\"[tiab] OR \"screening of titles\"[tiab] OR \"screening of abstracts\"[tiab] OR \"SR screening\"[tiab]) AND (sensitivity[tiab] OR specificity[tiab] OR precision[tiab] OR recall[tiab] OR \"F1 score\"[tiab])",
-    "europepmc: 901 hits <- (TITLE_ABS:\"large language model\" OR TITLE_ABS:LLM OR TITLE_ABS:GPT-4 OR TITLE_ABS:ChatGPT OR TITLE_ABS:Claude OR TITLE_ABS:LLaMA OR TITLE_ABS:PaLM OR TITLE_ABS:Bard OR TITLE_ABS:\"generative AI\" OR TITLE_ABS:\"transformer model\" OR TITLE_ABS:\"AI language model\" OR TITLE_ABS:\"deep learning model\" OR TITLE_ABS:\"Artificial Intelligence\" OR TITLE_ABS:\"Machine Learning\") AND (TITLE_ABS:\"title screening\" OR TITLE_ABS:\"abstract screening\" OR TITLE_ABS:\"study selection\" OR TITLE_ABS:\"record screening\" OR TITLE_ABS:\"citation screening\" OR TITLE_ABS:\"eligibility screening\" OR TITLE_ABS:\"systematic review screening\" OR TITLE_ABS:\"screening of titles\" OR TITLE_ABS:\"screening of abstracts\" OR TITLE_ABS:\"SR screening\")",
-    "europepmc: 312 hits <- (TITLE_ABS:\"large language model\" OR TITLE_ABS:LLM OR TITLE_ABS:GPT-4 OR TITLE_ABS:ChatGPT OR TITLE_ABS:Claude OR TITLE_ABS:LLaMA OR TITLE_ABS:PaLM OR TITLE_ABS:Bard OR TITLE_ABS:\"generative AI\" OR TITLE_ABS:\"transformer model\" OR TITLE_ABS:\"AI language model\" OR TITLE_ABS:\"deep learning model\" OR TITLE_ABS:\"Artificial Intelligence\" OR TITLE_ABS:\"Machine Learning\") AND (TITLE_ABS:\"title screening\" OR TITLE_ABS:\"abstract screening\" OR TITLE_ABS:\"study selection\" OR TITLE_ABS:\"record screening\" OR TITLE_ABS:\"citation screening\" OR TITLE_ABS:\"eligibility screening\" OR TITLE_ABS:\"systematic review screening\" OR TITLE_ABS:\"screening of titles\" OR TITLE_ABS:\"screening of abstracts\" OR TITLE_ABS:\"SR screening\") AND (TITLE_ABS:sensitivity OR TITLE_ABS:specificity OR TITLE_ABS:precision OR TITLE_ABS:recall OR TITLE_ABS:\"F1 score\")",
-    "semantic_scholar: 221 hits <- (\"large language model\" | LLM | GPT-4 | ChatGPT | Claude | LLaMA | PaLM | Bard | \"generative AI\" | \"transformer model\" | \"AI language model\" | \"deep learning model\" ) + (\"title screening\" | \"abstract screening\" | \"study selection\" | \"record screening\" | \"citation screening\" | \"eligibility screening\" | \"systematic review screening\" | \"screening of titles\" | \"screening of abstracts\" | \"SR screening\") + (sensitivity | specificity | precision | recall | \"F1 score\")"
+    "pubmed: 10218 hits <- (\"large language model\"[tiab] OR LLM[tiab] OR \"GPT-4\"[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR BERT[tiab] OR \"transformer model\"[tiab] OR \"AI screening\"[tiab] OR \"machine learning\"[tiab] OR \"deep learning\"[tiab] OR \"natural language processing\"[tiab] OR \"Artificial Intelligence\"[MeSH] OR \"Machine Learning\"[MeSH]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab] OR \"record screening\"[tiab] OR \"citation screening\"[tiab] OR \"eligibility screening\"[tiab] OR \"systematic review\"[tiab] OR SR[tiab] OR \"screening decisions\"[tiab] OR \"screening accuracy\"[tiab] OR \"Systematic Review\"[MeSH] OR \"Literature Review\"[MeSH])",
+    "pubmed: 78 hits <- (GPT-4[tiab] OR ChatGPT[tiab] OR Claude[tiab] OR LLaMA[tiab] OR BERT[tiab]) AND (\"title screening\"[tiab] OR \"abstract screening\"[tiab] OR \"study selection\"[tiab])",
+    "europepmc: 90 hits <- (TITLE_ABS:\"GPT-4\" OR TITLE_ABS:ChatGPT OR TITLE_ABS:Claude OR TITLE_ABS:LLaMA OR TITLE_ABS:BERT) AND (TITLE_ABS:\"title screening\" OR TITLE_ABS:\"abstract screening\" OR TITLE_ABS:\"study selection\")",
+    "arxiv: 11 hits <- (abs:\"GPT-4\" OR abs:ChatGPT OR abs:Claude OR abs:LLaMA OR abs:BERT) AND (abs:\"title screening\" OR abs:\"abstract screening\" OR abs:\"study selection\")",
+    "arxiv: 393 hits <- (abs:\"GPT-4\" OR abs:ChatGPT OR abs:Claude OR abs:LLaMA OR abs:BERT OR abs:\"large language model\") AND (abs:\"title screening\" OR abs:\"abstract screening\" OR abs:\"study selection\" OR abs:\"systematic review\" )",
+    "semantic_scholar: 3514 hits <- (\"GPT-4\" | ChatGPT | Claude | LLaMA | BERT | \"large language model\") + (\"title screening\" | \"abstract screening\" | \"study selection\" | \"systematic review\")",
+    "semantic_scholar: 123 hits <- (GPT-4 | ChatGPT | Claude | LLaMA | BERT) + (\"title screening\" | \"abstract screening\" | \"study selection\")"
   ]
 }

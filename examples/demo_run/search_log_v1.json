@@ -1,13 +1,15 @@
 {
   "identified": {
-    "pubmed": 40,
-    "europepmc": 40,
-    "semantic_scholar": 40
+    "pubmed": 59,
+    "europepmc": 60,
+    "arxiv": 60,
+    "semantic_scholar": 60
   },
   "errors": {},
   "total_hits": {
-    "pubmed": 195,
-    "europepmc": 312,
-    "semantic_scholar": 221
+    "pubmed": 78,
+    "europepmc": 90,
+    "arxiv": 393,
+    "semantic_scholar": 123
   }
 }

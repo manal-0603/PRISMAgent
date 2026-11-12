@@ -1,77 +1,77 @@
 {
-  "run_id": "20261110-234913-how-accurate-are-large-language-models-a",
+  "run_id": "20261111-233350-how-accurate-are-large-language-models-a",
   "completeness": {
     "prisma_items_reported": "42/42",
     "prisma_flow_arithmetic_consistent": true,
-    "included_studies_with_extraction": "13/13",
-    "included_studies_with_risk_of_bias": "13/13",
-    "data_items_reported_by_studies": "61/89",
-    "studies_read_from_full_text": "8/13"
+    "included_studies_with_extraction": "21/21",
+    "included_studies_with_risk_of_bias": "21/21",
+    "data_items_reported_by_studies": "109/168",
+    "studies_read_from_full_text": "21/21"
   },
   "accuracy": {
-    "extraction_quotes_verified_in_source": "98/109",
-    "extraction_quote_verification_rate": 0.8991,
+    "extraction_quotes_verified_in_source": "133/186",
+    "extraction_quote_verification_rate": 0.7151,
     "citations_to_unknown_records_final": 0,
-    "unsupported_statements_found_by_critic_first_draft": 3,
-    "unsupported_statements_found_by_critic_final_draft": 3,
-    "critic_rounds": 1,
+    "unsupported_statements_found_by_critic_first_draft": 2,
+    "unsupported_statements_found_by_critic_final_draft": 2,
+    "critic_rounds": 3,
     "eligibility_audit_flagged_included_studies": 0
   },
   "consistency": {
-    "title_abstract_cohen_kappa": 0.8333,
-    "title_abstract_interpretation": "almost perfect",
-    "title_abstract_raw_agreement": 0.9583,
-    "title_abstract_conflicts": "1/24",
-    "full_text_cohen_kappa": 0.6591,
+    "title_abstract_cohen_kappa": 0.5606,
+    "title_abstract_interpretation": "moderate",
+    "title_abstract_raw_agreement": 0.8,
+    "title_abstract_conflicts": "10/50",
+    "full_text_cohen_kappa": 0.64,
     "full_text_interpretation": "substantial",
-    "full_text_raw_agreement": 0.85,
-    "full_text_conflicts": "3/20",
-    "exclusion_audit_agreement": 0.75,
-    "exclusion_audit_sample": 4
+    "full_text_raw_agreement": 0.8182,
+    "full_text_conflicts": "6/33",
+    "exclusion_audit_agreement": 0.9,
+    "exclusion_audit_sample": 10
   },
   "time": {
-    "pipeline_hours": 0.58,
-    "manual_person_hours_estimate": 67.7,
-    "reduction_all_tasks": 0.9914,
-    "per_item_tasks_manual_person_hours": 22.7,
-    "per_item_tasks_pipeline_hours": 0.41,
-    "reduction_per_item_tasks": 0.9821,
+    "pipeline_hours": 10.51,
+    "manual_person_hours_estimate": 82.2,
+    "reduction_all_tasks": 0.8721,
+    "per_item_tasks_manual_person_hours": 37.2,
+    "per_item_tasks_pipeline_hours": 1.15,
+    "reduction_per_item_tasks": 0.969,
     "note": "Pipeline time is machine wall-clock time, dominated by API rate limits; it excludes human checkpoint time. Manual figures are estimates from config/manual_effort.yaml, not measurements."
   },
   "time_by_stage": [
     {
       "Stage": "protocol",
-      "Pipeline (min)": 0.0,
+      "Pipeline (min)": 0.1,
       "Manual estimate (person-hours)": 8
     },
     {
       "Stage": "search_strategy",
-      "Pipeline (min)": 1.1,
+      "Pipeline (min)": 3.0,
       "Manual estimate (person-hours)": 6
     },
     {
       "Stage": "retrieval",
-      "Pipeline (min)": 0.2,
+      "Pipeline (min)": 0.3,
       "Manual estimate (person-hours)": 1
     },
     {
       "Stage": "screen_title_abstract",
-      "Pipeline (min)": 3.0,
-      "Manual estimate (person-hours)": 0.6
+      "Pipeline (min)": 8.3,
+      "Manual estimate (person-hours)": 1.25
     },
     {
       "Stage": "screen_full_text",
-      "Pipeline (min)": 6.1,
-      "Manual estimate (person-hours)": 8.0
+      "Pipeline (min)": 13.3,
+      "Manual estimate (person-hours)": 13.2
     },
     {
       "Stage": "extraction",
-      "Pipeline (min)": 15.2,
-      "Manual estimate (person-hours)": 14.08
+      "Pipeline (min)": 47.7,
+      "Manual estimate (person-hours)": 22.75
     },
     {
       "Stage": "synthesis",
-      "Pipeline (min)": 9.3,
+      "Pipeline (min)": 557.9,
       "Manual estimate (person-hours)": 30
     }
   ],
@@ -89,25 +89,25 @@
   },
   "llm_usage": {
     "openai/gpt-oss-120b": {
-      "calls": 41,
-      "cached": 18,
-      "input_tokens": 52982,
-      "output_tokens": 7571,
-      "seconds": 25.3
+      "calls": 82,
+      "cached": 12,
+      "input_tokens": 176673,
+      "output_tokens": 48203,
+      "seconds": 145.6
     },
     "openai/gpt-oss-20b": {
-      "calls": 54,
-      "cached": 2,
-      "input_tokens": 98736,
-      "output_tokens": 24109,
-      "seconds": 55.9
+      "calls": 67,
+      "cached": 3,
+      "input_tokens": 123149,
+      "output_tokens": 19364,
+      "seconds": 56.0
     },
     "qwen/qwen3.8-27b": {
-      "calls": 29,
-      "cached": 0,
-      "input_tokens": 59359,
-      "output_tokens": 5136,
-      "seconds": 21.4
+      "calls": 57,
+      "cached": 3,
+      "input_tokens": 132144,
+      "output_tokens": 10253,
+      "seconds": 45.3
     }
   },
   "gold_standard_recall": null

@@ -1,23 +1,25 @@
 {
   "identified": {
-    "pubmed": 40,
-    "europepmc": 40,
-    "semantic_scholar": 40
+    "pubmed": 59,
+    "europepmc": 60,
+    "arxiv": 60,
+    "semantic_scholar": 60
   },
-  "duplicates_removed": 8,
-  "removed_by_automation": 88,
+  "duplicates_removed": 75,
+  "removed_by_automation": 114,
   "automation_detail": {
-    "relevance-ranking cap": 88
+    "relevance-ranking cap": 114
   },
-  "records_screened": 24,
-  "records_excluded": 4,
-  "reports_sought": 20,
+  "records_screened": 50,
+  "records_excluded": 17,
+  "reports_sought": 33,
   "reports_not_retrieved": 0,
-  "reports_assessed": 20,
+  "reports_assessed": 33,
   "assessed_on_abstract_only": 10,
   "reports_excluded": {
-    "E5: Compares the LLM only with another automated method, without a human reviewer benchmark.": 5,
-    "I3: Provides a direct comparison with human reviewer performance on the same dataset.": 2
+    "I6: Full text is available for data extraction.": 6,
+    "E5: Studies that do not provide a human comparator or reference standard for screening decisions.": 5,
+    "E6: Non‑English language publications.": 1
   },
-  "studies_included": 13
+  "studies_included": 21
 }

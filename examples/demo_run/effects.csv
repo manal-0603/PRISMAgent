@@ -1,49 +1,78 @@
 id,rid,study,outcome,measure,value,ci_low,ci_high,n,quote_verified
-0,R0006,Cao et al. (2025),Sensitivity of LLM abstract screening,accuracy,97.7,86.7,100.0,,False
-1,R0006,Cao et al. (2025),Specificity of LLM abstract screening,accuracy,85.2,68.3,95.9,,False
-2,R0006,Cao et al. (2025),Sensitivity of LLM full-text screening,accuracy,96.5,89.7,100.0,,False
-3,R0006,Cao et al. (2025),Specificity of LLM full-text screening,accuracy,91.2,80.7,100.0,,False
-4,R0028,Oami et al. (2024),Sensitivity,accuracy,0.75,0.43,0.92,,True
-5,R0028,Oami et al. (2024),Specificity,accuracy,0.99,0.99,0.99,,True
-6,R0028,Oami et al. (2024),Sensitivity (post hoc),accuracy,0.91,0.77,0.97,,True
-7,R0028,Oami et al. (2024),Specificity (post hoc),accuracy,0.98,0.96,0.99,,True
-8,R0028,Oami et al. (2024),Processing time for 100 studies,time per record,1.3,1.28,1.32,100,True
-9,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9593,,,,True
-10,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9448,,,,True
-11,R0039,Insuk et al. (2025),Accuracy title/abstract screening,accuracy,0.9138,,,,True
-12,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.3853,,,,True
-13,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.3724,,,,True
-14,R0039,Insuk et al. (2025),F1-score title/abstract screening,F1-score,0.2755,,,,True
-15,R0040,Oami et al. (2025),Sensitivity,accuracy,0.75,0.54,0.88,,True
-16,R0040,Oami et al. (2025),Specificity,accuracy,0.98,0.96,0.99,,True
-17,R0040,Oami et al. (2025),Processing time for 100 studies,time per 100 studies,0.93,0.92,0.98,,True
-18,R0040,Oami et al. (2025),Cost for 100 studies,cost,0.41,0.34,0.48,,True
-19,R0042,Aigner et al. (2026),Recall,accuracy,0.86,,,,True
-20,R0042,Aigner et al. (2026),Specificity,accuracy,0.79,,,,True
-21,R0048,Kwok et al. (2026),Accuracy,proportion,0.83,,,,True
-22,R0048,Kwok et al. (2026),Accuracy,proportion,0.86,,,,True
-23,R0048,Kwok et al. (2026),Precision,proportion,0.44,,,,True
-24,R0048,Kwok et al. (2026),Precision,proportion,0.48,,,,True
-25,R0048,Kwok et al. (2026),Recall,proportion,0.88,,,,True
-26,R0048,Kwok et al. (2026),Recall,proportion,0.87,,,,True
-27,R0057,Sanghera et al. (2025),Sensitivity,accuracy,1.0,,,800,True
-28,R0057,Sanghera et al. (2025),Precision,accuracy,0.927,,,800,True
-29,R0057,Sanghera et al. (2025),Specificity,accuracy,0.993,,,119695,False
-30,R0057,Sanghera et al. (2025),F1‑score,accuracy,0.381,,,119695,False
-31,R0057,Sanghera et al. (2025),Workload reduction,proportion,0.9911,,,,True
-32,R0064,Qiu et al. (2026),Sensitivity,accuracy,100.0,,,,True
-33,R0064,Qiu et al. (2026),Specificity,accuracy,93.0,,,,True
-34,R0064,Qiu et al. (2026),Sensitivity,accuracy,96.2,,,,True
-35,R0064,Qiu et al. (2026),Specificity,accuracy,90.3,,,,True
-36,R0070,Zhan et al. (2025),Sensitivity of Review Copilot for title/abstract screening,sensitivity,99.2,,,,True
-37,R0070,Zhan et al. (2025),Specificity of Review Copilot for title/abstract screening,specificity,83.6,,,,True
-38,R0070,Zhan et al. (2025),Sensitivity of Review Copilot for full‑text screening,sensitivity,97.6,,,,False
-39,R0070,Zhan et al. (2025),Specificity of Review Copilot for full‑text screening,specificity,47.4,,,,False
-40,R0070,Zhan et al. (2025),Percent agreement between two runs,percent agreement,95.4,,,,True
-41,R0070,Zhan et al. (2025),Kappa statistic for reliability,kappa,0.83,,,,True
-42,R0074,Li et al. (2024),Sensitivity,accuracy,0.93,,,,True
-43,R0074,Li et al. (2024),Specificity,accuracy,0.96,,,,True
-44,R0074,Li et al. (2024),Accuracy,accuracy,0.945,,,,True
-45,R0089,Homiar et al. (2025),Sensitivity,accuracy,100.0,,,,True
-46,R0089,Homiar et al. (2025),Sensitivity,accuracy,58.0,,,,True
-47,R0089,Homiar et al. (2025),Precision,accuracy,4.0,,,,True
+0,R0010,Oami et al. (2024),integrated sensitivity (primary analysis),sensitivity,0.75,0.43,0.92,,True
+1,R0010,Oami et al. (2024),integrated specificity (primary analysis),specificity,0.99,0.99,0.99,,False
+2,R0010,Oami et al. (2024),modified‑prompt integrated sensitivity,sensitivity,0.91,0.77,0.97,,True
+3,R0010,Oami et al. (2024),screening time difference per 100 studies,mean difference (minutes),-15.25,-17.7,-12.79,,True
+4,R0011,Li et al. (2025),sensitivity (advanced melanoma),sensitivity,90.0,,,50,False
+5,R0011,Li et al. (2025),specificity (advanced melanoma),specificity,93.0,,,50,False
+6,R0011,Li et al. (2025),F1 score (advanced melanoma),F1,90.0,,,50,False
+7,R0011,Li et al. (2025),accuracy (advanced melanoma),accuracy,92.0,,,50,False
+8,R0011,Li et al. (2025),Cohen's kappa (advanced melanoma),kappa,0.84,,,50,False
+9,R0011,Li et al. (2025),sensitivity (RRMM),sensitivity,97.0,,,3665,False
+10,R0014,Ramchandani et al. (2025),Recall (perioperative),sensitivity,0.89,,,1967,True
+11,R0014,Ramchandani et al. (2025),Precision (perioperative),precision,0.74,,,1967,True
+12,R0014,Ramchandani et al. (2025),AUC (perioperative),AUC,0.87,,,1967,True
+13,R0014,Ramchandani et al. (2025),Recall (preoperative),sensitivity,0.67,,,1967,True
+14,R0014,Ramchandani et al. (2025),Precision (preoperative),precision,0.65,,,1967,True
+15,R0014,Ramchandani et al. (2025),AUC (preoperative),AUC,0.75,,,1967,True
+16,R0018,Dai et al. (2025),Full‑text screening sensitivity,sensitivity,0.87,0.77,0.99,,True
+17,R0018,Dai et al. (2025),Full‑text screening specificity,specificity,0.96,0.91,0.98,,True
+18,R0018,Dai et al. (2025),Full‑text screening AUC,AUC,0.96,0.94,0.97,,True
+19,R0025,Sanghera et al. (2025),Sensitivity,sensitivity,1.0,,,119695,False
+20,R0025,Sanghera et al. (2025),Specificity,specificity,0.993,,,119695,False
+21,R0025,Sanghera et al. (2025),Precision,precision,0.235,,,119695,False
+22,R0025,Sanghera et al. (2025),Balanced accuracy,accuracy,0.996,,,119695,False
+23,R0025,Sanghera et al. (2025),F1‑score,F1,0.381,,,119695,False
+24,R0028,Guo et al. (2024),accuracy,accuracy,0.91,,,24307,True
+25,R0028,Guo et al. (2024),macro F1-score,F1,0.6,,,24307,True
+26,R0028,Guo et al. (2024),sensitivity (included papers),sensitivity,0.76,,,24307,True
+27,R0028,Guo et al. (2024),sensitivity (excluded papers),sensitivity,0.91,,,24307,True
+28,R0028,Guo et al. (2024),interrater agreement (human reviewers),kappa,0.46,,,,True
+29,R0028,Guo et al. (2024),interrater agreement (GPT vs human consensus),kappa,0.96,,,,True
+30,R0035,Li et al. (2024),sensitivity,sensitivity,0.93,,,,False
+31,R0035,Li et al. (2024),specificity,specificity,0.96,,,,False
+32,R0035,Li et al. (2024),accuracy,accuracy,0.945,,,,True
+33,R0035,Li et al. (2024),screening time per 200 abstracts,time (minutes),15.0,10.0,20.0,,True
+34,R0037,López-Pineda et al. (2025),sensitivity (Llama 3 LLA_2),sensitivity,77.5,,,984,True
+35,R0037,López-Pineda et al. (2025),specificity (Llama 3 LLA_2),specificity,91.4,,,984,True
+36,R0037,López-Pineda et al. (2025),accuracy (Llama 3 LLA_2),accuracy,90.2,,,984,True
+37,R0037,López-Pineda et al. (2025),sensitivity (ChatGPT-4o mini CHAT_2),sensitivity,56.2,,,984,True
+38,R0037,López-Pineda et al. (2025),specificity (ChatGPT-4o mini CHAT_2),specificity,95.1,,,984,False
+39,R0037,López-Pineda et al. (2025),accuracy (ChatGPT-4o mini CHAT_2),accuracy,92.0,,,984,False
+40,R0049,Zhan et al. (2025),Title/abstract screening sensitivity,sensitivity,99.2,,,,True
+41,R0049,Zhan et al. (2025),Title/abstract screening specificity,specificity,83.6,,,,False
+42,R0049,Zhan et al. (2025),Full‑text screening sensitivity,sensitivity,97.6,,,,True
+43,R0049,Zhan et al. (2025),Full‑text screening specificity,specificity,47.4,,,,False
+44,R0049,Zhan et al. (2025),Screening time reduction,proportion,0.25,,,,True
+45,R0061,Hilkenmeier et al. (2026),Precision,precision,0.88,,,,False
+46,R0061,Hilkenmeier et al. (2026),Recall (Sensitivity),sensitivity,0.96,,,,False
+47,R0061,Hilkenmeier et al. (2026),Specificity,specificity,0.87,,,,False
+48,R0061,Hilkenmeier et al. (2026),F1 score,F1,0.92,,,,False
+49,R0061,Hilkenmeier et al. (2026),Accuracy,accuracy,0.92,,,,False
+50,R0061,Hilkenmeier et al. (2026),Krippendorff’s alpha,reliability,0.83,,,,False
+51,R0069,Cifuentes-González et al. (2026),Accuracy,accuracy,93.3,,,1030,False
+52,R0069,Cifuentes-González et al. (2026),Area under the ROC curve,AUC,0.887,,,1030,True
+53,R0069,Cifuentes-González et al. (2026),Sensitivity,sensitivity,81.7,,,1030,True
+54,R0069,Cifuentes-González et al. (2026),Specificity,specificity,95.7,,,1030,True
+55,R0072,Sciurti et al. (2026),sensitivity,sensitivity,100.0,,,,True
+56,R0072,Sciurti et al. (2026),balanced accuracy,balanced accuracy,91.3,,,,True
+57,R0072,Sciurti et al. (2026),specificity,specificity,92.7,,,,False
+58,R0073,Nordmann et al. (2026),accuracy,accuracy,68.0,,,15307,True
+59,R0073,Nordmann et al. (2026),specificity,specificity,67.0,,,15307,False
+60,R0073,Nordmann et al. (2026),sensitivity,sensitivity,88.0,,89.0,15307,False
+61,R0073,Nordmann et al. (2026),precision,precision,11.0,,,15307,False
+62,R0073,Nordmann et al. (2026),negative predictive value,negative predictive value,99.0,,,15307,False
+63,R0073,Nordmann et al. (2026),workload savings,proportion,64.0,,,15307,True
+64,R0079,Qiu et al. (2026),abstract sensitivity Study 1,sensitivity,98.0,,,1000,False
+65,R0079,Qiu et al. (2026),abstract specificity Study 1,specificity,80.6,,,1000,False
+66,R0079,Qiu et al. (2026),abstract sensitivity Study 2,sensitivity,100.0,,,1321,False
+67,R0079,Qiu et al. (2026),abstract specificity Study 2,specificity,85.6,,,1321,False
+68,R0079,Qiu et al. (2026),full-text accuracy Study 2,accuracy,82.1,,,82,True
+69,R0079,Qiu et al. (2026),abstract sensitivity Study 3,sensitivity,100.0,,,1500,False
+70,R0096,Yamoah et al. (2026),sensitivity,sensitivity,91.18,,,8277,True
+71,R0096,Yamoah et al. (2026),specificity,specificity,86.38,,,8277,True
+72,R0096,Yamoah et al. (2026),overall agreement,accuracy,86.4,,,8277,True
+73,R0096,Yamoah et al. (2026),weighted F1 improvement,percentage increase,80.79,,,,True
+74,R0145,Wilkins (2023),sensitivity,sensitivity,71.0,,,,True
+75,R0145,Wilkins (2023),specificity,specificity,89.0,,,,True
+76,R0145,Wilkins (2023),overall accuracy,accuracy,84.0,,,,True

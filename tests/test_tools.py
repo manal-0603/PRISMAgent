@@ -369,3 +369,15 @@ def test_estimated_available_quota(tmp_path, monkeypatch):
     assert cache.estimated_available(200_000) == {"m": 0}
     cache.record_usage("other", 10_000, ts=now - 48 * 3600)  # long ago: full again, never above the cap
     assert cache.estimated_available(200_000)["other"] == 200_000
+
+
+def test_verdict_label_does_not_call_open_issues_a_pass():
+    from sysrev.agents.critic import verdict_label
+
+    major = {"severity": "major", "area": "abstract", "description": "x"}
+    minor = {"severity": "minor", "area": "abstract", "description": "x"}
+    assert verdict_label("pass", []) == "pass"
+    assert verdict_label("pass", [minor]) == "pass"
+    assert verdict_label("revise", [major]).startswith("revise")
+    label = verdict_label("pass", [major, major, minor])
+    assert label.startswith("not resolved") and "2 critical or major issues" in label
