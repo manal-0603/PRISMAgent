@@ -1,44 +1,51 @@
 [
   {
-    "name": "Prompt engineering",
-    "description": "Studies evaluating the impact of prompt design and optimization on LLM screening accuracy and sensitivity.",
+    "name": "High sensitivity screening models",
+    "description": "Studies reporting LLMs achieving sensitivity of roughly 90% or higher for title/abstract or full‑text screening, indicating strong ability to identify relevant records.",
     "study_ids": [
-      "R0006",
+      "R0010",
+      "R0011",
+      "R0014",
+      "R0035",
+      "R0037",
+      "R0049",
+      "R0073",
+      "R0079",
+      "R0096"
+    ]
+  },
+  {
+    "name": "Ensemble and prompt‑optimization approaches",
+    "description": "Studies that improve performance through prompt engineering, model ensembles, full‑agreement strategies, or calibrated zero‑shot ensembles.",
+    "study_ids": [
+      "R0010",
+      "R0025",
       "R0028",
-      "R0089",
-      "R0064",
-      "R0057"
+      "R0061",
+      "R0103",
+      "R0138",
+      "R0145"
     ]
   },
   {
-    "name": "Model performance comparisons",
-    "description": "Direct comparisons of different large language models (e.g., GPT‑4, Claude, Gemini, ChatGPT) for title/abstract screening accuracy.",
+    "name": "Fine‑tuned or specialized LLMs",
+    "description": "Studies evaluating fine‑tuned, domain‑specific, or compact LLMs and comparing them with general‑purpose models for systematic review screening.",
     "study_ids": [
-      "R0039",
-      "R0040",
-      "R0052",
-      "R0053",
-      "R0070",
-      "R0074",
-      "R0048"
+      "R0069",
+      "R0096",
+      "R0072",
+      "R0045",
+      "R0058",
+      "R0073",
+      "R0085",
+      "R0145"
     ]
   },
   {
-    "name": "Efficiency and workload reduction",
-    "description": "Evidence on time savings, processing speed, and reduction of human workload when using LLMs for screening.",
+    "name": "Other findings",
+    "description": "Studies not covered by the themes above.",
     "study_ids": [
-      "R0028",
-      "R0048",
-      "R0074",
-      "R0064",
-      "R0070"
-    ]
-  },
-  {
-    "name": "LLM versus supervised machine learning",
-    "description": "Comparative evaluations of LLMs against traditional supervised machine‑learning classifiers for title‑abstract screening.",
-    "study_ids": [
-      "R0042"
+      "R0018"
     ]
   }
 ]

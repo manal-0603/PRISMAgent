@@ -302,8 +302,24 @@ def _eligibility_audit(ctx: RunContext, protocol: Protocol, records: dict[str, R
     ]
 
 
+def verdict_label(verdict: str, issues: list) -> str:
+    """Readable outcome of a review round.
+
+    The stored verdict only drives the routing: "pass" means "no further automatic revision", which is
+    also what happens when the revision rounds are used up. Open issues must not read as a clean pass.
+    """
+    severities = [i["severity"] if isinstance(i, dict) else i.severity for i in issues]
+    serious = sum(s in ("critical", "major") for s in severities)
+    if verdict == "revise":
+        return "revise — returned to the Writing agent"
+    if serious:
+        plural = "s" if serious != 1 else ""
+        return f"not resolved — {serious} critical or major issue{plural} still open; no further automatic revision"
+    return "pass"
+
+
 def qa_markdown(report: QAReport) -> str:
-    lines = [f"# Quality-assurance report", "", f"**Verdict:** {report.verdict}", "", "## Checks", ""]
+    lines = [f"# Quality-assurance report", "", f"**Verdict:** {verdict_label(report.verdict, report.issues)}", "", "## Checks", ""]
     lines += [f"- **{key}**: {value}" for key, value in report.checks.items()]
     lines += ["", "## Issues", ""]
     if not report.issues:

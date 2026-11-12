@@ -1,14 +1,15 @@
 {
-  "n": 24,
-  "raw_agreement": 0.9583,
-  "cohen_kappa": 0.8333,
-  "interpretation": "almost perfect",
-  "conflicts": 1,
-  "reviewer_a_included": 20,
-  "reviewer_b_included": 21,
+  "n": 50,
+  "raw_agreement": 0.8,
+  "cohen_kappa": 0.5606,
+  "interpretation": "moderate",
+  "conflicts": 10,
+  "reviewer_a_included": 39,
+  "reviewer_b_included": 29,
   "resolved_by": {
-    "consensus": 23,
-    "adjudicator": 1,
+    "consensus": 40,
+    "adjudicator": 10,
     "human": 0
-  }
+  },
+  "exclusions_blocked_by_guard": 3
 }

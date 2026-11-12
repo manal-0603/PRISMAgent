@@ -2,51 +2,69 @@
   "verdict": "revise",
   "issues": [
     {
+      "severity": "minor",
+      "area": "synthesis:High sensitivity screening models",
+      "description": "Studies assigned to this theme are never cited in its narrative: R0035, R0073, R0096.",
+      "suggested_fix": "Report what these studies found, or explain why they add nothing."
+    },
+    {
       "severity": "major",
-      "area": "synthesis:Model performance comparisons",
-      "description": "36% of the sentences in this narrative carry no citation.",
+      "area": "synthesis:Ensemble and prompt‑optimization approaches",
+      "description": "38% of the sentences in this narrative carry no citation.",
       "suggested_fix": "End every sentence reporting a finding with the ids of the studies it comes from."
     },
     {
+      "severity": "minor",
+      "area": "synthesis:Ensemble and prompt‑optimization approaches",
+      "description": "Studies assigned to this theme are never cited in its narrative: R0103, R0145.",
+      "suggested_fix": "Report what these studies found, or explain why they add nothing."
+    },
+    {
       "severity": "major",
-      "area": "synthesis:LLM versus supervised machine learning",
-      "description": "50% of the sentences in this narrative carry no citation.",
+      "area": "synthesis:Fine‑tuned or specialized LLMs",
+      "description": "43% of the sentences in this narrative carry no citation.",
       "suggested_fix": "End every sentence reporting a finding with the ids of the studies it comes from."
     },
     {
-      "severity": "major",
-      "area": "synthesis:Prompt engineering",
-      "description": "Unsupported statement: \"Oami et al. observed a rise in sensitivity from 0.75 to 0.91 after post‑hoc prompt modifications while maintaining high specificity (0.98) for GPT‑4 Turbo, indicating that prompt refinement can boost recall without sacrificing precision [R0028].\" — The evidence states that specificity decreased from 0.99 to 0.98 after the prompt modifications. The draft claims specificity was 'maintained' and that precision was not sacrificed, which contradicts the reported drop in specificity.",
-      "suggested_fix": "Change the description to note that specificity decreased slightly from 0.99 to 0.98, or remove the claim that precision was not sacrificed."
+      "severity": "minor",
+      "area": "synthesis:Fine‑tuned or specialized LLMs",
+      "description": "Studies assigned to this theme are never cited in its narrative: R0045, R0058, R0085.",
+      "suggested_fix": "Report what these studies found, or explain why they add nothing."
     },
     {
       "severity": "major",
-      "area": "synthesis:LLM versus supervised machine learning",
-      "description": "Unsupported statement: \"The LLM achieved a recall of 0.86, which was comparable to or higher than the recall reported for human reviewers\" — The evidence states that the LLM achieved recall values 'close to or above' human reviewers, but does not provide a specific aggregate recall value of 0.86 for the LLM. The value 0.86 appears in the 'Effects' section of the evidence card labeled as 'Recall: accuracy = 0.86', which is ambiguous and likely refers to a different metric or a specific dataset not explicitly linked to the LLM's overall performance in the text. Furthermore, the text says SML models 'exceeded human specificity while falling behind human recall', but the draft claims the LLM's recall was 'comparable to or higher', which is supported, but the specific number 0.86 is not explicitly attributed to the LLM's overall recall in the supporting passages.",
-      "suggested_fix": "Remove the specific number 0.86 or verify if it is the correct aggregate recall for the LLM. The text supports that the LLM's recall was close to or above human reviewers, but the specific value 0.86 is not clearly supported as the LLM's overall recall in the provided passages."
+      "area": "extraction",
+      "description": "Only 72% of the extraction quotations were found in the source texts.",
+      "suggested_fix": "A human should verify the values flagged 'unverified' in evidence_table.csv."
     },
     {
       "severity": "major",
-      "area": "synthesis:LLM versus supervised machine learning",
-      "description": "Unsupported statement: \"Specificity for the LLM was 0.79, falling between the higher specificity of the SML models and the lower specificity of human screening.\" — The evidence states that SML models 'exceeded human specificity'. It does not state that the LLM's specificity (0.79) fell *between* the SML models and human reviewers. The evidence only says SML exceeded human specificity. It does not compare the LLM's specificity to the SML models' specificity or place it in a specific order relative to both. The claim that it falls 'between' is an unsupported inference.",
-      "suggested_fix": "Remove the claim that the LLM's specificity fell between the SML models and human reviewers. State only that the LLM's specificity was 0.79 and that SML models exceeded human specificity, without ranking the LLM's specificity relative to the SML models unless explicitly stated."
+      "area": "synthesis:High sensitivity screening models",
+      "description": "Unsupported statement: \"Overall, studies using dual‑reviewer reference standards and larger sample sizes (e.g., Oami, Li, Qiu) report higher sensitivities, whereas smaller or single‑reviewer designs (e.g., Yamoah) show modestly lower values.\" — The evidence contradicts this comparison. Yamoah et al. [R0073] used a dual-reviewer reference standard (with a third for consensus) and reported a sensitivity of up to 89% (or 88% in effects), which is not 'modestly lower' than the 90-100% range reported by Qiu et al. [R0079] (who used human reviewers as reference, details on independence not explicitly stated as dual in the card but implied by 'human reviewers') or Li et al. [R0011]. Furthermore, Yamoah's sample size (15,307) is larger than Li [R0011] (3,715) and Qiu [R0079] (1,000-1,500), so the claim that 'larger sample sizes... report higher sensitivities' while citing Yamoah as a 'smaller... design' is factually incorrect regarding the sample size comparison. The claim also incorrectly groups Yamoah with 'single-reviewer designs' when the evidence states 'Dual independent reviewers'.",
+      "suggested_fix": "Remove the comparative claim about sample size and reviewer type correlating with sensitivity, or correct it to reflect that Yamoah et al. used a dual-reviewer standard and a large sample size (15,307) but reported a sensitivity (88-89%) that was comparable to or slightly lower than the highest-performing models in other studies, without mischaracterizing the sample size or reviewer process."
+    },
+    {
+      "severity": "major",
+      "area": "synthesis:Ensemble and prompt‑optimization approaches",
+      "description": "Unsupported statement: \"In Oami et al., modifying the prompt raised integrated sensitivity from 0.75 to 0.91 while specificity remained above 0.98, demonstrating the impact of prompt engineering on a dataset of 16,670 records [R0010].\" — The number of records is incorrect. The evidence states the sample size was 16,669 records, not 16,670.",
+      "suggested_fix": "Change '16,670 records' to '16,669 records'."
     },
     {
       "severity": "major",
       "area": "abstract",
-      "description": "\"Five studies demonstrated workload reductions of 60–75 %\" — The thematic synthesis states that Kwok et al. found LLMs cut screening time to 37% of human time (a 63% reduction) and Zhan et al. reported completion in one-quarter of human time (a 75% reduction). However, the synthesis does not provide specific percentage reductions for the other three studies (Oami, Li, Qiu), only noting 'substantial time savings' or specific minute savings. The abstract's claim of a consistent 60-75% range across all five studies is not supported by the provided synthesis text, which lacks the data to verify the lower bound for the other studies.",
-      "suggested_fix": "Revise the abstract to state that studies reported substantial time savings, with specific examples of 63-75% reductions (or 'up to 75%'), or verify the specific percentages for all five studies against the full source data before asserting a uniform range."
+      "description": "\"LLMs can reliably identify relevant records in systematic‑review screening, often meeting the 90% sensitivity threshold\" — The thematic synthesis rates the certainty of evidence for high-sensitivity models as 'low' and notes significant variability (sensitivities ranging from 56% to 100%). The term 'reliably' implies a level of consistency and confidence that is not supported by the low certainty rating and the wide performance range.",
+      "suggested_fix": "Soften the language to reflect the low certainty and variability, e.g., 'LLMs show potential to identify relevant records, with some models meeting the 90% sensitivity threshold, but performance is variable and certainty of evidence is low.'"
     },
     {
       "severity": "major",
-      "area": "abstract",
-      "description": "\"Further high‑quality, standardized evaluations are needed before routine replacement of human screening.\" — The thematic synthesis concludes that 'no single model consistently outperforms others' and notes 'low to moderate certainty' evidence. It does not support the conclusion that LLMs are ready for 'routine replacement' of human screening, nor does it suggest that replacement is a viable near-term outcome. The synthesis emphasizes the need for human oversight due to false positives and the trade-off between sensitivity and precision. The phrase 'before routine replacement' implies a trajectory toward replacement that is not substantiated by the current evidence, which highlights persistent limitations and the necessity of human oversight.",
-      "suggested_fix": "Change the conclusion to reflect that LLMs are useful adjuncts to human screening, and that further research is needed to determine their role in augmenting (rather than replacing) human workflows, or to establish conditions under which they can be safely integrated with human oversight."
+      "area": "discussion",
+      "description": "\"Overall, evidence suggests LLMs can reliably identify relevant records\" — Similar to the abstract, this conclusion overstates the certainty of the evidence. The synthesis explicitly states 'Certainty: low' for the high-sensitivity theme and highlights risk-of-bias concerns (unblinded reference standards, single-reviewer coding) that 'temper confidence'. 'Reliably' is too strong a claim given the methodological limitations and low certainty.",
+      "suggested_fix": "Change to 'evidence suggests LLMs have the potential to identify relevant records' or 'LLMs can identify relevant records with high sensitivity in specific contexts', acknowledging the low certainty and methodological constraints."
     },
     {
       "severity": "major",
       "area": "screening",
-      "description": "R0038 was excluded at title/abstract stage but an independent auditor would include it: Study evaluates GPT-5 for title/abstract screening, reports accuracy metrics, compares with human reviewers, and is in English.",
+      "description": "R0088 was excluded at title/abstract stage but an independent auditor would include it: Experimental study comparing LLMs to human reviewers for title‑abstract screening with reported performance metrics.",
       "suggested_fix": "Human reviewer to re-check this record."
     }
   ],
@@ -58,28 +76,28 @@
     "unknown_citations": [],
     "included_without_extraction": [],
     "uncited_sentence_ratio": {
-      "Prompt engineering": 0.29,
-      "Model performance comparisons": 0.36,
-      "Efficiency and workload reduction": 0.29,
-      "LLM versus supervised machine learning": 0.5
+      "High sensitivity screening models": 0.33,
+      "Ensemble and prompt‑optimization approaches": 0.38,
+      "Fine‑tuned or specialized LLMs": 0.43,
+      "Other findings": 0.17
     },
     "extraction_quotes": {
-      "quotes_checked": 109,
-      "quotes_verified": 98,
-      "verification_rate": 0.8991
+      "quotes_checked": 186,
+      "quotes_verified": 133,
+      "verification_rate": 0.7151
     },
-    "unsupported_statements": 3,
+    "unsupported_statements": 2,
     "overstatements": 2,
     "exclusion_audit": {
-      "sampled": 4,
-      "judged": 4,
+      "sampled": 10,
+      "judged": 10,
       "auditor_would_include": [
-        "R0038"
+        "R0088"
       ],
-      "agreement": 0.75
+      "agreement": 0.9
     },
     "eligibility_audit": {
-      "checked": 13,
+      "checked": 21,
       "flagged": []
     }
   }

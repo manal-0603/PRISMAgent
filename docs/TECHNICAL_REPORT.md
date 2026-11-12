@@ -147,47 +147,57 @@ against the source by string matching — the basis of the quotation-verificatio
 ## 6. Demonstration
 
 Question: *How accurate are large language models at title and abstract screening for systematic
-reviews, compared with human reviewers?* — autonomous mode, Groq free tier, 40 records per
-database, 24 records screened, one revision round allowed. All artifacts are in
+reviews, compared with human reviewers?* — autonomous mode, Groq free tier, default options (up to
+60 records per database, 50 records screened, two revision rounds). All artifacts are in
 `examples/demo_run/`.
 
 | Stage | Result | Time |
 |---|---|---|
-| Protocol | PICO, 5 inclusion and 5 exclusion criteria, 7 data items, 3 databases | cached |
-| Search strategy | 5 queries tested live; PubMed 195 hits, Europe PMC 312, Semantic Scholar 221 | 1.1 min |
-| Retrieval | 120 records, 8 duplicates, 112 unique, 24 kept by relevance ranking | 0.2 min |
-| Title/abstract screening | 20 retained, 4 excluded; kappa 0.83; 1 adjudication | 3.0 min |
-| Full-text screening | 10 full texts retrieved, 10 abstract-only; 13 included, 7 excluded; kappa 0.66; 3 adjudications | 6.1 min |
-| Extraction and appraisal | 13 studies; 98/109 quotations verified; 12 "some concerns", 1 "unclear" | 15.2 min |
-| Synthesis and writing | 4 themes; 8,700 words; 17 references; 42/42 PRISMA items | 6.1 min |
-| Critic, round 1 | 8 issues raised | 3.1 min |
-| Revision and critic, round 2 | flagged sections rewritten; 7 issues raised | run later, see below |
+| Protocol | PICO, 6 inclusion and 6 exclusion criteria (3 marked "full text only"), 8 data items, 4 databases | 0.1 min |
+| Search strategy | 7 queries tested live; PubMed 78 hits, Europe PMC 90, arXiv 393, Semantic Scholar 123 | 3.0 min |
+| Retrieval | 239 records, 75 duplicates, 164 unique, 50 kept by relevance ranking | 0.3 min |
+| Title/abstract screening | 33 retained, 17 excluded; kappa 0.56; 10 adjudications; 3 exclusions blocked by the guard | 8.3 min |
+| Full-text screening | 23 full texts retrieved, 10 abstract-only; 21 included, 12 excluded; kappa 0.64; 6 adjudications | 13.3 min |
+| Extraction and appraisal | 21 studies; 133/186 quotations verified; 20 "some concerns", 1 "unclear" | 47.7 min |
+| Synthesis and writing | 4 themes; 9,700 words; 22 references; 42/42 PRISMA items | 3.4 h |
+| Critic, round 1 | 11 issues raised | 1.4 h |
+| Revision 1 and critic, round 2 | flagged sections rewritten; 7 issues raised | 2.5 h |
+| Revision 2 and critic, round 3 | flagged sections rewritten; 10 issues raised | 1.9 h |
 
-First complete pass: 148 model calls (44 answered from the cache) in 34.9 minutes. With the later
-revision round: 169 calls; tokens sent gpt-oss-120b 69 k, gpt-oss-20b 123 k, qwen3.8-27b 79 k.
-Nearly all the elapsed time is waiting for rate limits: the models answered in 112 seconds in total.
+In total 206 model calls (18 answered from the cache) in 10.5 hours; tokens used: gpt-oss-120b
+225 k, gpt-oss-20b 143 k, qwen3.8-27b 142 k. The models answered in 4 minutes in total. The rest is
+waiting: 9.2 hours for the daily quota of the primary model, which ran out 47 minutes into the run,
+during extraction. The run was started with `LLM_MAX_WAIT_SECONDS=3600`, so it waited for the quota
+to refill instead of stopping, and advanced one call at a time from there.
 
-**What the critic found (round 1).** Three statements not supported by the evidence (for example,
-the draft said specificity was "maintained" where the study reports a drop from 0.99 to 0.98), two
-overstatements in the abstract, two narratives with too few citations, and one excluded record
-that an independent auditor would include. These are real defects of the first draft.
+**What the critic found (round 1).** Two statements not supported by the evidence (one gives a
+record count of 16,670 where the study reports 16,669), two overstatements (the abstract and the
+discussion said the models "can reliably identify relevant records"), two narratives with too few
+citations, three themes that never cite some of their studies, the low quotation rate, and one
+excluded record that an independent auditor would include.
 
-**The revision, in two sittings.** The writing model's daily quota was exhausted when the critic
-returned its issues. The pipeline kept the reviewed draft, logged `revision_skipped`, wrote the
-fact into the manuscript and finished. Half an hour later `sysrev revise <run_id>` reopened the
-run: the writer rewrote the three flagged narratives, the discussion and the abstract, and the
-critic reviewed the result.
+**Two revisions, no convergence.** After the first revision the critic raised 7 issues: the
+flagged text had been corrected, but two new unsupported statements and two new overstatements had
+appeared. After the second it raised 10: again two unsupported statements and two overstatements,
+and the record count of round 1 was still there. The revision budget was then used up. Seven major
+issues remain open, five of them for the writer; `qa_report.md` lists them under the verdict "not
+resolved" and the manuscript's Methods state it. The lesson is that the critic → writer loop
+detects errors reliably but rewriting whole sections produces new ones as fast as it removes the
+old: the last word has to be a human's, and a writer that edits only the flagged sentences is the
+change to try next.
 
-**What the critic found (round 2).** The round-1 defects were gone, but the rewritten text
-contained new ones: three other unsupported statements, one overstatement in the abstract and one
-in the discussion, and a study never cited in its theme. With one revision round allowed for this
-run, the loop stopped there: 6 issues for the writer (7 with the screening one) remain open and
-are listed in `qa_report.md`; the manuscript's Methods state it. The lesson is that the critic →
-writer loop detects errors reliably but one round does not guarantee convergence: the default is
-two rounds, and the last word should be a human's.
+**The exclusion guard fired three times.** Reviewer A wanted to exclude three records on a
+criterion marked "full text only" (no human comparator). The guard turned these votes into
+"unsure"; one of the three records is among the 21 included studies.
 
-**Deviations from the default configuration**, both forced by the quota: extraction ran on
-gpt-oss-20b instead of gpt-oss-120b, and only 24 records were screened.
+**Quotation verification: 72%.** 46 of the 53 unverified quotations are fragments from different
+places that the extractor joined with "…". The verifier looks for one continuous passage and
+rejects them. They are flagged in `evidence_table.csv`. Checking each fragment separately would
+separate stitched quotations from invented ones.
+
+**Six reports excluded for lack of a full text.** The planner wrote "full text is available for
+data extraction" as an inclusion criterion, and six reports without an open-access copy were
+excluded on it. A human team would obtain the papers; this is an availability bias of the run.
 
 ## 7. Evaluation
 
@@ -199,25 +209,25 @@ gpt-oss-20b instead of gpt-oss-120b, and only 24 records were screened.
 |---|---|---|
 | Completeness | PRISMA 2020 items reported | 42/42 |
 | | PRISMA flow arithmetic consistent | yes |
-| | Included studies with extraction and appraisal | 13/13 |
-| | Data items reported by the studies | 61/89 |
-| | Studies read from full text | 8/13 |
-| Accuracy | Extraction quotations found in the source | 98/109 (90%) |
+| | Included studies with extraction and appraisal | 21/21 |
+| | Data items reported by the studies | 109/168 |
+| | Studies read from full text | 21/21 |
+| Accuracy | Extraction quotations found in the source | 133/186 (72%) |
 | | Citations to non-existent records | 0 |
-| | Included studies flagged by the eligibility audit | 0/13 |
-| | Unsupported statements / overstatements found by the critic | 3 / 2 in the first draft; 3 / 2 (different ones) after one revision |
-| Consistency | Title/abstract: kappa, raw agreement, conflicts | 0.83, 96%, 1/24 |
-| | Full text: kappa, raw agreement, conflicts | 0.66, 85%, 3/20 |
-| | Independent re-screening of excluded records | agreed on 3 of 4 |
-| Time | Machine time | 0.58 h for the first complete pass (1.17 h with the later revision, mostly quota waits) |
-| | Estimated manual effort, same workload | 67.7 person-hours |
-| | Per-item tasks only (screening, extraction, appraisal) | 0.41 h vs 22.7 person-hours |
+| | Included studies flagged by the eligibility audit | 0/21 |
+| | Unsupported statements / overstatements found by the critic | 2 / 2 in the first draft; 2 / 2 in the final draft, after two revisions |
+| Consistency | Title/abstract: kappa, raw agreement, conflicts | 0.56, 80%, 10/50 |
+| | Full text: kappa, raw agreement, conflicts | 0.64, 82%, 6/33 |
+| | Independent re-screening of excluded records | agreed on 9 of 10 |
+| Time | Machine time | 10.5 h, of which 9.2 h waiting for the daily quota |
+| | Estimated manual effort, same workload | 82.2 person-hours |
+| | Per-item tasks only (screening, extraction, appraisal) | 1.15 h vs 37.2 person-hours |
 
 How to read these:
 
 - **Quotation verification** measures grounding, not correctness: a verified quotation proves the
-  sentence exists in the source, not that the value was read correctly from it. The 11 unverified
-  quotations are flagged in `evidence_table.csv` for a human to check.
+  sentence exists in the source, not that the value was read correctly from it. The 53 unverified
+  quotations (46 of them stitched from several passages, section 6) are flagged in `evidence_table.csv` for a human to check.
 - **Kappa** measures agreement between two models, not agreement with the truth. Two models can
   agree and both be wrong, which is what the benchmark below shows.
 - **Time**: the manual figure applies the assumptions in `config/manual_effort.yaml` (for example
@@ -335,7 +345,13 @@ loop, critic loop, resume in a fresh process, reopening a finished run for revis
 ## 8. Limitations and future work
 
 - **Scale under the free tier.** 200,000 tokens per model per day limits a review to a few dozen
-  screened records. The code has no such limit; a paid tier or local models remove it.
+  screened records, and a review with the default options does not fit in one day of the primary
+  model's quota (10.5 hours for the demonstration, section 6). The code has no such limit; a paid
+  tier or local models remove it.
+- **Revision loop.** Two critic → writer rounds left as many issues as the first draft had. Editing
+  only the flagged sentences, instead of rewriting the section, is the next thing to try.
+- **Quotation check.** Quotations assembled from several passages are counted as unverified; they
+  should be checked fragment by fragment.
 - **Screening sensitivity** reached 0.76 on the benchmark topic after three iterations (section 7.2).
   Exclusions still need a human check; quoted evidence for every exclusion is the next step.
 - **Single extraction.** Extraction and appraisal are done once; dual extraction with reconciliation

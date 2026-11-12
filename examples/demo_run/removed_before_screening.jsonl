@@ -1,88 +1,114 @@
-{"rid": "R0001", "title": "Artificial intelligence (AI) in restorative dentistry: current trends and future prospects.", "reason": "relevance-ranking cap", "rank": 100}
-{"rid": "R0002", "title": "Artificial Intelligence in Pancreatic Imaging: A Systematic Review.", "reason": "relevance-ranking cap", "rank": 109}
-{"rid": "R0003", "title": "Detection of Sleep Apnea Using Wearable AI: Systematic Review and Meta-Analysis.", "reason": "relevance-ranking cap", "rank": 104}
-{"rid": "R0004", "title": "Examining the Role of Large Language Models in Orthopedics: Systematic Review.", "reason": "relevance-ranking cap", "rank": 73}
-{"rid": "R0005", "title": "Artificial Intelligence for Hip Fracture Detection and Outcome Prediction: A Systematic Review and Meta-analysis.", "reason": "relevance-ranking cap", "rank": 91}
-{"rid": "R0007", "title": "Machine learning models for predicting preeclampsia: a systematic review.", "reason": "relevance-ranking cap", "rank": 82}
-{"rid": "R0008", "title": "Wearable Artificial Intelligence for Detecting Anxiety: Systematic Review and Meta-Analysis.", "reason": "relevance-ranking cap", "rank": 90}
-{"rid": "R0009", "title": "Enhancing systematic literature reviews with generative artificial intelligence: development, applications, and performance evaluation.", "reason": "relevance-ranking cap", "rank": 25}
-{"rid": "R0010", "title": "Application of artificial intelligence in the dental field: A literature review.", "reason": "relevance-ranking cap", "rank": 98}
-{"rid": "R0011", "title": "Machine learning for prediction of viral hepatitis: A systematic review and meta-analysis.", "reason": "relevance-ranking cap", "rank": 102}
-{"rid": "R0012", "title": "Artificial intelligence in mammography: a systematic review of the external validation.", "reason": "relevance-ranking cap", "rank": 79}
-{"rid": "R0013", "title": "Use of artificial intelligence for image analysis in breast cancer screening programmes: systematic review of test accuracy.", "reason": "relevance-ranking cap", "rank": 54}
-{"rid": "R0014", "title": "Artificial intelligence for detecting periapical radiolucencies: A systematic review and meta-analysis.", "reason": "relevance-ranking cap", "rank": 92}
-{"rid": "R0015", "title": "Accuracy of Large Language Models for Literature Screening in Thoracic Surgery: Diagnostic Study.", "reason": "relevance-ranking cap", "rank": 56}
-{"rid": "R0016", "title": "Current status and dilemmas of osteoporosis screening tools: A narrative review.", "reason": "relevance-ranking cap", "rank": 81}
-{"rid": "R0017", "title": "Monitoring performance of clinical artificial intelligence in health care: a scoping review.", "reason": "relevance-ranking cap", "rank": 70}
-{"rid": "R0018", "title": "The Evolution and Application of Artificial Intelligence in Rhinology: A State of the Art Review.", "reason": "relevance-ranking cap", "rank": 108}
-{"rid": "R0019", "title": "Iterative guided machine learning-assisted systematic literature reviews: a diabetes case study.", "reason": "relevance-ranking cap", "rank": 68}
-{"rid": "R0020", "title": "Diagnostic performance of deep-learning-based screening methods for diabetic retinopathy in primary care-A meta-analysis.", "reason": "relevance-ranking cap", "rank": 76}
-{"rid": "R0021", "title": "A scoping review of empathy recognition in text using natural language processing.", "reason": "relevance-ranking cap", "rank": 107}
-{"rid": "R0022", "title": "Artificial intelligence and dental panoramic radiographs: where are we now?", "reason": "relevance-ranking cap", "rank": 61}
-{"rid": "R0023", "title": "Application of artificial intelligence in dental implant prognosis: A scoping review.", "reason": "relevance-ranking cap", "rank": 89}
-{"rid": "R0024", "title": "Revolutionizing surgery: AI and robotics for precision, risk reduction, and innovation.", "reason": "relevance-ranking cap", "rank": 110}
-{"rid": "R0026", "title": "Large language models in systematic review and meta-analysis of surgical treatments for vaginal vault prolapse.", "reason": "relevance-ranking cap", "rank": 72}
-{"rid": "R0027", "title": "Deep learning for the diagnosis of lumbar disc herniation: a systematic review and meta-analysis.", "reason": "relevance-ranking cap", "rank": 80}
-{"rid": "R0029", "title": "Artificial Intelligence to Improve Health Outcomes in the NICU and PICU: A Systematic Review.", "reason": "relevance-ranking cap", "rank": 103}
-{"rid": "R0031", "title": "Usefulness of machine learning softwares to screen titles of systematic reviews: a methodological study.", "reason": "relevance-ranking cap", "rank": 51}
-{"rid": "R0032", "title": "Role of Artificial Intelligence and Machine Learning in Facial Aesthetic Surgery: A Systematic Review.", "reason": "relevance-ranking cap", "rank": 105}
-{"rid": "R0033", "title": "The Performance of Wearable AI in Detecting Stress Among Students: Systematic Review and Meta-Analysis.", "reason": "relevance-ranking cap", "rank": 101}
-{"rid": "R0034", "title": "Use of artificial intelligence for outcome assessment in pediatric rehabilitation: a scoping review.", "reason": "relevance-ranking cap", "rank": 77}
-{"rid": "R0035", "title": "[Development of an artificial intelligence system to improve cancer clinical trial eligibility screening].", "reason": "relevance-ranking cap", "rank": 75}
-{"rid": "R0036", "title": "Artificial intelligence for detecting orthodontic root resorption: A systematic review and meta-analysis of diagnostic accuracy.", "reason": "relevance-ranking cap", "rank": 95}
-{"rid": "R0037", "title": "A foundation model for human-AI collaboration in medical literature mining.", "reason": "relevance-ranking cap", "rank": 59}
-{"rid": "R0041", "title": "Artificial Intelligence and Machine Learning for Emergency Department Overcrowding: A Systematic Review with Large Language Model-Assisted Screening", "reason": "relevance-ranking cap", "rank": 46}
-{"rid": "R0043", "title": "Machine learning-assisted abstract screening on learning analytics: a step-by-step tutorial", "reason": "relevance-ranking cap", "rank": 28}
-{"rid": "R0046", "title": "A biomedical BERT ensemble (TITAN-SR) outperformed active-learning and large language model chatbots for systematic review title and abstract screening: development and external validation", "reason": "relevance-ranking cap", "rank": 60}
-{"rid": "R0049", "title": "A Machine Learning and Large Language Model Tool for Systematic Literature Reviews of Health Economic Evidence: A Validation Study", "reason": "relevance-ranking cap", "rank": 30}
-{"rid": "R0050", "title": "Artificial intelligence-driven study selection in systematic reviews of randomized controlled trials, emulated trials and economic evaluation studies using large language models", "reason": "relevance-ranking cap", "rank": 49}
-{"rid": "R0051", "title": "Transforming oncology clinical trial matching through neuro-symbolic, multi-agent AI and an oncology-specific knowledge graph: a prospective evaluation in 3804 patients", "reason": "relevance-ranking cap", "rank": 69}
-{"rid": "R0054", "title": "AIScreening: A Structured-Output Pipeline and Prompt-Policy Benchmark for LLM-Assisted Title and Abstract Screening", "reason": "relevance-ranking cap", "rank": 41}
-{"rid": "R0055", "title": "Is Large Language Model-Assisted Citation Screening Feasible in a Scoping Review on Nonpharmacological Interventions for Delirium in Patients With Cancer?", "reason": "relevance-ranking cap", "rank": 35}
-{"rid": "R0056", "title": "Enhancing AI for citation screening in literature reviews: Improving accuracy with ensemble models", "reason": "relevance-ranking cap", "rank": 44}
-{"rid": "R0058", "title": "Transforming Systematic Reviews: Evaluating a Fine-Tuned Large Language Model for Abstract Screening in Uveitis and Retinal Vasculitis: Fine-Tuned LLM for Review Screening", "reason": "relevance-ranking cap", "rank": 34}
-{"rid": "R0059", "title": "Artificial intelligence in systematic reviews and meta-analyses: Task-specific performance, residual error quantification, and human oversight", "reason": "relevance-ranking cap", "rank": 58}
-{"rid": "R0060", "title": "Human versus artificial intelligence: evaluating ChatGPT's performance in conducting published systematic reviews with meta-analysis in chronic pain research", "reason": "relevance-ranking cap", "rank": 53}
-{"rid": "R0061", "title": "Novel Abstract Screening Algorithm Using Delphi-Inspired Large Language Model Consensus for Systematic Reviews in Psychiatry: Nouvel algorithme de sélection des résumés utilisant un consensus issu d'un grand modèle de langage inspiré de la méthode Delphi pour les revues systématiques en psychiatrie", "reason": "relevance-ranking cap", "rank": 32}
-{"rid": "R0063", "title": "Artificial intelligence for early detection of oral squamous cell carcinoma: a systematic review", "reason": "relevance-ranking cap", "rank": 87}
-{"rid": "R0065", "title": "Collaborative Multi-Agent Screening Framework for Efficient Eligibility Evaluation of Clinical Trial Patients", "reason": "relevance-ranking cap", "rank": 66}
-{"rid": "R0066", "title": "Testing the utility of GPT for title and abstract screening in environmental systematic evidence synthesis", "reason": "relevance-ranking cap", "rank": 42}
-{"rid": "R0067", "title": "Label-free, low-cost AI ranking for systematic review screening", "reason": "relevance-ranking cap", "rank": 64}
-{"rid": "R0068", "title": "Prospective validation of NeutrinoReview for LLM-assisted systematic review screening: an indoor air quality case study", "reason": "relevance-ranking cap", "rank": 27}
-{"rid": "R0069", "title": "Audited large language model triage for systematic review screening in national clinical guideline production: validation and prospective deployment", "reason": "relevance-ranking cap", "rank": 26}
-{"rid": "R0071", "title": "Validation of Synthesa AI, a Large Language Model-Based Screening Tool for Systematic Reviews: Results from Nine Studies", "reason": "relevance-ranking cap", "rank": 43}
-{"rid": "R0075", "title": "MechaScreener: Large language model-based automated screening for systematic reviews and research", "reason": "relevance-ranking cap", "rank": 45}
-{"rid": "R0076", "title": "Benchmarking a Local Schema-Constrained Large Language Model Pipeline for Abstract Screening and Evidence Mapping", "reason": "relevance-ranking cap", "rank": 39}
-{"rid": "R0077", "title": "Cost-Efficient Large Language Model-Assisted Title­­ and Abstract Screening for Systematic Reviews: Method Evaluation and Validation", "reason": "relevance-ranking cap", "rank": 37}
-{"rid": "R0078", "title": "Artificial Intelligence in Minimally Invasive Gynecological Surgery: A Systematic Review of Task- Specific Performance and Clinical Translational Readiness.", "reason": "relevance-ranking cap", "rank": 86}
-{"rid": "R0079", "title": "AI-assisted workflow enables rapid, high-fidelity breast cancer clinical trial eligibility prescreening", "reason": "relevance-ranking cap", "rank": 71}
-{"rid": "R0080", "title": "Automated title and abstract screening for scoping reviews using the GPT-4 Large Language Model", "reason": "relevance-ranking cap", "rank": 40}
-{"rid": "R0081", "title": "Has LLM Screening Performance Stalled in Software Engineering Systematic Reviews?", "reason": "relevance-ranking cap", "rank": 57}
-{"rid": "R0083", "title": "Explainable and Interpretable AI for Voice and Speech Analysis in Clinical Care: Systematic Review", "reason": "relevance-ranking cap", "rank": 84}
-{"rid": "R0084", "title": "Artificial Intelligence Professional Development Provision for Teachers in Andalusia: Documentary Analysis and Recommendations for a Comprehensive Approach", "reason": "relevance-ranking cap", "rank": 106}
-{"rid": "R0085", "title": "Application of Artificial Intelligence in Education of Prosthodontics and Implant Dentistry: A Review", "reason": "relevance-ranking cap", "rank": 111}
-{"rid": "R0086", "title": "GPT-3.5 Turbo and GPT-4 Turbo in Title and Abstract Screening for Systematic Reviews", "reason": "relevance-ranking cap", "rank": 52}
-{"rid": "R0087", "title": "Generative AI and Cybersecurity Education, Training, and Awareness: A Systematic Mapping Study", "reason": "relevance-ranking cap", "rank": 99}
-{"rid": "R0088", "title": "C18-03 Developing and Evaluating Deep Learning Model for Pulmonary Hypertension Screening via Heart Sounds—With RHC as Gold Standard: A Multi-Center Prospective Study", "reason": "relevance-ranking cap", "rank": 83}
-{"rid": "R0090", "title": "ARTIFICIAL INTELLIGENCE IN PSYCHIATRIC DIAGNOSIS AND CLINICAL DECISION-MAKING: CURRENT EVIDENCE, CLINICAL APPLICATIONS, CHALLENGES AND FUTURE DIRECTIONS", "reason": "relevance-ranking cap", "rank": 85}
-{"rid": "R0091", "title": "Applications of Natural Language Processing and Large Language Models for Social Determinants of Health: Protocol for a Systematic Review", "reason": "relevance-ranking cap", "rank": 74}
-{"rid": "R0092", "title": "LLM-Based Classifiers Can Reduce the Proportion of Records to Screen with Minimal Loss of Relevant Studies: A Case Study.", "reason": "relevance-ranking cap", "rank": 62}
-{"rid": "R0093", "title": "AI-Powered Vulnerability Detection and Patch Management in Cybersecurity: A Systematic Review of Techniques, Challenges, and Emerging Trends", "reason": "relevance-ranking cap", "rank": 94}
-{"rid": "R0094", "title": "Streamlining systematic reviews with large language models using prompt engineering and retrieval augmented generation", "reason": "relevance-ranking cap", "rank": 47}
-{"rid": "R0095", "title": "Emerging Frameworks: A Systematic Review of Publishers’ Policies for Generative AI in Medical Sciences Research", "reason": "relevance-ranking cap", "rank": 78}
-{"rid": "R0096", "title": "LLM-Assisted Abstract Screening with OLIVER: Evaluating Calibration and Single-Model vs. Actor-Critic Configurations in Literature Reviews", "reason": "relevance-ranking cap", "rank": 29}
-{"rid": "R0097", "title": "An AI-augmented review of childhood atopic dermatitis biomarkers across genetic, immune, microbial, and metabolic domains", "reason": "relevance-ranking cap", "rank": 97}
-{"rid": "R0098", "title": "Artificial Intelligence, Knowledge Sharing, and Organizational Performance: A Systematic Literature Review", "reason": "relevance-ranking cap", "rank": 88}
-{"rid": "R0099", "title": "Machine learning models for abstract screening task - A systematic literature review application for health economics and outcome research", "reason": "relevance-ranking cap", "rank": 55}
-{"rid": "R0100", "title": "LLM4SCREENLIT: Recommendations on Assessing the Performance of Large Language Models for Screening Literature in Systematic Reviews", "reason": "relevance-ranking cap", "rank": 36}
-{"rid": "R0101", "title": "Innovative Technologies", "reason": "relevance-ranking cap", "rank": 112}
-{"rid": "R0102", "title": "Human-Comparable Sensitivity of Large Language Models in Identifying Eligible Studies Through Title and Abstract Screening: 3-Layer Strategy Using GPT-3.5 and GPT-4 for Systematic Reviews", "reason": "relevance-ranking cap", "rank": 31}
-{"rid": "R0103", "title": "Efficacy of Large Language Models for Screening of Systematic Reviews on Periprosthetic Joint Infection", "reason": "relevance-ranking cap", "rank": 38}
-{"rid": "R0104", "title": "Machine Learning-Assisted Systematic Review: A Case Study in Learning Analytics", "reason": "relevance-ranking cap", "rank": 63}
-{"rid": "R0106", "title": "Validation of Synthesa AI, a Large Language Model-Based Screening Tool for Systematic Reviews: Results from Nine Pharmacologic Studies.", "reason": "relevance-ranking cap", "rank": 50}
-{"rid": "R0107", "title": "Screening Automation for Systematic Reviews: A 5-Tier Prompting Approach Meeting Cochrane’s Sensitivity Requirement", "reason": "relevance-ranking cap", "rank": 33}
-{"rid": "R0108", "title": "From Automation to Validation: Assessing Human–LLM Agreement in Systematic Reviews of Venture Capital Investment Strategies", "reason": "relevance-ranking cap", "rank": 48}
-{"rid": "R0109", "title": "Applications and challenges of artificial intelligence in cancer management", "reason": "relevance-ranking cap", "rank": 93}
-{"rid": "R0110", "title": "LLM-Enhanced Rapid Review (LLMEn-RR): a methodology proposal", "reason": "relevance-ranking cap", "rank": 65}
-{"rid": "R0111", "title": "GENERATIVE AI AS TEAM PARTNER: A TAXONOMY OF ROLES FROM A SYSTEMATIC LITERATURE REVIEW", "reason": "relevance-ranking cap", "rank": 96}
-{"rid": "R0112", "title": "Rapid Clinical Evidence Explorer: A Generative Pre-Trained Transformer-Powered Tool for Automated Oncology Evidence Extraction.", "reason": "relevance-ranking cap", "rank": 67}
+{"rid": "R0001", "title": "Examining the Role of Large Language Models in Orthopedics: Systematic Review.", "reason": "relevance-ranking cap", "rank": 117}
+{"rid": "R0002", "title": "Large language models for conducting systematic reviews: on the rise, but not yet ready for use-a scoping review.", "reason": "relevance-ranking cap", "rank": 79}
+{"rid": "R0005", "title": "AI-Assisted Systematic Review: Humans Still Need to Review All Abstracts for Inclusion.", "reason": "relevance-ranking cap", "rank": 106}
+{"rid": "R0006", "title": "GPT-3.5 Turbo and GPT-4 Turbo in Title and Abstract Screening for Systematic Reviews.", "reason": "relevance-ranking cap", "rank": 90}
+{"rid": "R0008", "title": "Semi-automating abstract screening with a natural language model pretrained on biomedical literature.", "reason": "relevance-ranking cap", "rank": 59}
+{"rid": "R0009", "title": "ChatGPT-4 Assistance in Optimizing Emergency Department Radiology Referrals and Imaging Selection.", "reason": "relevance-ranking cap", "rank": 135}
+{"rid": "R0012", "title": "The Pros and Cons of Using ChatGPT in Medical Education: A Scoping Review.", "reason": "relevance-ranking cap", "rank": 160}
+{"rid": "R0013", "title": "Artificial Intelligence Tools for Automating Evidence Synthesis: Scoping Review.", "reason": "relevance-ranking cap", "rank": 101}
+{"rid": "R0015", "title": "Rapid Clinical Evidence Explorer: A Generative Pre-Trained Transformer-Powered Tool for Automated Oncology Evidence Extraction.", "reason": "relevance-ranking cap", "rank": 86}
+{"rid": "R0017", "title": "Role of Generative Artificial Intelligence in Assisting Systematic Review Process in Health Research: A Systematic Review.", "reason": "relevance-ranking cap", "rank": 130}
+{"rid": "R0020", "title": "Bridging language gaps in healthcare: a systematic review of the practical implementation of neural machine translation technologies in clinical settings.", "reason": "relevance-ranking cap", "rank": 103}
+{"rid": "R0021", "title": "A question-answering framework for automated abstract screening using large language models.", "reason": "relevance-ranking cap", "rank": 57}
+{"rid": "R0022", "title": "Performance of large language models in medical licensing examinations: a systematic review and meta-analysis.", "reason": "relevance-ranking cap", "rank": 93}
+{"rid": "R0023", "title": "Human-Comparable Sensitivity of Large Language Models in Identifying Eligible Studies Through Title and Abstract Screening: 3-Layer Strategy Using GPT-3.5 and GPT-4 for Systematic Reviews.", "reason": "relevance-ranking cap", "rank": 54}
+{"rid": "R0024", "title": "Using GPT-4 for Title and Abstract Screening in a Literature Review of Public Policies: A Feasibility Study.", "reason": "relevance-ranking cap", "rank": 74}
+{"rid": "R0026", "title": "Harnessing ChatGPT for abstract screening in health-related scoping reviews: the role of structured eligibility criteria.", "reason": "relevance-ranking cap", "rank": 56}
+{"rid": "R0027", "title": "Development and Validation of a Literature Screening Tool: Few-Shot Learning Approach in Systematic Reviews.", "reason": "relevance-ranking cap", "rank": 87}
+{"rid": "R0030", "title": "Correction to \"Artificial Intelligence and Automation in Evidence Synthesis: An Investigation of Methods Employed in Cochrane, Campbell Collaboration, and Environmental Evidence Reviews,\" \"Creating Interactive Data Dashboards for Evidence Syntheses,\" and \"Using GPT-4 for Title and Abstract Screening in a Literature Review of Public Policies: A Feasibility Study\".", "reason": "relevance-ranking cap", "rank": 143}
+{"rid": "R0031", "title": "Generative AI and Large Language Models in Rehabilitation: A Scoping Review.", "reason": "relevance-ranking cap", "rank": 136}
+{"rid": "R0032", "title": "Testing the utility of GPT for title and abstract screening in environmental systematic evidence synthesis.", "reason": "relevance-ranking cap", "rank": 53}
+{"rid": "R0034", "title": "[Claude Bernard-Horner syndrome and its opposite, Pourfour du Petit syndrome, in anesthesia and intensive care].", "reason": "relevance-ranking cap", "rank": 164}
+{"rid": "R0036", "title": "Machine Learning-Based Approach for Identifying Research Gaps: COVID-19 as a Case Study.", "reason": "relevance-ranking cap", "rank": 151}
+{"rid": "R0040", "title": "Leveraging open-source large language models (LLMs) in scoping reviews: a case study on disability and AI applications.", "reason": "relevance-ranking cap", "rank": 65}
+{"rid": "R0041", "title": "Large language models in systematic review and meta-analysis of surgical treatments for vaginal vault prolapse.", "reason": "relevance-ranking cap", "rank": 104}
+{"rid": "R0042", "title": "Applications, Technical Characteristics, and Evaluation Approaches of Retrieval-Augmented Generation in Nursing: Scoping Review.", "reason": "relevance-ranking cap", "rank": 111}
+{"rid": "R0043", "title": "Using Natural Language Processing to Automate Screening of Abstracts for Neurosurgical Guideline Creation.", "reason": "relevance-ranking cap", "rank": 61}
+{"rid": "R0044", "title": "Accelerating systematic reviews: a novel 1-wk screening protocol using rule-based automation with AI-assisted Python coding.", "reason": "relevance-ranking cap", "rank": 83}
+{"rid": "R0046", "title": "Batch Size Effects on Mid-2025 State-of-the-Art Large Language Model Performance in Automated Title and Abstract Screening.", "reason": "relevance-ranking cap", "rank": 63}
+{"rid": "R0047", "title": "The therapeutic potential of poetry as a health intervention in the context of palliative care: an integrative review.", "reason": "relevance-ranking cap", "rank": 157}
+{"rid": "R0048", "title": "Human versus artificial intelligence: evaluating ChatGPT's performance in conducting published systematic reviews with meta-analysis in chronic pain research.", "reason": "relevance-ranking cap", "rank": 76}
+{"rid": "R0051", "title": "An AI-augmented review of childhood atopic dermatitis biomarkers across genetic, immune, microbial, and metabolic domains.", "reason": "relevance-ranking cap", "rank": 146}
+{"rid": "R0052", "title": "Human Versus Artificial Intelligence: Comparing Cochrane Authors' and ChatGPT's Risk of Bias Assessments.", "reason": "relevance-ranking cap", "rank": 99}
+{"rid": "R0053", "title": "Is Large Language Model-Assisted Citation Screening Feasible in a Scoping Review on Nonpharmacological Interventions for Delirium in Patients With Cancer?", "reason": "relevance-ranking cap", "rank": 60}
+{"rid": "R0054", "title": "REFLECTIVE-TIAB: cost-effective prompt optimization for large language model-based title and abstract screening in literature reviews.", "reason": "relevance-ranking cap", "rank": 68}
+{"rid": "R0056", "title": "Effectiveness of large language model-based teaching interventions in medical education: a systematic review and stratified meta-analysis of 14 studies.", "reason": "relevance-ranking cap", "rank": 115}
+{"rid": "R0057", "title": "Structural insights into clinical large language models and their barriers to translational readiness.", "reason": "relevance-ranking cap", "rank": 108}
+{"rid": "R0060", "title": "Supporting Literature Reviews: A Comparison Between Human and Generative Artificial Intelligence Screening for a Scoping Review", "reason": "relevance-ranking cap", "rank": 84}
+{"rid": "R0062", "title": "Artificial intelligence-driven study selection in systematic reviews of randomized controlled trials, emulated trials and economic evaluation studies using large language models", "reason": "relevance-ranking cap", "rank": 75}
+{"rid": "R0064", "title": "Deploying Local Large Language Models for Automated Article Screening in Scientific Literature Reviews", "reason": "relevance-ranking cap", "rank": 69}
+{"rid": "R0066", "title": "Artificial Intelligence - Large Language Models (LLMs) and Agentic AI in Clinical Decision Support in Outpatient, General Practice and Acute Settings: A Systematic Review of Diagnostic Accuracy, Comparative Efficacy, Clinical Outcomes and Implementation Factors", "reason": "relevance-ranking cap", "rank": 98}
+{"rid": "R0068", "title": "Artificial Intelligence and Machine Learning for Emergency Department Overcrowding: A Systematic Review with Large Language Model-Assisted Screening", "reason": "relevance-ranking cap", "rank": 72}
+{"rid": "R0070", "title": "Label-free, low-cost AI ranking for systematic review screening", "reason": "relevance-ranking cap", "rank": 88}
+{"rid": "R0071", "title": "Generative Artificial Intelligence Performance on University-Level Human Anatomy Examinations: A Structured Narrative Review and Proposed MATRIX-Anatomy Framework", "reason": "relevance-ranking cap", "rank": 145}
+{"rid": "R0075", "title": "Developing and Evaluating the Use of ChatGPT as a Screening Tool for Nurses Conducting Structured Literature Reviews: Proof of Concept Study Results", "reason": "relevance-ranking cap", "rank": 81}
+{"rid": "R0076", "title": "Comparing Single-Agent and Multi-Agent Strategies in LLM-Based Title-Abstract Screening", "reason": "relevance-ranking cap", "rank": 85}
+{"rid": "R0080", "title": "A Living Systematic Review Engine: LLM-Automated Evidence Surveillance Validated Against a Published Meta-Analysis of Statins for Sepsis", "reason": "relevance-ranking cap", "rank": 55}
+{"rid": "R0081", "title": "Artificial intelligence versus human consensus: A concordance analysis in the screening of studies for evidence synthesis in physical activity and sport", "reason": "relevance-ranking cap", "rank": 78}
+{"rid": "R0082", "title": "Chatting with Pythons: using ChatGPT and Python computer code to screen abstracts for systematic literature reviews in complex disciplines", "reason": "relevance-ranking cap", "rank": 100}
+{"rid": "R0086", "title": "Bio-SIEVE: Exploring Instruction Tuning Large Language Models for Systematic Review Automation", "reason": "relevance-ranking cap", "rank": 58}
+{"rid": "R0089", "title": "Leveraging LLMs for Title and Abstract Screening for Systematic Review: A Cost-Effective Dynamic Few-Shot Learning Approach", "reason": "relevance-ranking cap", "rank": 64}
+{"rid": "R0092", "title": "SESR-Eval: Dataset for Evaluating LLMs in the Title-Abstract Screening of Systematic Reviews", "reason": "relevance-ranking cap", "rank": 51}
+{"rid": "R0093", "title": "AiReview: An Open Platform for Accelerating Systematic Reviews with LLMs", "reason": "relevance-ranking cap", "rank": 80}
+{"rid": "R0094", "title": "SciLitBench: Benchmark and Design Principles for LLM-Powered Systematic Literature Reviews", "reason": "relevance-ranking cap", "rank": 52}
+{"rid": "R0095", "title": "AI Insights: A Case Study on Utilizing ChatGPT Intelligence for Research Paper Analysis", "reason": "relevance-ranking cap", "rank": 138}
+{"rid": "R0097", "title": "Assessing the Ability of ChatGPT to Screen Articles for Systematic Reviews", "reason": "relevance-ranking cap", "rank": 107}
+{"rid": "R0098", "title": "Do AI chatbots find what experts would? Effects of model, user role, and sample size on study retrieval for medical questions", "reason": "relevance-ranking cap", "rank": 97}
+{"rid": "R0100", "title": "Auxiliary uncertainty signals for LLM-assisted systematic review screening: a benchmark across eight Cohen drug-class reviews", "reason": "relevance-ranking cap", "rank": 71}
+{"rid": "R0101", "title": "LatteReview: A Multi-Agent Framework for Systematic Review Automation Using Large Language Models", "reason": "relevance-ranking cap", "rank": 96}
+{"rid": "R0102", "title": "Emerging Synergies Between Large Language Models and Machine Learning in Ecommerce Recommendations", "reason": "relevance-ranking cap", "rank": 144}
+{"rid": "R0104", "title": "Can ChatGPT Write a Good Boolean Query for Systematic Review Literature Search?", "reason": "relevance-ranking cap", "rank": 102}
+{"rid": "R0105", "title": "Generating Natural Language Queries for More Effective Systematic Review Screening Prioritisation", "reason": "relevance-ranking cap", "rank": 62}
+{"rid": "R0106", "title": "Language Modeling on Tabular Data: A Survey of Foundations, Techniques and Evolution", "reason": "relevance-ranking cap", "rank": 125}
+{"rid": "R0107", "title": "Exploring the use of a Large Language Model for data extraction in systematic reviews: a rapid feasibility study", "reason": "relevance-ranking cap", "rank": 67}
+{"rid": "R0109", "title": "Development of the ChatGPT, Generative Artificial Intelligence and Natural Large Language Models for Accountable Reporting and Use (CANGARU) Guidelines", "reason": "relevance-ranking cap", "rank": 137}
+{"rid": "R0110", "title": "Efficacy of Large Language Models in Systematic Reviews", "reason": "relevance-ranking cap", "rank": 82}
+{"rid": "R0111", "title": "Automated Penetration Testing with LLM Agents and Classical Planning", "reason": "relevance-ranking cap", "rank": 158}
+{"rid": "R0112", "title": "LGAR: Zero-Shot LLM-Guided Neural Ranking for Abstract Screening in Systematic Literature Reviews", "reason": "relevance-ranking cap", "rank": 94}
+{"rid": "R0113", "title": "Survey of Vulnerabilities in Large Language Models Revealed by Adversarial Attacks", "reason": "relevance-ranking cap", "rank": 149}
+{"rid": "R0115", "title": "Automatic assessment of text-based responses in post-secondary education: A systematic review", "reason": "relevance-ranking cap", "rank": 127}
+{"rid": "R0116", "title": "Reassessing Large Language Model Boolean Query Generation for Systematic Reviews", "reason": "relevance-ranking cap", "rank": 105}
+{"rid": "R0117", "title": "Systematic Review on Healthcare Systems Engineering utilizing ChatGPT", "reason": "relevance-ranking cap", "rank": 142}
+{"rid": "R0118", "title": "Accelerating Clinical Evidence Synthesis with Large Language Models", "reason": "relevance-ranking cap", "rank": 109}
+{"rid": "R0119", "title": "Large Language Models on Graphs: A Comprehensive Survey", "reason": "relevance-ranking cap", "rank": 110}
+{"rid": "R0120", "title": "Humanlike Cognitive Patterns as Emergent Phenomena in Large Language Models", "reason": "relevance-ranking cap", "rank": 150}
+{"rid": "R0121", "title": "LUMEN: Cost-Transparent Multi-Agent Pipeline for Automated Systematic Review and Meta-Analysis", "reason": "relevance-ranking cap", "rank": 89}
+{"rid": "R0122", "title": "A Reproducibility and Generalizability Study of Large Language Models for Query Generation", "reason": "relevance-ranking cap", "rank": 129}
+{"rid": "R0123", "title": "The impact and applications of ChatGPT: a systematic review of literature reviews", "reason": "relevance-ranking cap", "rank": 122}
+{"rid": "R0124", "title": "Survey on Foundation Models for Prognostics and Health Management in Industrial Cyber-Physical Systems", "reason": "relevance-ranking cap", "rank": 162}
+{"rid": "R0125", "title": "meta-pipe: An LLM-agent pipeline for end-to-end automated systematic review and meta-analysis", "reason": "relevance-ranking cap", "rank": 95}
+{"rid": "R0126", "title": "ProfOlaf: Semi-Automated Tool for Systematic Literature Reviews", "reason": "relevance-ranking cap", "rank": 116}
+{"rid": "R0127", "title": "Governing Bring Your Own AI: A Parameterized Maturity Model", "reason": "relevance-ranking cap", "rank": 155}
+{"rid": "R0128", "title": "Advances in Pre-trained Language Models for Domain-Specific Text Classification: A Systematic Review", "reason": "relevance-ranking cap", "rank": 141}
+{"rid": "R0129", "title": "A systematic review of trial-matching pipelines using large language models", "reason": "relevance-ranking cap", "rank": 114}
+{"rid": "R0130", "title": "Explainability in Practice: A Survey of Explainable NLP Across Various Domains", "reason": "relevance-ranking cap", "rank": 123}
+{"rid": "R0131", "title": "A State-of-the-practice Release-readiness Checklist for Generative AI-based Software Products", "reason": "relevance-ranking cap", "rank": 153}
+{"rid": "R0132", "title": "Closing the gap between open-source and commercial large language models for medical evidence summarization", "reason": "relevance-ranking cap", "rank": 92}
+{"rid": "R0133", "title": "Large Language Models for Combinatorial Optimization: A Systematic Review", "reason": "relevance-ranking cap", "rank": 133}
+{"rid": "R0134", "title": "LLMs in Software Security: A Survey of Vulnerability Detection Techniques and Insights", "reason": "relevance-ranking cap", "rank": 139}
+{"rid": "R0135", "title": "Large Language Models for Variant-Centric Functional Evidence Mining", "reason": "relevance-ranking cap", "rank": 77}
+{"rid": "R0136", "title": "A Systematic Survey on Large Language Models for Algorithm Design", "reason": "relevance-ranking cap", "rank": 147}
+{"rid": "R0137", "title": "A Reproducible Optimisation Protocol for Calibrating Prompt-Based Large Language Model Workflows in Evidence Synthesis", "reason": "relevance-ranking cap", "rank": 119}
+{"rid": "R0139", "title": "Large Language Models in Bioinformatics: A Survey", "reason": "relevance-ranking cap", "rank": 128}
+{"rid": "R0140", "title": "L-PRISMA: An Extension of PRISMA in the Era of Generative Artificial Intelligence (GenAI)", "reason": "relevance-ranking cap", "rank": 91}
+{"rid": "R0141", "title": "Robustness, Security, Privacy, Explainability, Efficiency, and Usability of Large Language Models for Code", "reason": "relevance-ranking cap", "rank": 120}
+{"rid": "R0142", "title": "Medical Dialogue: A Survey of Categories, Methods, Evaluation and Challenges", "reason": "relevance-ranking cap", "rank": 159}
+{"rid": "R0143", "title": "A Novel Question-Answering Framework for Automated Citation Screening Using Large Language Models", "reason": "relevance-ranking cap", "rank": 66}
+{"rid": "R0144", "title": "The Role of Artificial Intelligence in Breast Cancer Patient Education: Scoping Review", "reason": "relevance-ranking cap", "rank": 134}
+{"rid": "R0146", "title": "Medical Applications of Graph Convolutional Networks Using Electronic Health Records: A Scoping Review", "reason": "relevance-ranking cap", "rank": 118}
+{"rid": "R0147", "title": "Safeguarding students' academic integrity in the age of generative AI: challenges and solutions", "reason": "relevance-ranking cap", "rank": 156}
+{"rid": "R0148", "title": "Experiences of Academics, Graduates, and Undergraduates in Using Generative AI in Research (Un)Ethically and (Ir)Responsibly: A Systematic Review of Qualitative Synthesis", "reason": "relevance-ranking cap", "rank": 140}
+{"rid": "R0149", "title": "Harnessing the Power of ChatGPT for Automating Systematic Review Process: Methodology, Case Study, Limitations, and Future Directions", "reason": "relevance-ranking cap", "rank": 113}
+{"rid": "R0150", "title": "From Automation to Validation: Assessing Human–LLM Agreement in Systematic Reviews of Venture Capital Investment Strategies", "reason": "relevance-ranking cap", "rank": 70}
+{"rid": "R0151", "title": "AI-ASSISTED SCHOLARLY WRITING IN EDUCATION: A SCOPING REVIEW (2019–2024)", "reason": "relevance-ranking cap", "rank": 131}
+{"rid": "R0153", "title": "A Systematic Literature Review on Impact of Artificial Intelligence on Academic Integrity", "reason": "relevance-ranking cap", "rank": 124}
+{"rid": "R0154", "title": "Context of Peacebuilding Education in the Philippines: A Literature Review on Communication Skills, Critical Consciousness, and Intercultural Competencies of Teachers and Students", "reason": "relevance-ranking cap", "rank": 132}
+{"rid": "R0156", "title": "( META-ANALYSIS ) Effect ofHome-andCommunity-BasedPhysical Activity Interventions on Physical Function Among Cancer Survivors : A Systematic Review and Meta-Analysis", "reason": "relevance-ranking cap", "rank": 161}
+{"rid": "R0157", "title": "A PRISMA based systematic review of deep learning for multimodal fake news detection using text and images", "reason": "relevance-ranking cap", "rank": 121}
+{"rid": "R0158", "title": "Transformer-based Architecture for Assisting Title and Abstract Screening of a Systematic Review", "reason": "relevance-ranking cap", "rank": 73}
+{"rid": "R0159", "title": "Generative AI Use and Its Impact on Nurses' Decision-Making: A Systematic Review", "reason": "relevance-ranking cap", "rank": 148}
+{"rid": "R0160", "title": "Questionnaire-Based Tools for Colorectal Cancer Screening and Risk Assessment: A Scoping Review", "reason": "relevance-ranking cap", "rank": 112}
+{"rid": "R0161", "title": "Comprehensive Overview of Anatomy Education Using an AI-Assisted Thematic Synthesis of Highly Cited Literature", "reason": "relevance-ranking cap", "rank": 154}
+{"rid": "R0162", "title": "A qualitative systematic review protocol of patient experiences of using large language models for health information seeking and healthcare decision making", "reason": "relevance-ranking cap", "rank": 126}
+{"rid": "R0163", "title": "Preliminary Structured Literature Review Results Using ChatGPT: Towards a Pragmatic Framework for Product Managers at Software Startups", "reason": "relevance-ranking cap", "rank": 163}
+{"rid": "R0164", "title": "AID-SLR: A Generative Artificial Intelligence-Driven Automated System for Systematic Literature Review", "reason": "relevance-ranking cap", "rank": 152}

@@ -1,15 +1,16 @@
 {
   "identified": {
-    "pubmed": 40,
-    "europepmc": 40,
-    "semantic_scholar": 40
+    "pubmed": 59,
+    "europepmc": 60,
+    "arxiv": 60,
+    "semantic_scholar": 60
   },
-  "duplicates_removed": 8,
-  "removed_by_automation": 88,
+  "duplicates_removed": 75,
+  "removed_by_automation": 114,
   "automation_detail": {
-    "relevance-ranking cap": 88
+    "relevance-ranking cap": 114
   },
-  "records_screened": 24,
+  "records_screened": 50,
   "records_excluded": 0,
   "reports_sought": 0,
   "reports_not_retrieved": 0,

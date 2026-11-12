@@ -114,7 +114,9 @@ def _checkpoint_screening(payload: dict, run_dir: Path) -> dict:
 
 def _checkpoint_report(payload: dict, run_dir: Path) -> dict:
     qa = payload["qa_report"]
-    lines = [f"Verdict of the Critic agent: {qa['verdict']}", f"Issues: {len(qa['issues'])}"]
+    from .agents.critic import verdict_label
+
+    lines = [f"Verdict of the Critic agent: {verdict_label(qa['verdict'], qa['issues'])}", f"Issues: {len(qa['issues'])}"]
     lines += [f"  [{i['severity']}] ({i['area']}) {i['description'][:160]}" for i in qa["issues"][:12]]
     lines.append(f"Draft: {payload['draft_file']}")
     console.print(Panel("\n".join(lines), title="Checkpoint 3 — manuscript", border_style="cyan"))

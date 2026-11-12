@@ -1,7 +1,7 @@
 # Script de la vidéo de démonstration (3 minutes maximum)
 
-Une revue complète prend 30 à 60 minutes avec le quota gratuit de Groq : elle ne peut pas être
-filmée en direct. La vidéo montre donc deux choses : un point de validation humaine sur une revue
+Une revue complète prend plusieurs heures avec le quota gratuit de Groq (10 h 30 pour la revue de
+démonstration) : elle ne peut pas être filmée en direct. La vidéo montre donc deux choses : un point de validation humaine sur une revue
 en cours, puis les résultats d'une revue terminée.
 
 ## Préparation, avant d'enregistrer

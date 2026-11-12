@@ -1,11 +1,11 @@
 {
-  "protocol": 0.01,
-  "search_strategy": 64.1,
-  "retrieval": 12.0,
-  "screen_title_abstract": 182.7,
-  "screen_full_text": 367.42,
-  "extraction": 910.97,
-  "synthesis": 2344.79,
-  "critic": 307.14,
-  "finalize": 12.52
+  "protocol": 5.72,
+  "search_strategy": 178.88,
+  "retrieval": 15.39,
+  "screen_title_abstract": 499.19,
+  "screen_full_text": 798.92,
+  "extraction": 2859.82,
+  "synthesis": 28044.95,
+  "critic": 5431.68,
+  "finalize": 9.99
 }

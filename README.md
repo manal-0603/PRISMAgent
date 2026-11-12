@@ -142,9 +142,12 @@ limits. Your e-mail address is sent to those services only if you set `CONTACT_E
 
 The Groq free tier allows, per model, 8,000 tokens per minute and **200,000 tokens per day**. The
 pipeline is built around that constraint: a token-aware rate limiter, an on-disk cache, compact
-prompts, and tasks spread over three models. With the default options (50 records screened) a
-review fits in one day of free quota and takes roughly an hour, nearly all of it waiting for the
-rate limiter. Check your usage at any time:
+prompts, and tasks spread over three models. Even so, a review with the default options (50
+records screened, two revision rounds) can need more than one day of the primary model's quota: the
+demonstration used about 225,000 tokens of it and took 10.5 hours, most of them waiting (section
+5). To make a run fit in the daily quota, screen fewer records (`--max-screen 24`), allow one
+revision round (`--qa-rounds 1`), or give extraction to the smaller model (`ROLE_EXTRACTOR=fast`).
+Check your usage at any time:
 
 ```bash
 sysrev quota
@@ -266,26 +269,26 @@ writer. For `anthropic` or `openai`, also install `langchain-anthropic` or `lang
 ## 5. Demonstration
 
 Question: *How accurate are large language models at title and abstract screening for systematic
-reviews, compared with human reviewers?* Run in autonomous mode on the Groq free tier.
+reviews, compared with human reviewers?* Run in autonomous mode on the Groq free tier, with the
+default options.
 
 ```bash
-ROLE_EXTRACTOR=fast sysrev run "How accurate are large language models at title and abstract screening for systematic reviews, compared with human reviewers?" \
-    --auto --max-per-source 40 --max-screen 24 --qa-rounds 1
+LLM_MAX_WAIT_SECONDS=3600 sysrev run "How accurate are large language models at title and abstract screening for systematic reviews, compared with human reviewers?" --auto
 ```
 
 | Stage | Result |
 |---|---|
-| Protocol | PICO question, 5 inclusion and 5 exclusion criteria, 7 data items; the planner chose PubMed, Europe PMC and Semantic Scholar |
-| Search strategy | 2 concept blocks, 5 queries tested on the live databases; final hits: PubMed 195, Europe PMC 312, Semantic Scholar 221 |
-| Retrieval | 120 records (40 per database), 8 duplicates merged, 112 unique; the 24 most relevant were screened, 88 reported as removed by automation |
-| Title/abstract screening | 20 retained, 4 excluded; Cohen's kappa between the two reviewers 0.83; 1 conflict adjudicated |
-| Full-text screening | 10 open-access full texts retrieved and indexed, 10 reports assessed on the abstract; 13 included, 7 excluded with reasons; kappa 0.66; 3 conflicts adjudicated |
-| Extraction and appraisal | 13 studies; 98 of 109 supporting quotations found in the source (90%); tools chosen: QUADAS-2 (8), PROBAST (2), ROBINS-I (2), JBI (1); 12 studies "some concerns", 1 "unclear" |
-| Synthesis | 4 themes, certainty rating per theme, 8,700-word manuscript, 17 references, 5 tables, PRISMA diagram and evidence map; 42 of 42 PRISMA items reported |
-| Critic, round 1 | 8 issues: 3 unsupported statements, 2 overstatements in the abstract, 2 narratives with too few citations, 1 excluded record an independent auditor would include |
-| Revision | the Writing agent rewrote the flagged narratives, the discussion and the abstract |
-| Critic, round 2 | 7 issues: 3 unsupported statements in the rewritten narratives, 1 overstatement in the abstract, 1 in the discussion, 1 study never cited in its theme, and the same excluded record |
-| Cost | 34.9 minutes for the first complete pass; 169 model calls and 263 audit events including the revision |
+| Protocol | PICO question, 6 inclusion and 6 exclusion criteria (3 marked "full text only"), 8 data items; the planner chose PubMed, Europe PMC, arXiv and Semantic Scholar |
+| Search strategy | 2 concept blocks, 7 queries tested on the live databases; final hits: PubMed 78, Europe PMC 90, arXiv 393, Semantic Scholar 123 |
+| Retrieval | 239 records (up to 60 per database), 75 duplicates merged, 164 unique; the 50 most relevant were screened, 114 reported as removed by automation |
+| Title/abstract screening | 33 retained, 17 excluded; Cohen's kappa between the two reviewers 0.56; 10 conflicts adjudicated; 3 exclusions that rested only on a "full text only" criterion were blocked |
+| Full-text screening | 23 open-access full texts retrieved and indexed, 10 reports assessed on the abstract; 21 included, 12 excluded with reasons (6 no full text available, 5 no human comparator, 1 not in English); kappa 0.64; 6 conflicts adjudicated |
+| Extraction and appraisal | 21 studies, all read from full text; 133 of 186 supporting quotations found in the source (72%); tools chosen: QUADAS-2 (14), ROBINS-I (5), PROBAST (2); 20 studies "some concerns", 1 "unclear" |
+| Synthesis | 4 themes, certainty rating per theme, 9,700-word manuscript, 22 references, 5 tables, PRISMA diagram and evidence map; one exploratory pooled estimate (sensitivity, 2 studies); 42 of 42 PRISMA items reported |
+| Critic, round 1 | 11 issues: 2 unsupported statements, 2 overstatements (abstract, discussion), 2 narratives with too few citations, 3 themes that never cite some of their studies, the low quotation rate, 1 excluded record an independent auditor would include |
+| Revision 1, critic round 2 | 7 issues: the flagged text was corrected, but the critic found 2 new unsupported statements and 2 new overstatements |
+| Revision 2, critic round 3 | 10 issues: again 2 unsupported statements and 2 overstatements, 1 narrative with too few citations, 3 themes with uncited studies; the revision budget (2 rounds) was used up |
+| Cost | 10.5 hours of wall-clock time, 9.2 of them waiting for the daily quota of the primary model; the models answered in 4 minutes in total; 206 model calls, 321 audit events |
 
 Outputs in [`examples/demo_run/`](examples/demo_run/): [`report.md`](examples/demo_run/report.md),
 [`report.docx`](examples/demo_run/report.docx), [`prisma_flow.png`](examples/demo_run/prisma_flow.png),
@@ -296,20 +299,25 @@ Outputs in [`examples/demo_run/`](examples/demo_run/): [`report.md`](examples/de
 
 What to know when reading this demonstration:
 
-- **It is small.** The free daily quota was shared with development runs, so only 24 records were
-  screened. The numbers describe that sample of the literature, not the whole field.
-- **The revision did not converge.** The writer corrected what the critic had flagged, but the
-  critic then found new unsupported statements in the rewritten text. This run allowed one revision
-  round (`--qa-rounds 1`), so 6 issues for the writer remain open; they are listed in
-  [`qa_report.md`](examples/demo_run/qa_report.md) and the manuscript says so in its Methods. The
-  affected paragraphs need another round or a human edit.
-- **The revision was applied in a second sitting.** The daily quota of the writing model ran out
-  just before the revision round: the pipeline finished with the reviewed draft and recorded that
-  the revision was skipped. It was applied later with `sysrev revise <run_id>`.
-- **Extraction ran on the smaller model** (`ROLE_EXTRACTOR=fast`) for the same quota reason; the
-  default is the larger one.
-- **It predates the last screening change.** The demonstration was screened with version v2; the
-  criteria marking of v3 (section 6) was added afterwards.
+- **It is a sample.** 50 of the 164 unique records were screened (the relevance cap). The numbers
+  describe that sample of the literature, not the whole field.
+- **It took 10.5 hours, not one.** With the default options this review needed about 225,000
+  tokens of the primary model (extraction 95,000, writing and two revisions 68,000), more than the
+  200,000 the free tier gives per day. The quota ran out 47 minutes in, during extraction; from
+  there the run waited for it to refill and advanced one call at a time. Everything up to the end
+  of extraction took 1.2 hours. See "Free-tier quotas" in section 3 for ways to make a run fit.
+- **The revision loop did not converge.** Each rewrite fixed what the critic had flagged and
+  introduced other errors: 11 issues, then 7, then 10. One error survived both revisions (a record
+  count of 16,670 where the study says 16,669). Seven major issues remain open, five of them for
+  the writer; [`qa_report.md`](examples/demo_run/qa_report.md) lists them under the verdict "not
+  resolved" and the manuscript says so in its Methods. The text needs a human edit.
+- **72% of the supporting quotations were found in the sources.** 46 of the 53 others are
+  fragments that the extractor joined with "…"; the check looks for one continuous passage and
+  rejects them. They are flagged "unverified" in the evidence table: not shown to be wrong, but
+  not checked either.
+- **Six reports were excluded because no open-access full text was found.** The planner wrote
+  "full text is available" as an inclusion criterion. A human team would obtain the papers
+  instead; this is an availability bias of the run.
 - **No human verified anything** (autonomous mode). The manuscript is a draft for expert review.
 
 ## 6. Evaluation
@@ -320,17 +328,21 @@ are computed by `sysrev evaluate` from the run artifacts. For the demonstration 
 
 | Measure | Result |
 |---|---|
-| **Completeness** | 42/42 PRISMA 2020 items reported; PRISMA flow arithmetic consistent; 13/13 included studies extracted and appraised; 61 of 89 data items reported by the studies; 8 of 13 studies read from full text |
-| **Accuracy and grounding** | 98/109 extraction quotations located in the source text (90%); 0 citations to non-existent records; 0 of 13 included studies flagged by the eligibility audit; the critic found 3 unsupported statements and 2 overstatements in the first draft, and again 3 and 2 (different ones) after one revision round (see section 5) |
-| **Inter-agent consistency** | title/abstract: kappa 0.83, raw agreement 96%, 1 conflict in 24; full text: kappa 0.66, raw agreement 85%, 3 conflicts in 20; independent re-screening of the 4 excluded records agreed on 3 |
-| **Time** | 0.58 hours of machine time for the first complete pass (1.17 hours with the later revision round, most of it spent waiting for the daily quota), against an estimated 67.7 person-hours for a manual review of the same workload (24 records, 20 full texts, 13 studies) |
+| **Completeness** | 42/42 PRISMA 2020 items reported; PRISMA flow arithmetic consistent; 21/21 included studies extracted and appraised; 109 of 168 data items reported by the studies; 21 of 21 studies read from full text |
+| **Accuracy and grounding** | 133/186 extraction quotations located in the source text (72%); 0 citations to non-existent records; 0 of 21 included studies flagged by the eligibility audit; the critic found 2 unsupported statements and 2 overstatements in the first draft, and 2 and 2 again in the final draft after two revision rounds (see section 5) |
+| **Inter-agent consistency** | title/abstract: kappa 0.56, raw agreement 80%, 10 conflicts in 50; full text: kappa 0.64, raw agreement 82%, 6 conflicts in 33; independent re-screening of 10 excluded records agreed on 9 |
+| **Time** | 10.5 hours of machine time, 9.2 of them waiting for the free daily quota, against an estimated 82.2 person-hours for a manual review of the same workload (50 records, 33 full texts, 21 studies) |
 
 The manual figure is an estimate, not a measurement: it applies per-task assumptions that are
 written down in [`config/manual_effort.yaml`](config/manual_effort.yaml) and can be changed.
 Restricted to the per-item tasks (screening, full-text assessment, extraction, appraisal), the
-estimate is 22.7 person-hours against 0.41 hours. Machine time excludes the time a human needs to
+estimate is 37.2 person-hours against 1.15 hours. Machine time excludes the time a human needs to
 check the output, which a real review still requires. For context, published reviews registered in
 PROSPERO took 67 weeks on average from registration to publication (Borah et al., 2017).
+
+The two reviewers agreed less here (kappa 0.56) than in earlier trial runs (0.83 on 24 records):
+reviewer A kept 39 of the 50 records and reviewer B 29. Kappa measures agreement between two
+models, not agreement with the truth.
 
 ### Screening accuracy against human reviewers
 
@@ -466,7 +478,11 @@ docs/                        technical report, evaluation results, video script
   grey literature), and only open-access full texts are read; other reports are assessed on their
   abstract and flagged.
 - On the free tier the number of records screened per day is limited; records beyond the cap are
-  dropped by relevance ranking and reported as such.
+  dropped by relevance ranking and reported as such. A review with the default options took 10.5
+  hours, nearly all of it waiting for the daily quota.
+- The critic → writer loop detects errors but does not converge on its own: in the demonstration
+  two revision rounds left as many issues as the first draft had. The final text needs a human.
+- Quotations that the extractor assembles from several passages are counted as unverified.
 - Meta-analysis is exploratory: comparability of effect estimates is judged by a model.
 - Risk-of-bias and certainty ratings are produced by one automated assessor and are indicative.
 
