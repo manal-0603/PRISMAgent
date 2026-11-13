@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from typing import Callable
+from collections.abc import Callable
 
 from ..config import Settings
 from ..models import Record

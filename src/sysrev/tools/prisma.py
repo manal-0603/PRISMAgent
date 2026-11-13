@@ -132,7 +132,7 @@ class PrismaFlow(BaseModel):
 
         y = total
         centers = []
-        for key, h in zip(left, row_h):
+        for h in row_h:
             centers.append(y - h / 2)
             y -= h + gap
         for i, key in enumerate(left):

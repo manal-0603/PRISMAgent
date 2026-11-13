@@ -28,11 +28,14 @@ dependencies = [
     "matplotlib",
     "fastapi",
     "uvicorn",
-    "streamlit",
 ]
 
+[project.urls]
+Repository = "https://github.com/manal-0603/PRISMAgent"
+Documentation = "https://github.com/manal-0603/PRISMAgent/blob/main/docs/TECHNICAL_REPORT.md"
+
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "httpx", "ruff"]
 
 [project.scripts]
 sysrev = "sysrev.cli:app"
@@ -47,3 +50,20 @@ packages = ["src/sysrev"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = [
+    "B008",  # typer declares options as function-call defaults
+    "B905",  # zip() without strict=: the paired lists are built together
+]
+
+[tool.ruff.lint.per-file-ignores]
+# sentences of the manuscript and of the benchmark report are kept on one line each
+"src/sysrev/agents/synthesis.py" = ["E501"]
+"src/sysrev/evaluation/benchmark.py" = ["E501"]

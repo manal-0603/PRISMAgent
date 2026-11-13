@@ -2,10 +2,15 @@
   "name": "prismagent-web",
   "version": "1.0.0",
   "private": true,
+  "description": "Web interface of PRISMAgent (Next.js). Talks to the Python API started by `sysrev web`.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
-    "start": "next start"
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "geist": "^1.9.2",

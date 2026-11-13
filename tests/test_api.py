@@ -1,4 +1,4 @@
-"""The HTTP API behind the web interface, driven end to end with the fake agents of test_graph."""
+"""The HTTP API behind the web interface, driven end to end with the fake agents of conftest.py."""
 
 from __future__ import annotations
 
@@ -7,7 +7,6 @@ import time
 from fastapi.testclient import TestClient
 
 from sysrev import api
-from test_graph import calls  # noqa: F401  (fixture: fake agents, temporary runs folder)
 
 
 def wait_for(client: TestClient, run_id: str, states: tuple[str, ...], timeout: float = 20.0) -> dict:
@@ -20,7 +19,7 @@ def wait_for(client: TestClient, run_id: str, states: tuple[str, ...], timeout: 
     raise AssertionError(f"run still {run['status']['state']}: {run['status']}")
 
 
-def test_review_through_the_three_checkpoints(calls):  # noqa: F811
+def test_review_through_the_three_checkpoints(calls):
     api._jobs.clear(), api._runners.clear()
     client = TestClient(api.app)
     assert client.get("/api/runs").json() == []
@@ -62,7 +61,7 @@ def test_review_through_the_three_checkpoints(calls):  # noqa: F811
     assert client.post(f"/api/runs/{run_id}/advance", json={}).status_code == 409
 
 
-def test_api_refuses_unknown_runs_files_and_bad_input(calls):  # noqa: F811
+def test_api_refuses_unknown_runs_files_and_bad_input(calls):
     api._jobs.clear(), api._runners.clear()
     client = TestClient(api.app)
     assert client.get("/api/runs/nope").status_code == 404

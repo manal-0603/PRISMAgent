@@ -14,7 +14,6 @@ Four families of measures, all computed from the run artifacts:
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import yaml

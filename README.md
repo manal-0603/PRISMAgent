@@ -254,9 +254,6 @@ RUNS_DIR=examples sysrev web
 
 More screenshots: [studies](docs/screenshots/studies.png), [quality report](docs/screenshots/quality.png).
 
-Without Node.js, an earlier single-file interface with the same six tabs is still available:
-`streamlit run app/streamlit_app.py`.
-
 ### Protocol template
 
 [`config/protocol_template.yaml`](config/protocol_template.yaml) is aligned with PRISMA-P. Values
@@ -379,8 +376,8 @@ each change was tested on a sample the agents had not seen before.
 | v2: "missing information is not a reason to exclude" | seed 7 | 0.33 (7/21) | 1.00 (39/39) | 0.39 | 1 of 3 |
 | v3: criteria marked "full text only" | seed 21 | **0.76 (16/21)** | 0.87 (34/39) | 0.63 | 1 of 1 |
 
-Full reports: [v1](docs/evaluation/benchmark_screening_prompt_v1_seed13_n60.md),
-[v2](docs/evaluation/benchmark_screening_prompt_v2_seed7_n60.md),
+Full reports: [v1](docs/evaluation/benchmark_screening_v1_seed13_n60.md),
+[v2](docs/evaluation/benchmark_screening_v2_seed7_n60.md),
 [v3](docs/evaluation/benchmark_screening_v3_seed21_n60.md).
 
 - **v1** never kept an irrelevant record but excluded 18 of the 21 records the humans had carried
@@ -414,13 +411,19 @@ What v3 costs and what it does not solve:
 sysrev benchmark --dataset Appenzeller-Herzog_2020 --n 60 --seed 21
 ```
 
-## 7. Tests
+## 7. Tests and code quality
 
 ```bash
-pytest
+make check        # lint, tests and type-check: what the continuous integration runs
 ```
 
-38 tests, no network and no API key needed:
+or one at a time:
+
+```bash
+pytest                              # 38 tests, no network and no API key needed
+ruff check src tests                # Python lint (rules in pyproject.toml)
+cd web && npm run typecheck         # TypeScript type-check of the web interface
+```
 
 - `tests/test_tools.py` — de-duplication, Cohen's kappa, classification metrics, random-effects
   pooling (checked against hand calculations), PRISMA flow arithmetic and checklist validator,
@@ -432,35 +435,51 @@ pytest
 - `tests/test_api.py` — the HTTP API of the web interface driven through a whole review with the
   same fakes: the three checkpoints, a protocol revision, a screening override, downloads, and the
   refusal of unknown reviews, unlisted files and invalid input.
+- `tests/conftest.py` — the fake agents shared by the last two.
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the same checks on every push, plus a
+production build of the web interface. `make help` lists the other tasks (`make web`, `make demo`…).
 
 ## 8. Project structure
 
 ```
-config/
-  protocol_template.yaml     configurable PRISMA-P protocol template
-  manual_effort.yaml         assumptions used to estimate manual review time
-src/sysrev/
+src/sysrev/                  the Python package
   graph.py                   LangGraph workflow, coordinator, human checkpoints, runner
-  context.py                 per-run context, run options, manifest
-  llm.py                     model factory, rate limiter, cache, structured output, tracing
-  audit.py                   audit log, versioned artifact store, stage timer
-  models.py                  typed data model (records, protocol, decisions, extractions…)
   agents/                    planner, search_strategy, retrieval, screening, extraction, synthesis, critic
   sources/                   PubMed, Europe PMC, OpenAlex, arXiv, Semantic Scholar, full-text retrieval
   rag/index.py               hybrid index: Chroma + BM25, fusion, re-ranking, compression
   tools/                     de-duplication, statistics, PRISMA helpers, exports
   evaluation/                run metrics and the screening benchmark
-  cli.py                     command-line interface
+  llm.py                     model factory, rate limiter, cache, structured output, tracing
+  models.py                  typed data model (records, protocol, decisions, extractions…)
+  context.py                 per-run context, run options, manifest
+  audit.py                   audit log, versioned artifact store, stage timer
+  config.py                  settings read from the environment and .env
+  cli.py                     command-line interface (`sysrev …`)
   api.py                     HTTP API of the web interface (FastAPI, local machine only)
-web/                         web interface (Next.js, React, TypeScript)
-  app/                       pages, layout and the design tokens (globals.css)
+web/                         the web interface (Next.js, React, TypeScript)
+  app/                       pages, layout, design tokens (globals.css)
   components/                sidebar, progress strip, checkpoints, one file per tab
-  lib/api.ts                 typed client of the API
-app/streamlit_app.py         earlier single-file interface (Streamlit), kept as a fallback without Node.js
-tests/                       unit and workflow tests
-examples/demo_run/           artifacts of the demonstration review
-docs/                        technical report, evaluation results, video script
+  lib/                       typed API client (api.ts), English/French texts (i18n.tsx)
+tests/                       unit, workflow and API tests; shared fakes in conftest.py
+config/
+  protocol_template.yaml     configurable PRISMA-P protocol template
+  manual_effort.yaml         assumptions used to estimate manual review time
+examples/demo_run/           every artifact of the demonstration review
+docs/
+  TECHNICAL_REPORT.md        design, demonstration, evaluation, limitations
+  evaluation/                screening benchmark reports (v1, v2, v3)
+  screenshots/               the web interface
+  VIDEO_SCRIPT.md            script of the demonstration video (in French)
+.github/workflows/ci.yml     lint, tests, type-check and build on every push
+pyproject.toml               package metadata, dependencies, ruff and pytest settings
+requirements-lock.txt        exact versions the project was tested with
+Makefile                     common tasks (`make help`)
+.env.example                 settings to copy to .env (API key, models, limits)
 ```
+
+Not in the repository: `.env` (your key), `runs/` (your reviews), `.cache/` (models and the LLM
+cache), `.venv/` and `web/node_modules/`.
 
 ## 9. Development steps
 
@@ -480,8 +499,8 @@ docs/                        technical report, evaluation results, video script
    appraisal, synthesis and writing, critic.
 7. **Orchestration** — LangGraph state graph with a coordinator, SQLite checkpointing, three
    interrupt-based human checkpoints, two revision loops; workflow tests with fake agents.
-8. **Interfaces** — Typer CLI, then a Streamlit application; the web interface was later rebuilt as a
-   Next.js application over a small FastAPI layer, for full control of the design.
+8. **Interfaces** — Typer CLI and a Streamlit prototype; the prototype was then replaced by a Next.js
+   application over a small FastAPI layer, for full control of the design, in English and French.
 9. **Trial runs and fixes** — a small end-to-end run exposed real defects, each fixed and covered by
    a test where possible: PubMed identifiers taken from reference lists, OpenAlex full-text search
    far too broad, unreliable "review" labels misleading the screeners, LaTeX residue in full texts,
