@@ -26,6 +26,8 @@ dependencies = [
     "typer",
     "rich",
     "matplotlib",
+    "fastapi",
+    "uvicorn",
     "streamlit",
 ]
 

@@ -94,6 +94,7 @@ replays the same answers at no cost.
 ## 2. Installation
 
 Requirements: Python 3.11–3.13 and about 1.5 GB of disk (dependencies and two small local models).
+The web interface also needs [Node.js](https://nodejs.org) 20 or later; the command line works without it.
 
 ```bash
 git clone https://github.com/manal-0603/PRISMAgent.git
@@ -185,6 +186,7 @@ sysrev rebuild <run_id>     # regenerate the report and exports without new mode
 sysrev export <run_id> examples/my_review   # copy the shareable artifacts of a run
 sysrev evaluate <run_id>    # evaluation report of a finished run
 sysrev quota                # tokens and requests used over the last 24 hours
+sysrev web                  # web interface on http://localhost:3000 (see below)
 sysrev benchmark            # list benchmark datasets
 sysrev benchmark --dataset Appenzeller-Herzog_2020 --n 60   # screening vs human labels
 ```
@@ -213,31 +215,45 @@ a checkpoint can be closed and resumed later.
 ### Web interface
 
 ```bash
-streamlit run app/streamlit_app.py
+sysrev web
 ```
 
-Start a review, follow its twelve stages on the progress track, and answer the checkpoints in
-forms (the screening table is editable). Six tabs show the headline of each part of the review;
-the detail is one click away, in expanders:
+then open <http://localhost:3000>. The command starts two things: the Python API
+(`src/sysrev/api.py`, FastAPI, port 8000) and the Next.js application in [`web/`](web/) (port
+3000). The first start installs the JavaScript packages, which takes about a minute.
+
+Start a review from a question, follow its twelve stages on the progress strip (round nodes are
+agents, square ones are your three checkpoints), and answer each checkpoint in place: approve the
+protocol, ask the planner for changes or edit it yourself; flip any screening decision; approve
+the manuscript or send it back to the writer. Six tabs show the headline of each part of the
+review; the detail is one click away:
 
 | Tab | At a glance | On demand |
 |---|---|---|
-| Overview | key numbers, study-selection funnel, risk of bias, share of verified quotations, themes | PRISMA flow diagram |
+| Overview | key numbers, study-selection funnel, risk of bias, share of quotations found, themes | PRISMA flow diagram |
 | Protocol | question framework, inclusion and exclusion criteria | search strategy and queries, data items, coordinator briefs |
-| Screening | counts, agreement, every decision | reviewers' rationales, how each disagreement was settled |
+| Screening | counts, agreement, every decision, filters | click a record: both reviewers' rationales and how a disagreement was settled |
 | Studies | one card per included study | extracted data with quotations, findings, risk-of-bias domains |
-| Report | the manuscript, with Markdown, Word and BibTeX downloads | |
+| Report | the manuscript, with Word, Markdown, BibTeX and evidence-table downloads | |
 | Quality | the critic's open issues, one line each | full issue and suggested fix, evaluation, audit trail |
+
+The sidebar lists the reviews with their state and shows an estimate of the free quota left for
+each model.
 
 To browse the demonstration review without running anything or setting a key:
 
 ```bash
-RUNS_DIR=examples streamlit run app/streamlit_app.py
+RUNS_DIR=examples sysrev web
 ```
 
 ![Overview tab of the web interface](docs/screenshots/overview.png)
 
+![A human checkpoint: approving the protocol](docs/screenshots/checkpoint.png)
+
 More screenshots: [studies](docs/screenshots/studies.png), [quality report](docs/screenshots/quality.png).
+
+Without Node.js, an earlier single-file interface with the same six tabs is still available:
+`streamlit run app/streamlit_app.py`.
 
 ### Protocol template
 
@@ -402,7 +418,7 @@ sysrev benchmark --dataset Appenzeller-Herzog_2020 --n 60 --seed 21
 pytest
 ```
 
-34 tests, no network and no API key needed:
+38 tests, no network and no API key needed:
 
 - `tests/test_tools.py` — de-duplication, Cohen's kappa, classification metrics, random-effects
   pooling (checked against hand calculations), PRISMA flow arithmetic and checklist validator,
@@ -411,6 +427,9 @@ pytest
 - `tests/test_graph.py` — the real LangGraph workflow with the LLM agents replaced by fakes:
   routing, the three human checkpoints, the protocol-revision loop, the critic → writer loop,
   checkpointing and resumption in a fresh process.
+- `tests/test_api.py` — the HTTP API of the web interface driven through a whole review with the
+  same fakes: the three checkpoints, a protocol revision, a screening override, downloads, and the
+  refusal of unknown reviews, unlisted files and invalid input.
 
 ## 8. Project structure
 
@@ -430,9 +449,12 @@ src/sysrev/
   tools/                     de-duplication, statistics, PRISMA helpers, exports
   evaluation/                run metrics and the screening benchmark
   cli.py                     command-line interface
-app/streamlit_app.py         web interface
-app/ui.py                    its visual system: design tokens, CSS, HTML components and charts
-.streamlit/config.toml       theme of the web interface
+  api.py                     HTTP API of the web interface (FastAPI, local machine only)
+web/                         web interface (Next.js, React, TypeScript)
+  app/                       pages, layout and the design tokens (globals.css)
+  components/                sidebar, progress strip, checkpoints, one file per tab
+  lib/api.ts                 typed client of the API
+app/streamlit_app.py         earlier single-file interface (Streamlit), kept as a fallback without Node.js
 tests/                       unit and workflow tests
 examples/demo_run/           artifacts of the demonstration review
 docs/                        technical report, evaluation results, video script
@@ -456,7 +478,8 @@ docs/                        technical report, evaluation results, video script
    appraisal, synthesis and writing, critic.
 7. **Orchestration** — LangGraph state graph with a coordinator, SQLite checkpointing, three
    interrupt-based human checkpoints, two revision loops; workflow tests with fake agents.
-8. **Interfaces** — Typer CLI and Streamlit application.
+8. **Interfaces** — Typer CLI, then a Streamlit application; the web interface was later rebuilt as a
+   Next.js application over a small FastAPI layer, for full control of the design.
 9. **Trial runs and fixes** — a small end-to-end run exposed real defects, each fixed and covered by
    a test where possible: PubMed identifiers taken from reference lists, OpenAlex full-text search
    far too broad, unreliable "review" labels misleading the screeners, LaTeX residue in full texts,

@@ -338,3 +338,46 @@ def benchmark(
 
 if __name__ == "__main__":
     app()
+
+
+@app.command()
+def serve(port: int = typer.Option(8000, help="Port of the API"), reload: bool = typer.Option(False, hidden=True)) -> None:
+    """Start the HTTP API used by the web interface (local machine only)."""
+    import uvicorn
+
+    uvicorn.run("sysrev.api:app", host="127.0.0.1", port=port, reload=reload, log_level="warning")
+
+
+@app.command()
+def web(
+    port: int = typer.Option(3000, help="Port of the web interface"),
+    api_port: int = typer.Option(8000, help="Port of the API"),
+) -> None:
+    """Start the web interface: the API and the Next.js application in web/."""
+    import os
+    import shutil
+    import subprocess
+    import threading
+
+    import uvicorn
+
+    web_dir = Path(__file__).resolve().parents[2] / "web"
+    npm = shutil.which("npm")
+    if not npm:
+        console.print("[red]Node.js is required for the web interface (https://nodejs.org). The CLI works without it.[/red]")
+        raise typer.Exit(1)
+    if not (web_dir / "package.json").exists():
+        console.print(f"[red]Web application not found in {web_dir}.[/red]")
+        raise typer.Exit(1)
+    if not (web_dir / "node_modules").exists():
+        console.print("Installing the web interface (first start only)…")
+        subprocess.run([npm, "install", "--no-audit", "--no-fund"], cwd=web_dir, check=True)
+
+    env = {**os.environ, "SYSREV_API": f"http://127.0.0.1:{api_port}", "PORT": str(port), "NEXT_TELEMETRY_DISABLED": "1"}
+    front = subprocess.Popen([npm, "run", "dev", "--", "--port", str(port)], cwd=web_dir, env=env,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    threading.Timer(2.0, lambda: console.print(f"[green]PRISMAgent is running:[/green] http://localhost:{port}   (Ctrl+C to stop)")).start()
+    try:
+        uvicorn.run("sysrev.api:app", host="127.0.0.1", port=api_port, log_level="warning")
+    finally:
+        front.terminate()

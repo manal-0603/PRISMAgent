@@ -74,6 +74,13 @@ Three checkpoints use LangGraph `interrupt()`:
 In autonomous mode (`--auto`) the checkpoints are auto-approved and the manuscript states that no
 human verified the decisions. Human overrides are logged with the previous value.
 
+The checkpoints can be answered in the terminal or in the web interface. The interface is a Next.js
+application (`web/`) over a small FastAPI layer (`src/sysrev/api.py`) that reads the run folder,
+runs the graph in a background thread and resumes it with the reviewer's decision
+(`Command(resume=...)`). The layer listens on the local machine only, serves a fixed list of files
+per run, and refuses to start a review that another process is already running. Its tests drive a
+whole review through the three checkpoints with fake agents (`tests/test_api.py`).
+
 ### 2.4 LLM layer
 
 `llm.py` is shared by all agents:
