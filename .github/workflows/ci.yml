@@ -19,7 +19,7 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: |
-          uv venv
+          uv venv --allow-existing   # the setup action may already have created it
           uv pip install -r requirements-lock.txt
           uv pip install -e . --no-deps
       - name: Lint
