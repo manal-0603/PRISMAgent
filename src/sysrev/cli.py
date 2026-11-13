@@ -15,19 +15,18 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Optional
 
 import typer
-
-# Keep the terminal readable: third-party libraries log every HTTP request at INFO level.
-logging.basicConfig(level=logging.WARNING)
-os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
 from .config import get_settings
 from .context import RunOptions, get_context
+
+# Keep the terminal readable: third-party libraries log every HTTP request at INFO level.
+logging.basicConfig(level=logging.WARNING)
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 app = typer.Typer(add_completion=False, help="Agentic pipeline for PRISMA 2020 systematic reviews.")
 console = Console()
@@ -174,7 +173,7 @@ def run(
     max_per_source: int = typer.Option(60, help="Records fetched per database"),
     max_screen: int = typer.Option(50, help="Maximum records sent to screening (relevance-ranked)"),
     qa_rounds: int = typer.Option(2, help="Maximum critic -> writer revision rounds"),
-    databases: Optional[str] = typer.Option(None, help="Comma-separated override, e.g. pubmed,openalex"),
+    databases: str | None = typer.Option(None, help="Comma-separated override, e.g. pubmed,openalex"),
     fulltext_fallback: str = typer.Option("abstract", help="'abstract' or 'exclude' when no open full text exists"),
     template: str = typer.Option("config/protocol_template.yaml", help="Protocol template file"),
 ) -> None:
@@ -192,7 +191,7 @@ def run(
 
 
 @app.command()
-def resume(run_id: str, auto: Optional[bool] = typer.Option(None, "--auto/--interactive", help="Change the oversight mode")) -> None:
+def resume(run_id: str, auto: bool | None = typer.Option(None, "--auto/--interactive", help="Change the oversight mode")) -> None:
     """Continue a run that was interrupted (checkpoint, crash, rate limit)."""
     ctx = get_context(run_id)
     if not ctx.manifest_path.exists():
@@ -285,7 +284,7 @@ def status(run_id: str) -> None:
 @app.command()
 def evaluate(
     run_id: str,
-    gold: Optional[Path] = typer.Option(None, help="Text file listing known relevant studies (one DOI or title per line)"),
+    gold: Path | None = typer.Option(None, help="Text file listing known relevant studies (one DOI or title per line)"),
 ) -> None:
     """Write the evaluation report of a finished run (completeness, consistency, time savings)."""
     from .evaluation.run_metrics import evaluate_run
@@ -384,7 +383,7 @@ def web(
 
     env = {**os.environ, "SYSREV_API": f"http://127.0.0.1:{api_port}", "PORT": str(port), "NEXT_TELEMETRY_DISABLED": "1"}
     # both servers listen on this machine only
-    front = subprocess.Popen([npm, "run", "dev", "--", "--port", str(port), "--hostname", "127.0.0.1"], cwd=web_dir, env=env,
+    front = subprocess.Popen([npm, "run", "dev", "--", "--port", str(port)], cwd=web_dir, env=env,
                              stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     threading.Timer(2.0, lambda: console.print(f"[green]PRISMAgent is running:[/green] http://localhost:{port}   (Ctrl+C to stop)")).start()
     try:

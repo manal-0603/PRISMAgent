@@ -32,7 +32,7 @@ from ..rag.index import split_sentences
 from ..tools.prisma import PrismaFlow, validate_checklist
 from .extraction import quote_stats
 from .planner import protocol_brief
-from .screening import BatchVotes, TA_SYSTEM, _record_block
+from .screening import TA_SYSTEM, BatchVotes, _record_block
 from .synthesis import study_card, theme_evidence
 
 AGENT = "critic"
@@ -319,7 +319,7 @@ def verdict_label(verdict: str, issues: list) -> str:
 
 
 def qa_markdown(report: QAReport) -> str:
-    lines = [f"# Quality-assurance report", "", f"**Verdict:** {verdict_label(report.verdict, report.issues)}", "", "## Checks", ""]
+    lines = ["# Quality-assurance report", "", f"**Verdict:** {verdict_label(report.verdict, report.issues)}", "", "## Checks", ""]
     lines += [f"- **{key}**: {value}" for key, value in report.checks.items()]
     lines += ["", "## Issues", ""]
     if not report.issues:

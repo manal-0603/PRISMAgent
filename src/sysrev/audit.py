@@ -16,9 +16,10 @@ from __future__ import annotations
 import json
 import threading
 import time
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable, TypeVar
+from typing import Any, TypeVar
 
 from pydantic import BaseModel
 
@@ -26,7 +27,7 @@ T = TypeVar("T", bound=BaseModel)
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 class AuditLog:
@@ -129,7 +130,7 @@ class Timer:
         data[stage] = round(data.get(stage, 0.0) + seconds, 2)
         self.file.write_text(json.dumps(data, indent=2))
 
-    def stage(self, name: str) -> "_StageTimer":
+    def stage(self, name: str) -> _StageTimer:
         return _StageTimer(self, name)
 
 
@@ -137,7 +138,7 @@ class _StageTimer:
     def __init__(self, timer: Timer, name: str):
         self.timer, self.name = timer, name
 
-    def __enter__(self) -> "_StageTimer":
+    def __enter__(self) -> _StageTimer:
         self.t0 = time.perf_counter()
         return self
 

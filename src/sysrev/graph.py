@@ -20,7 +20,8 @@ from __future__ import annotations
 import json
 import sqlite3
 import time
-from typing import Any, Callable, TypedDict
+from collections.abc import Callable
+from typing import Any, TypedDict
 
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
@@ -32,7 +33,7 @@ from .agents import planner, retrieval, screening, search_strategy, synthesis
 from .agents.planner import ReviewPlan
 from .context import RunContext, RunOptions, get_context, new_run_id
 from .llm import QuotaExhausted
-from .models import Protocol, QAIssue, Record, ScreeningDecision, SearchStrategy
+from .models import Protocol, QAIssue, ScreeningDecision, SearchStrategy
 from .tools.export import markdown_to_docx, to_bibtex, write_csv
 from .tools.prisma import PrismaFlow, checklist_markdown, validate_checklist
 
@@ -387,7 +388,7 @@ class ReviewRunner:
         self.config = {"configurable": {"thread_id": run_id}, "recursion_limit": 120}
 
     @classmethod
-    def create(cls, question: str, options: RunOptions | None = None) -> "ReviewRunner":
+    def create(cls, question: str, options: RunOptions | None = None) -> ReviewRunner:
         run_id = new_run_id(question)
         get_context(run_id).init_manifest(question, options or RunOptions())
         return cls(run_id)

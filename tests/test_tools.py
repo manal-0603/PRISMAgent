@@ -17,7 +17,6 @@ from sysrev.tools.dedup import deduplicate, norm_title
 from sysrev.tools.export import bibtex_key, format_reference, md_table, to_bibtex
 from sysrev.tools.prisma import PRISMA_2020_ITEMS, PrismaFlow, split_sections, validate_checklist
 
-
 # --------------------------------------------------------------------------- #
 # De-duplication
 # --------------------------------------------------------------------------- #

@@ -345,9 +345,12 @@ study of the sample was kept. Time: 10.3 minutes.
 
 ### 7.3 Software tests
 
-34 automated tests run without network or API key: 31 on the deterministic components and 3 on
-the real LangGraph workflow with fake agents (routing, three human checkpoints, protocol-revision
-loop, critic loop, resume in a fresh process, reopening a finished run for revision).
+38 automated tests run without network or API key: 33 on the deterministic components, 3 on the
+real LangGraph workflow with fake agents (routing, three human checkpoints, protocol-revision
+loop, critic loop, resume in a fresh process, reopening a finished run for revision) and 2 on the
+HTTP API of the web interface, which drive a whole review through the checkpoints. A GitHub
+Actions workflow runs them on every push, with the Python lint (ruff) and the type-check and
+production build of the web interface.
 
 ## 8. Limitations and future work
 
