@@ -3,7 +3,8 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { ChartNoAxesColumn, History, Info, TriangleAlert } from "lucide-react";
-import { fetcher, plural, post, type AuditEvent, type Issue, type Run } from "@/lib/api";
+import { fetcher, post, type AuditEvent, type Issue, type Run } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 import { Bars, Card, Disclosure, Empty, Stat } from "../ui";
 
 const ORDER = ["critical", "major", "minor"];
@@ -13,18 +14,16 @@ function headline(issue: Issue): string {
   return text.length > 96 ? text.slice(0, 95) + "…" : text;
 }
 
-const pretty = (key: string) =>
-  key.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase()).replace("Prisma", "PRISMA").replace("cohen", "Cohen");
-
 function Listing({ section }: { section: Record<string, unknown> }) {
+  const { measure, v } = useI18n();
   return (
     <>
       {Object.entries(section)
         .filter(([key]) => key !== "note")
         .map(([key, value]) => (
           <div className="kv" key={key}>
-            <span>{pretty(key)}</span>
-            <b className="num">{String(value)}</b>
+            <span>{measure(key)}</span>
+            <b className="num">{v(String(value))}</b>
           </div>
         ))}
     </>
@@ -32,6 +31,7 @@ function Listing({ section }: { section: Record<string, unknown> }) {
 }
 
 function Audit({ run }: { run: Run }) {
+  const { t, n } = useI18n();
   const { data } = useSWR<AuditEvent[]>(`/api/runs/${run.id}/audit`, fetcher);
   const [agent, setAgent] = useState("");
   if (!data) return <div className="skeleton" style={{ height: 200 }} />;
@@ -41,7 +41,7 @@ function Audit({ run }: { run: Run }) {
     <>
       <div className="toolbar">
         <select className="input" style={{ width: 240 }} value={agent} onChange={(e) => setAgent(e.target.value)}>
-          <option value="">All agents</option>
+          <option value="">{t("qa.allAgents")}</option>
           {agents.map((a) => (
             <option key={a} value={a}>
               {a.replaceAll("_", " ")}
@@ -49,7 +49,7 @@ function Audit({ run }: { run: Run }) {
           ))}
         </select>
         <span className="muted" style={{ fontSize: 12.5 }}>
-          {plural(rows.length, "event")} · full prompts and answers are in llm_trace.jsonl
+          {n("event", rows.length)} · {t("qa.trace")}
         </span>
       </div>
       <div className="table-wrap" style={{ boxShadow: "none" }}>
@@ -58,10 +58,10 @@ function Audit({ run }: { run: Run }) {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Time</th>
-                <th>Agent</th>
-                <th>Action</th>
-                <th>Details</th>
+                <th>{t("qa.colTime")}</th>
+                <th>{t("qa.colAgent")}</th>
+                <th>{t("qa.colAction")}</th>
+                <th>{t("qa.colDetails")}</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +85,7 @@ function Audit({ run }: { run: Run }) {
 }
 
 export function QualityTab({ run, onChange }: { run: Run; onChange: () => void }) {
+  const { t, n, v } = useI18n();
   const { qa, evaluation } = run;
   const [auditOpen, setAuditOpen] = useState(false);
   const [computing, setComputing] = useState(false);
@@ -107,25 +108,25 @@ export function QualityTab({ run, onChange }: { run: Run; onChange: () => void }
 
   return (
     <div className="stack">
-      {!qa && <Empty>The Critic agent reviews the manuscript once a draft exists.</Empty>}
+      {!qa && <Empty>{t("qa.empty")}</Empty>}
       {qa && (
         <>
           <div className="grid c4">
-            <Stat label="Open issues" value={issues.length} lead note={`${serious} major · after ${plural(rounds, "critic round")}`} />
-            <Stat label="Quotations found" value={quotes.verification_rate != null ? `${Math.round(quotes.verification_rate * 100)}%` : "—"}
-                  note={`${quotes.quotes_verified ?? 0} of ${quotes.quotes_checked ?? 0} in the sources`} />
-            <Stat label="PRISMA items" value={`${checks.prisma_items_reported ?? "—"}/${checks.prisma_items_total ?? "—"}`} note="reported" />
-            <Stat label="Invented citations" value={(checks.unknown_citations ?? []).length} note="references to unknown records" />
+            <Stat label={t("qa.open")} value={issues.length} lead note={t("qa.openNote", { major: serious, rounds: n("round", rounds) })} />
+            <Stat label={t("qa.quotes")} value={quotes.verification_rate != null ? `${Math.round(quotes.verification_rate * 100)}%` : "—"}
+                  note={t("qa.quotesNote", { found: quotes.quotes_verified ?? 0, checked: quotes.quotes_checked ?? 0 })} />
+            <Stat label={t("qa.prisma")} value={`${checks.prisma_items_reported ?? "—"}/${checks.prisma_items_total ?? "—"}`} note={t("qa.reported")} />
+            <Stat label={t("qa.invented")} value={(checks.unknown_citations ?? []).length} note={t("qa.inventedNote")} />
           </div>
 
-          {!issues.length && <Empty>The critic found no issue.</Empty>}
+          {!issues.length && <Empty>{t("qa.none")}</Empty>}
           <div className="stack" style={{ gap: 8 }}>
             {issues.map((issue, i) => (
               <Disclosure
                 key={i}
                 flat
                 icon={
-                  <span className={`issue-sev ${issue.severity}`} title={issue.severity}>
+                  <span className={`issue-sev ${issue.severity}`} title={v(issue.severity)}>
                     {issue.severity === "minor" ? <Info size={13} /> : <TriangleAlert size={13} />}
                   </span>
                 }
@@ -135,7 +136,7 @@ export function QualityTab({ run, onChange }: { run: Run; onChange: () => void }
                 <p style={{ color: "var(--ink-2)" }}>{issue.description}</p>
                 {issue.suggested_fix && (
                   <>
-                    <div className="h5">Suggested fix</div>
+                    <div className="h5">{t("qa.fix")}</div>
                     <p style={{ color: "var(--ink-2)" }}>{issue.suggested_fix}</p>
                   </>
                 )}
@@ -146,42 +147,42 @@ export function QualityTab({ run, onChange }: { run: Run; onChange: () => void }
       )}
 
       {(evaluation || run.status.state === "finished") && (
-        <Disclosure icon={<ChartNoAxesColumn size={16} />} title="Evaluation" extra="completeness · accuracy · consistency · time">
+        <Disclosure icon={<ChartNoAxesColumn size={16} />} title={t("qa.evaluation")} extra={t("qa.evaluationExtra")}>
           {!evaluation ? (
             <button className="btn primary" disabled={computing} onClick={compute}>
-              Compute the evaluation
+              {t("qa.compute")}
             </button>
           ) : (
             <>
               <div className="grid c2">
                 <div className="stack">
-                  <Card title="Completeness">
+                  <Card title={t("qa.completeness")}>
                     <Listing section={evaluation.completeness} />
                   </Card>
-                  <Card title="Inter-agent consistency">
+                  <Card title={t("qa.consistency")}>
                     <Listing section={evaluation.consistency} />
                   </Card>
                 </div>
                 <div className="stack">
-                  <Card title="Accuracy and grounding">
+                  <Card title={t("qa.accuracy")}>
                     <Listing section={evaluation.accuracy} />
                   </Card>
                   <Card
-                    title="Machine time per stage"
-                    extra={`${evaluation.time.pipeline_hours.toFixed(1)} h · about ${Math.round(evaluation.time.manual_person_hours_estimate)} person-hours by hand`}
+                    title={t("qa.time")}
+                    extra={t("qa.timeExtra", { hours: evaluation.time.pipeline_hours.toFixed(1), manual: Math.round(evaluation.time.manual_person_hours_estimate) })}
                   >
-                    <Bars rows={run.timings.map((t) => ({ name: t.name, value: t.minutes, label: `${t.minutes}′` }))} />
+                    <Bars rows={run.timings.map((timing) => ({ name: t(`step.${timing.key}` as Parameters<typeof t>[0]), value: timing.minutes, label: `${timing.minutes}′` }))} />
                   </Card>
                 </div>
               </div>
-              <p className="hint" style={{ marginTop: 12 }}>{evaluation.time.note}</p>
+              <p className="hint" style={{ marginTop: 12 }}>{t("qa.timeNote")}</p>
             </>
           )}
         </Disclosure>
       )}
 
       {run.audit_events > 0 && (
-        <Disclosure icon={<History size={16} />} title="Audit trail" extra={plural(run.audit_events, "event")} onOpen={() => setAuditOpen(true)}>
+        <Disclosure icon={<History size={16} />} title={t("qa.audit")} extra={n("event", run.audit_events)} onOpen={() => setAuditOpen(true)}>
           {auditOpen && <Audit run={run} />}
         </Disclosure>
       )}

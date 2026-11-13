@@ -5,21 +5,36 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { FileSearch, Plus } from "lucide-react";
-import { fetcher, formatDate, type Quota, type RunSummary } from "@/lib/api";
+import { fetcher, type Quota, type RunSummary } from "@/lib/api";
+import { LanguageProvider, useI18n, type Lang } from "@/lib/i18n";
 import { NewReview } from "./NewReview";
 
 const NewReviewContext = createContext<() => void>(() => {});
 export const useNewReview = () => useContext(NewReviewContext);
 
-const STATE_LABEL: Record<string, string> = {
-  running: "Running",
-  waiting: "Waiting for you",
-  finished: "Finished",
-  error: "Stopped",
-  paused: "Not finished",
-};
-
 export function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <LanguageProvider>
+      <Frame>{children}</Frame>
+    </LanguageProvider>
+  );
+}
+
+function LanguageSwitch() {
+  const { lang, setLang, t } = useI18n();
+  return (
+    <div className="lang" role="group" aria-label={t("lang.switch")} title={t("lang.switch")}>
+      {(["en", "fr"] as Lang[]).map((code) => (
+        <button key={code} aria-pressed={lang === code} onClick={() => setLang(code)}>
+          {code.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Frame({ children }: { children: React.ReactNode }) {
+  const { t, date } = useI18n();
   const [creating, setCreating] = useState(false);
   const open = useCallback(() => setCreating(true), []);
   const params = useParams<{ id?: string }>();
@@ -32,42 +47,49 @@ export function Shell({ children }: { children: React.ReactNode }) {
     <NewReviewContext.Provider value={open}>
       <div className="shell">
         <aside className="side">
-          <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="brand-mark">
-              <FileSearch size={18} />
-            </div>
-            <div>
-              <div className="brand-name">PRISMAgent</div>
-              <div className="brand-sub">Systematic reviews, by agents</div>
-            </div>
-          </Link>
+          <div className="brand-row">
+            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>
+              <div className="brand-mark">
+                <FileSearch size={18} />
+              </div>
+              <div>
+                <div className="brand-name">PRISMAgent</div>
+                <div className="brand-sub">{t("brand.sub")}</div>
+              </div>
+            </Link>
+            <LanguageSwitch />
+          </div>
 
           <button className="side-new" onClick={open}>
-            <Plus size={16} /> New review
+            <Plus size={16} /> {t("side.new")}
           </button>
 
           <div className="side-list">
-            <div className="side-label">Reviews</div>
+            <div className="side-label">{t("side.reviews")}</div>
             {runs?.map((run) => (
               <Link key={run.id} href={`/runs/${run.id}`} className={`run-link${params?.id === run.id ? " active" : ""}`}>
                 <div className="run-q">{run.question}</div>
                 <div className="run-meta">
                   <span className={`dot ${run.state}`} />
                   <span>
-                    {STATE_LABEL[run.state]}
-                    {run.included !== null ? ` · ${run.included} studies` : ""}
+                    {t(`list.${run.state}`)}
+                    {run.included !== null ? ` · ${t("side.studies", { n: run.included })}` : ""}
                   </span>
-                  <span style={{ marginLeft: "auto" }}>{formatDate(run.created)}</span>
+                  <span style={{ marginLeft: "auto" }}>{date(run.created)}</span>
                 </div>
               </Link>
             ))}
-            {runs && !runs.length && <div className="run-meta" style={{ padding: "0 8px" }}>No review yet</div>}
+            {runs && !runs.length && (
+              <div className="run-meta" style={{ padding: "0 8px" }}>
+                {t("side.none")}
+              </div>
+            )}
           </div>
 
           {quota && (
-            <div className="quota" title="Estimate of the free daily allowance left for each model (it refills continuously).">
+            <div className="quota" title={t("side.quotaTip")}>
               <div className="side-label" style={{ padding: 0, marginBottom: 2 }}>
-                Free quota left
+                {t("side.quota")}
               </div>
               {quota.map((q) => {
                 const share = Math.max(0, Math.min(1, q.available / q.per_day));

@@ -139,13 +139,4 @@ export const post = (url: string, body: unknown = {}) =>
 
 export const fileUrl = (runId: string, name: string) => `/api/runs/${encodeURIComponent(runId)}/files/${encodeURIComponent(name)}`;
 
-export function formatDate(iso: string, withTime = false): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
-  const day = d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-  return withTime ? `${day}, ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}` : day;
-}
-
-export const plural = (n: number, word: string, many = word + "s") => `${n} ${n === 1 ? word : many}`;
-
 export const kappa = (a: Agreement) => (a && a.cohen_kappa !== null && a.cohen_kappa !== undefined ? a.cohen_kappa.toFixed(2) : "—");
