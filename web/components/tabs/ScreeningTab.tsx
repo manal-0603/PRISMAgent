@@ -1,31 +1,34 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { kappa, plural, type Decision, type Run } from "@/lib/api";
+import { kappa, type Decision, type Run } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 import { DecisionPill, Empty, Stat } from "../ui";
 
 const FILTERS = [
-  { key: "all", label: "All", test: (_: Decision) => true },
-  { key: "include", label: "Included", test: (d: Decision) => d.final === "include" },
-  { key: "exclude", label: "Excluded", test: (d: Decision) => d.final === "exclude" },
-  { key: "conflict", label: "Disagreements", test: (d: Decision) => d.resolved_by !== "consensus" },
+  { key: "all", label: "sc.all", test: (_: Decision) => true },
+  { key: "include", label: "sc.included", test: (d: Decision) => d.final === "include" },
+  { key: "exclude", label: "sc.excluded", test: (d: Decision) => d.final === "exclude" },
+  { key: "conflict", label: "sc.conflicts", test: (d: Decision) => d.resolved_by !== "consensus" },
 ] as const;
 
 export function ScreeningTab({ run }: { run: Run }) {
+  const { t, n, v } = useI18n();
   const stages = [
-    { key: "title_abstract" as const, label: "Title and abstract" },
-    { key: "full_text" as const, label: "Full text" },
+    { key: "title_abstract" as const, label: t("sc.ta") },
+    { key: "full_text" as const, label: t("sc.ft") },
   ].filter((s) => run.screening[s.key].length);
   const [stage, setStage] = useState<"title_abstract" | "full_text">("title_abstract");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["key"]>("all");
   const [open, setOpen] = useState<string | null>(null);
 
-  if (!stages.length) return <Empty>No screening decision yet.</Empty>;
+  if (!stages.length) return <Empty>{t("sc.empty")}</Empty>;
   const current = stages.some((s) => s.key === stage) ? stage : stages[0].key;
   const decisions = run.screening[current];
   const agreement = run.agreement[current];
   const included = decisions.filter((d) => d.final === "include").length;
   const rows = decisions.filter(FILTERS.find((f) => f.key === filter)!.test);
+  const who = (resolvedBy: string) => (resolvedBy === "human" ? t("who.human") : t("who.adjudicator"));
 
   return (
     <div className="stack">
@@ -40,18 +43,18 @@ export function ScreeningTab({ run }: { run: Run }) {
         <div className="segmented sm">
           {FILTERS.map((f) => (
             <button key={f.key} aria-pressed={filter === f.key} onClick={() => setFilter(f.key)}>
-              {f.label} <span className="num muted">{decisions.filter(f.test).length}</span>
+              {t(f.label)} <span className="num muted">{decisions.filter(f.test).length}</span>
             </button>
           ))}
         </div>
       </div>
 
       <div className="grid c4">
-        <Stat label="Assessed" value={decisions.length} />
-        <Stat label="Included" value={included} lead />
-        <Stat label="Excluded" value={decisions.length - included} />
-        <Stat label="Reviewer agreement" value={kappa(agreement)} unit="κ"
-              note={agreement ? `${plural(agreement.conflicts, "disagreement")} settled` : undefined} />
+        <Stat label={t("sc.assessed")} value={decisions.length} />
+        <Stat label={t("sc.included")} value={included} lead />
+        <Stat label={t("sc.excluded")} value={decisions.length - included} />
+        <Stat label={t("ov.agreement")} value={kappa(agreement)} unit="κ"
+              note={agreement ? t("sc.settled", { conflicts: n("disagreement", agreement.conflicts) }) : undefined} />
       </div>
 
       <div className="table-wrap">
@@ -60,10 +63,10 @@ export function ScreeningTab({ run }: { run: Run }) {
             <thead>
               <tr>
                 <th style={{ width: 70 }}>ID</th>
-                <th>Record</th>
-                <th className="fit">Decision</th>
-                <th className="fit">Reviewer A</th>
-                <th className="fit">Reviewer B</th>
+                <th>{t("sc.record")}</th>
+                <th className="fit">{t("sc.decision")}</th>
+                <th className="fit">{t("sc.reviewerA")}</th>
+                <th className="fit">{t("sc.reviewerB")}</th>
               </tr>
             </thead>
             <tbody>
@@ -75,8 +78,8 @@ export function ScreeningTab({ run }: { run: Run }) {
                     <td className="fit">
                       <DecisionPill value={d.final} />
                     </td>
-                    <td className="muted fit">{d.a}</td>
-                    <td className="muted fit">{d.b}</td>
+                    <td className="muted fit">{v(d.a)}</td>
+                    <td className="muted fit">{v(d.b)}</td>
                   </tr>
                   {open === d.rid && (
                     <tr className="detail">
@@ -85,17 +88,25 @@ export function ScreeningTab({ run }: { run: Run }) {
                         <div className="why">
                           <div className="wide">
                             <b>
-                              Decision · {d.resolved_by === "consensus" ? "both reviewers agreed" : `settled by the ${d.resolved_by}`}
+                              {t("sc.decision")} · {d.resolved_by === "consensus" ? t("sc.agreed") : t("sc.settledBy", { who: who(d.resolved_by) })}
                             </b>
                             {d.why || "—"}
-                            {d.reason && <div className="muted" style={{ marginTop: 4 }}>Reason: {d.reason}</div>}
+                            {d.reason && (
+                              <div className="muted" style={{ marginTop: 4 }}>
+                                {t("sc.reason", { reason: d.reason })}
+                              </div>
+                            )}
                           </div>
                           <div>
-                            <b>Reviewer A · {d.a}</b>
+                            <b>
+                              {t("sc.reviewerA")} · {v(d.a)}
+                            </b>
                             {d.a_why || "—"}
                           </div>
                           <div>
-                            <b>Reviewer B · {d.b}</b>
+                            <b>
+                              {t("sc.reviewerB")} · {v(d.b)}
+                            </b>
                             {d.b_why || "—"}
                           </div>
                         </div>
@@ -107,7 +118,7 @@ export function ScreeningTab({ run }: { run: Run }) {
               {!rows.length && (
                 <tr>
                   <td colSpan={5} className="muted" style={{ textAlign: "center", padding: 28 }}>
-                    No record in this view.
+                    {t("sc.none")}
                   </td>
                 </tr>
               )}
@@ -115,7 +126,9 @@ export function ScreeningTab({ run }: { run: Run }) {
           </table>
         </div>
       </div>
-      <p className="hint" style={{ marginTop: -6 }}>Click a record to read why it was included or excluded.</p>
+      <p className="hint" style={{ marginTop: -6 }}>
+        {t("sc.hint")}
+      </p>
     </div>
   );
 }

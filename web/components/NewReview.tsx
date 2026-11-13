@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { post } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 export function NewReview({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const { mutate } = useSWRConfig();
+  const { t } = useI18n();
   const [question, setQuestion] = useState("");
   const [auto, setAuto] = useState(false);
   const [perSource, setPerSource] = useState(60);
@@ -48,12 +50,12 @@ export function NewReview({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label="New review">
-        <h2>New review</h2>
-        <p className="modal-sub">One research question is enough. You approve the protocol before anything is searched.</p>
+      <div className="modal" role="dialog" aria-modal="true" aria-label={t("new.title")}>
+        <h2>{t("new.title")}</h2>
+        <p className="modal-sub">{t("new.sub")}</p>
 
         <label className="field-label" htmlFor="question">
-          Research question
+          {t("new.question")}
         </label>
         <textarea
           id="question"
@@ -62,38 +64,38 @@ export function NewReview({ onClose }: { onClose: () => void }) {
           rows={3}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="e.g. Does remote monitoring reduce readmissions in adults with heart failure?"
+          placeholder={t("new.placeholder")}
         />
 
         <div className="switch-row" onClick={() => setAuto(!auto)} role="switch" aria-checked={auto} tabIndex={0}
              onKeyDown={(e) => (e.key === " " || e.key === "Enter") && setAuto(!auto)}>
           <div className={`switch${auto ? " on" : ""}`} />
           <div>
-            <div style={{ fontWeight: 560, fontSize: 13.5 }}>Autonomous mode</div>
+            <div style={{ fontWeight: 560, fontSize: 13.5 }}>{t("new.auto")}</div>
             <div className="hint" style={{ marginTop: 1 }}>
-              Skip the three human checkpoints. The report will say that no human verified it.
+              {t("new.autoHint")}
             </div>
           </div>
         </div>
 
         <button className="btn ghost sm" style={{ marginTop: 12, marginLeft: -6 }} onClick={() => setMore(!more)}>
-          {more ? "Hide options" : "More options"}
+          {more ? t("new.less") : t("new.more")}
         </button>
         {more && (
           <div style={{ marginTop: 8 }}>
             <div className="two">
               <div>
-                <label className="field-label">Records per database</label>
+                <label className="field-label">{t("new.perSource")}</label>
                 <input className="input num" type="number" min={10} max={2000} step={10} value={perSource}
                        onChange={(e) => setPerSource(Number(e.target.value))} />
               </div>
               <div>
-                <label className="field-label">Records screened</label>
+                <label className="field-label">{t("new.screened")}</label>
                 <input className="input num" type="number" min={5} max={2000} step={5} value={screened}
                        onChange={(e) => setScreened(Number(e.target.value))} />
               </div>
               <div>
-                <label className="field-label">Revision rounds</label>
+                <label className="field-label">{t("new.rounds")}</label>
                 <select className="input" value={rounds} onChange={(e) => setRounds(Number(e.target.value))}>
                   {[0, 1, 2, 3].map((n) => (
                     <option key={n} value={n}>
@@ -103,14 +105,14 @@ export function NewReview({ onClose }: { onClose: () => void }) {
                 </select>
               </div>
               <div>
-                <label className="field-label">If no open full text</label>
+                <label className="field-label">{t("new.fallback")}</label>
                 <select className="input" value={fallback} onChange={(e) => setFallback(e.target.value)}>
-                  <option value="abstract">Assess on the abstract</option>
-                  <option value="exclude">Report as not retrieved</option>
+                  <option value="abstract">{t("new.fallbackAbstract")}</option>
+                  <option value="exclude">{t("new.fallbackExclude")}</option>
                 </select>
               </div>
             </div>
-            <p className="hint">On the free tier, 24 records screened and 1 revision round fit in one day of quota.</p>
+            <p className="hint">{t("new.hint")}</p>
           </div>
         )}
 
@@ -122,11 +124,11 @@ export function NewReview({ onClose }: { onClose: () => void }) {
 
         <div className="modal-foot">
           <button className="btn ghost" onClick={onClose}>
-            Cancel
+            {t("new.cancel")}
           </button>
           <button className="btn primary" disabled={busy || question.trim().length < 8} onClick={start}>
             {busy ? <LoaderCircle size={15} className="spin" /> : null}
-            Start review {!busy && <ArrowRight size={15} />}
+            {t("new.start")} {!busy && <ArrowRight size={15} />}
           </button>
         </div>
       </div>

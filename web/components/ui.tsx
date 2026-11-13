@@ -1,6 +1,9 @@
+"use client";
+
 // Small presentational pieces shared by the tabs.
 
 import { ChevronRight } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export function Stat({ label, value, unit, note, lead }: { label: string; value: React.ReactNode; unit?: string; note?: string; lead?: boolean }) {
   return (
@@ -84,27 +87,31 @@ export function Bars({ rows }: { rows: Bar[] }) {
   );
 }
 
-export const ROB: Record<string, { color: string; label: string; tone: string }> = {
-  low: { color: "#2fa56f", label: "Low", tone: "good" },
-  "some concerns": { color: "#e6a52e", label: "Some concerns", tone: "warn" },
-  high: { color: "#d2453c", label: "High", tone: "crit" },
-  unclear: { color: "#b9b6ab", label: "Unclear", tone: "" },
+// Risk-of-bias levels as the pipeline writes them; their label comes from the interface language.
+export const ROB: Record<string, { color: string; tone: string }> = {
+  low: { color: "#2fa56f", tone: "good" },
+  "some concerns": { color: "#e6a52e", tone: "warn" },
+  high: { color: "#d2453c", tone: "crit" },
+  unclear: { color: "#b9b6ab", tone: "" },
 };
 
+const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 export function RobBar({ levels }: { levels: string[] }) {
+  const { v } = useI18n();
   const counts = Object.keys(ROB).map((k) => ({ k, n: levels.filter((l) => l === k).length }));
   return (
     <>
       <div className="seg">
         {counts.filter((c) => c.n).map((c) => (
-          <span key={c.k} style={{ flex: c.n, background: ROB[c.k].color }} title={`${ROB[c.k].label}: ${c.n}`} />
+          <span key={c.k} style={{ flex: c.n, background: ROB[c.k].color }} title={`${capital(v(c.k))}: ${c.n}`} />
         ))}
       </div>
       <div className="legend">
         {counts.filter((c) => c.n).map((c) => (
           <span key={c.k}>
             <i style={{ background: ROB[c.k].color }} />
-            {ROB[c.k].label} <b className="num">{c.n}</b>
+            {capital(v(c.k))} <b className="num">{c.n}</b>
           </span>
         ))}
       </div>
@@ -113,6 +120,7 @@ export function RobBar({ levels }: { levels: string[] }) {
 }
 
 export function DecisionPill({ value }: { value: string }) {
+  const { v } = useI18n();
   const tone = value === "include" ? "good" : value === "exclude" ? "" : "warn";
-  return <Pill tone={tone}>{value}</Pill>;
+  return <Pill tone={tone}>{v(value)}</Pill>;
 }

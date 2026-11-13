@@ -373,8 +373,18 @@ def web(
         console.print("Installing the web interface (first start only)…")
         subprocess.run([npm, "install", "--no-audit", "--no-fund"], cwd=web_dir, check=True)
 
+    import socket
+
+    for busy in (port, api_port):
+        with socket.socket() as probe:
+            if probe.connect_ex(("127.0.0.1", busy)) == 0:
+                console.print(f"[yellow]Port {busy} is already in use: the interface is probably running already "
+                              f"(http://localhost:{port}). Stop it first, or choose other ports with --port / --api-port.[/yellow]")
+                raise typer.Exit(1)
+
     env = {**os.environ, "SYSREV_API": f"http://127.0.0.1:{api_port}", "PORT": str(port), "NEXT_TELEMETRY_DISABLED": "1"}
-    front = subprocess.Popen([npm, "run", "dev", "--", "--port", str(port)], cwd=web_dir, env=env,
+    # both servers listen on this machine only
+    front = subprocess.Popen([npm, "run", "dev", "--", "--port", str(port), "--hostname", "127.0.0.1"], cwd=web_dir, env=env,
                              stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     threading.Timer(2.0, lambda: console.print(f"[green]PRISMAgent is running:[/green] http://localhost:{port}   (Ctrl+C to stop)")).start()
     try:

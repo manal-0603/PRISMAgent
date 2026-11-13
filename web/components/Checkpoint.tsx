@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Check, UserCheck } from "lucide-react";
-import { plural, type Run } from "@/lib/api";
+import type { Run } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 type Props = { run: Run; busy: boolean; onDecision: (resume: Record<string, unknown>) => void };
 
@@ -15,15 +16,14 @@ export function Checkpoint(props: Props) {
 }
 
 function Head({ step, title, children }: { step: number; title: string; children: React.ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className="callout-head">
       <div className="callout-icon">
         <UserCheck size={17} />
       </div>
       <div>
-        <h3>
-          Checkpoint {step} of 3 · {title}
-        </h3>
+        <h3>{t("cp.head", { n: step, title })}</h3>
         <p>{children}</p>
       </div>
     </div>
@@ -31,6 +31,7 @@ function Head({ step, title, children }: { step: number; title: string; children
 }
 
 function ProtocolCheckpoint({ run, busy, onDecision }: Props) {
+  const { t } = useI18n();
   const [mode, setMode] = useState<"" | "changes" | "edit">("");
   const [feedback, setFeedback] = useState("");
   const [json, setJson] = useState(() => JSON.stringify(run.pending.protocol, null, 2));
@@ -40,34 +41,33 @@ function ProtocolCheckpoint({ run, busy, onDecision }: Props) {
     try {
       onDecision({ action: "approve", protocol: JSON.parse(json) });
     } catch (e) {
-      setJsonError(`Invalid JSON: ${(e as Error).message}`);
+      setJsonError(t("cp1.invalid", { error: (e as Error).message }));
     }
   }
 
   return (
     <div className="callout">
-      <Head step={1} title="Approve the protocol">
-        The Planner wrote the protocol and the Search agent tested its queries on the live databases. Read them in the Protocol tab below,
-        then decide. Nothing is retrieved before you approve.
+      <Head step={1} title={t("cp1.title")}>
+        {t("cp1.text")}
       </Head>
       <div className="callout-actions">
         <button className="btn primary" disabled={busy} onClick={() => onDecision({ action: "approve" })}>
-          <Check size={15} /> Approve
+          <Check size={15} /> {t("cp.approve")}
         </button>
         <button className="btn" disabled={busy} onClick={() => setMode(mode === "changes" ? "" : "changes")}>
-          Request changes
+          {t("cp1.changes")}
         </button>
         <button className="btn ghost" disabled={busy} onClick={() => setMode(mode === "edit" ? "" : "edit")}>
-          Edit it myself
+          {t("cp1.edit")}
         </button>
       </div>
       {mode === "changes" && (
         <div className="callout-body">
           <textarea className="input" autoFocus value={feedback} onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="e.g. Restrict to adults; add terms for telemonitoring" />
+                    placeholder={t("cp1.changesPlaceholder")} />
           <div className="callout-actions">
             <button className="btn primary" disabled={busy || !feedback.trim()} onClick={() => onDecision({ action: "revise", feedback: feedback.trim() })}>
-              Send to the Planner
+              {t("cp1.send")}
             </button>
           </div>
         </div>
@@ -78,7 +78,7 @@ function ProtocolCheckpoint({ run, busy, onDecision }: Props) {
           {jsonError && <div className="hint" style={{ color: "var(--crit)" }}>{jsonError}</div>}
           <div className="callout-actions">
             <button className="btn primary" disabled={busy} onClick={saveEdits}>
-              Save my edits and continue
+              {t("cp1.save")}
             </button>
           </div>
         </div>
@@ -90,6 +90,7 @@ function ProtocolCheckpoint({ run, busy, onDecision }: Props) {
 type PendingDecision = { rid: string; title: string; final: string; resolved_by: string; a: string; b: string; rationale: string };
 
 function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
+  const { t, n, v } = useI18n();
   const decisions: PendingDecision[] = run.pending.decisions;
   const [overrides, setOverrides] = useState<Record<string, string>>({});
   const [all, setAll] = useState(false);
@@ -110,18 +111,17 @@ function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
 
   return (
     <div className="callout">
-      <Head step={2} title="Check the screening decisions">
-        Two reviewers screened {decisions.length} records on title and abstract. Change any decision, then approve. Your changes are logged
-        and reported in the manuscript.
+      <Head step={2} title={t("cp2.title")}>
+        {t("cp2.text", { n: decisions.length })}
       </Head>
       <div className="callout-body">
         <div className="toolbar">
           <div className="segmented sm">
             <button aria-pressed={!all} onClick={() => setAll(false)}>
-              Retained and disputed ({decisions.filter((d) => d.final === "include" || d.resolved_by !== "consensus").length})
+              {t("cp2.disputed", { n: decisions.filter((d) => d.final === "include" || d.resolved_by !== "consensus").length })}
             </button>
             <button aria-pressed={all} onClick={() => setAll(true)}>
-              All ({decisions.length})
+              {t("cp2.all", { n: decisions.length })}
             </button>
           </div>
         </div>
@@ -130,9 +130,9 @@ function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
             <table className="t">
               <thead>
                 <tr>
-                  <th>Record</th>
-                  <th className="fit">Reviewers</th>
-                  <th className="fit">Decision</th>
+                  <th>{t("sc.record")}</th>
+                  <th className="fit">{t("cp2.reviewers")}</th>
+                  <th className="fit">{t("sc.decision")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,19 +147,23 @@ function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
                         </div>
                       </td>
                       <td className="muted fit">
-                        {d.a} / {d.b}
-                        {d.resolved_by !== "consensus" && <div style={{ fontSize: 12 }}>settled by {d.resolved_by}</div>}
+                        {v(d.a)} / {v(d.b)}
+                        {d.resolved_by !== "consensus" && (
+                          <div style={{ fontSize: 12 }}>
+                            {t("cp2.settledBy", { who: d.resolved_by === "human" ? t("who.human") : t("who.adjudicator") })}
+                          </div>
+                        )}
                       </td>
                       <td className="fit">
                         <div className="segmented sm">
                           <button aria-pressed={value === "include"} onClick={() => set(d.rid, d.final, "include")}>
-                            Include
+                            {t("cp2.include")}
                           </button>
                           <button aria-pressed={value === "exclude"} onClick={() => set(d.rid, d.final, "exclude")}>
-                            Exclude
+                            {t("cp2.exclude")}
                           </button>
                         </div>
-                        {overrides[d.rid] && <div className="hint" style={{ color: "var(--warn)" }}>changed by you</div>}
+                        {overrides[d.rid] && <div className="hint" style={{ color: "var(--warn)" }}>{t("cp2.changed")}</div>}
                       </td>
                     </tr>
                   );
@@ -171,7 +175,7 @@ function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
       </div>
       <div className="callout-actions">
         <button className="btn primary" disabled={busy} onClick={() => onDecision({ action: "approve", overrides })}>
-          <Check size={15} /> {changed ? `Approve with ${plural(changed, "change")}` : "Approve"}
+          <Check size={15} /> {changed ? t("cp2.approveWith", { changes: n("change", changed) }) : t("cp.approve")}
         </button>
       </div>
     </div>
@@ -179,33 +183,31 @@ function ScreeningCheckpoint({ run, busy, onDecision }: Props) {
 }
 
 function ReportCheckpoint({ run, busy, onDecision }: Props) {
+  const { t, n } = useI18n();
   const [revising, setRevising] = useState(false);
   const [feedback, setFeedback] = useState("");
   const issues = run.pending.qa_report?.issues?.length ?? 0;
 
   return (
     <div className="callout">
-      <Head step={3} title="Approve the manuscript">
-        {issues
-          ? `The Critic leaves ${plural(issues, "issue")} open: they are listed in the Quality tab below, and the draft is in the Report tab.`
-          : "The Critic found no open issue. The draft is in the Report tab below."}{" "}
-        Approve to export the final files, or ask the Writing agent for a revision.
+      <Head step={3} title={t("cp3.title")}>
+        {issues ? t("cp3.issues", { issues: n("issue", issues) }) : t("cp3.clean")} {t("cp3.then")}
       </Head>
       <div className="callout-actions">
         <button className="btn primary" disabled={busy} onClick={() => onDecision({ action: "approve" })}>
-          <Check size={15} /> Approve and export
+          <Check size={15} /> {t("cp3.approve")}
         </button>
         <button className="btn" disabled={busy} onClick={() => setRevising(!revising)}>
-          Request a revision
+          {t("cp3.revise")}
         </button>
       </div>
       {revising && (
         <div className="callout-body">
           <textarea className="input" autoFocus value={feedback} onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="What should the Writing agent change?" />
+                    placeholder={t("cp3.placeholder")} />
           <div className="callout-actions">
             <button className="btn primary" disabled={busy || !feedback.trim()} onClick={() => onDecision({ action: "revise", feedback: feedback.trim() })}>
-              Send to the Writing agent
+              {t("cp3.send")}
             </button>
           </div>
         </div>

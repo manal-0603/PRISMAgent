@@ -238,7 +238,9 @@ review; the detail is one click away:
 | Quality | the critic's open issues, one line each | full issue and suggested fix, evaluation, audit trail |
 
 The sidebar lists the reviews with their state and shows an estimate of the free quota left for
-each model.
+each model. The interface is available in English and French (switch at the top of the sidebar; the
+first visit follows the browser's language). Only the interface is translated: what the agents
+write — protocol, rationales, manuscript, critic's issues — stays in English.
 
 To browse the demonstration review without running anything or setting a key:
 
