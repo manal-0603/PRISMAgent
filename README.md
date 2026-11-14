@@ -531,9 +531,11 @@ cache), `.venv/` and `web/node_modules/`.
 
 ## 11. Team and individual contributions
 
-| Member | Contribution |
-|---|---|
-| _to be completed_ | _to be completed_ |
+**Team:** Manal Mounir and Ikram Ait Kaddi.
+
+The project was carried out jointly by the two team members. We worked on it together in online
+meetings, covering every part of the project: design, implementation, evaluation and documentation.
+No part was assigned to one member alone.
 
 ## 12. References
 
